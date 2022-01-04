@@ -1,18 +1,21 @@
 const express = require('express');
 const path = require('path');
 const helmet = require('helmet');
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize } = require('sequelize');
 
-//Connect to maridb database using sequelize
+//Connexion à la base de données avec Sequelize
 const sequelize = new Sequelize(process.env.DB_NAME,process.env.DB_USERNAME,process.env.DB_PASSWORD, {
     host: process.env.DB_HOST,
     dialect: 'mariadb',
 });
-sequelize.authenticate().then(() => {
-    console.log('Connection successfull.');
-}).catch(err => {
-    console.error('Unable to connect to the database:', err);
-});
+//Authentification et confirmation de connexion
+sequelize.authenticate()
+    .then(() => {
+        console.log('Connection successfull.');
+    }).catch(err => {
+        console.error('Unable to connect to the database:', err);
+    }
+);
 
 const app = express();
 
