@@ -2,6 +2,7 @@ const user = require('../models/userSchema');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const passwordValidator = require('password-validator');
+const AES = require('aes-encryption');
 
 const passwordSchema = new passwordValidator();
   passwordSchema
@@ -15,77 +16,82 @@ const passwordSchema = new passwordValidator();
 
 //Création d'un utilisateur
 
-exports.signup = (req, res, next) => {
-    //Verification du mot de passe
-    if(!passwordSchema.validate(req.body.password)){
-        res.status(401).json({message: 'Mot de passe invalide'});
-    }else{
-        //Création de l'utilisateur
-        bcrypt.hash(req.body.password, 10)
+exports.signUp = (req, res, next) => {
+    //Hash du mot de passe
+    bcrypt.hash(req.body.password, 10)
         .then(hash => {
+            const emailEncrypt = AES.encrypt(req.body.email);
             const user = new user({
-                email: req.body.email,
-                password: hash
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: emailEncrypt,
+                password: hash,
             });
+            //Sauvegarde dans la DB
             user.save()
-            .then(() => res.status(201).json({message: 'Utilisateur créé !'}))
-            .catch(error => res.status(400).json({error}));
+                .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+                .catch(error => res.status(400).json({ error }));
         })
-    }
+        .catch(error => res.status(500).json({ error }));
 };
 
 //Module de connection
 
 exports.login = (req, res, next) => {
-    user.findOne({ email: req.body.email})
-    .then (user =>{
-        if(!user){
-            return res.status(401).json({error: 'Utilisateur non trouvé'});
-        }
-        bcrypt.compare(req.body.password, user.password)
-        .then (valid =>{
-            if(!valid){
-                return res.status(401).json({error: 'Mot de passe incorrect!'})
+    const cryptedEmail = AES.encrypt(req.body.email);
+    user.findOne({ email: cryptedEmail })
+        .then(user => {
+            if(!user){
+                return res.status(401).json({ error: 'Utilisateur non trouvé !' });
             }
-            res.status(200).json({
-                userId: user._id,
-                token: jwt.sign(
-                    { userid: user._id }, '${process.env.TOKEN', {expiresIn: '24h'}
-                )
-            });
+            bcrypt.compare(req.body.password, user.password)
+                .then(valid => {
+                    if(!valid){
+                        return res.status(401).json({ error: 'Mot de passe incorrect !' });
+                    }
+                    res.status(200).json({
+                        userId: user.id,
+                        token: jwt.sign(
+                            { userId: user.id },
+                            process.env.TOKEN,
+                            { expiresIn: '24h' }
+                        ),
+                    });
+                }
+            )
+        .catch(error => res.status(500).json({ error }));
+    })
+};
+
+//Modification de l'utilisateur
+
+exports.modifyUser = (req, res, next) => {
+    const emailEncrypt = AES.encrypt(req.body.email);
+    const userId = req.userId;
+    user.findOne({ _id: userId })
+        .then(user => {
+            if(!user){
+                return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+            }
+            user.email = emailEncrypt;
+            user.save()
+                .then(() => res.status(200).json({ message: 'Utilisateur modifié !' }))
+                .catch(error => res.status(400).json({ error }));
         })
-        .catch(error => res.status(500).json({error}));
-    })
-    .catch(error => res.status(500).json({error}));
+        .catch(error => res.status(500).json({ error }));
 };
 
-//Modification de l'utilisateur par l'utilisateur
-
-exports.updateUser = (req, res, next) => {
-    user.findOne({ _id: req.userId}) //Utiliser TOKEN?
-    .then(user => {
-        if(!user){
-            return res.status(401).json({error: 'Utilisateur non trouvé'});
-        }
-        user.email = req.body.email;
-        user.save()
-        .then(() => res.status(200).json({message: 'Utilisateur modifié !'}))
-        .catch(error => res.status(400).json({error}));
-    })
-    .catch(error => res.status(500).json({error}));
-};
-
-//Suppression de l'utilisateur par l'utilisateur
-
+//Suppression d'un utilisateur par l'utilisateur ou un admin
 exports.deleteUser = (req, res, next) => {
-    user.findOne({ _id: req.userId})  //Utiliser TOKEN?
-    .then(user => {
-        if(!user){
-            return res.status(401).json({error: 'Utilisateur non trouvé'});
-        }
-        user.remove()
-        .then(() => res.status(200).json({message: 'Utilisateur supprimé !'}))
-        .catch(error => res.status(400).json({error}));
-    })
-    .catch(error => res.status(500).json({error}));
+    const userId = req.userId;
+    user.findOne({ _id: userId })
+        .then(user => {
+            if(!user){
+                return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+            }
+            user.remove()
+                .then(() => res.status(200).json({ message: 'Utilisateur supprimé !' }))
+                .catch(error => res.status(400).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error }));
 };

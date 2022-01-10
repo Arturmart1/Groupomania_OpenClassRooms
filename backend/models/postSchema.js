@@ -14,6 +14,20 @@ const post = Sequelize.define('Post', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    likes: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+    },
+    userliked: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        allowNull: false,
+        defaultValue: [],
+    },
     freezeTableName: true,
     instanceMethods: {
         generateHash(password) {

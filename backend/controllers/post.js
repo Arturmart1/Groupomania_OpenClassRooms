@@ -71,3 +71,18 @@ exports.deletePost = (req, res, next) => {
     })
     .catch((error) => res.status(500).json({ error: error }));
 };
+
+//Like d'un post
+
+exports.likePost = (req, res, next) => {
+    postSchema.findOne({ _id: req.params.id })
+    .then(post => {
+        if (post.userliked.includes(req.token.userId)){
+            return res.status(403).json({ error: 'Vous avez déjà liké ce post' });
+        }
+        postSchema.updateOne({ _id: req.params.id }, { $inc: { likes: 1 }, $push: { userliked: req.token.userId } })
+        .then(() => res.status(201).json({ message: 'Post liké !' }))
+        .catch((error) => res.status(400).json({ error: error, message: 'Echec de la modification du post' }));
+    })
+    .catch((error) => res.status(500).json({ error: error }));
+};

@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aes-encryption": "^1.0.4",
     "bcrypt": "^5.0.1",
     "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",
