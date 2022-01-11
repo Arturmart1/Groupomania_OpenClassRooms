@@ -1,13 +1,20 @@
-const AesEncryption = require('aes-encryption')
+//require('dotenv').config();
+const CryptoJS = require("crypto-js");
 
-const aes = new AesEncryption()
-aes.setSecretKey(process.env.ENCRYPT_KEY)
+const key = CryptoJS.enc.Hex.parse(process.env.ENCRYPT_KEY);
+const iv = CryptoJS.enc.Hex.parse(process.env.cryptoJSiv);
 
-const encrypted = aes.encrypt('some-plain-text')
-const decrypted = aes.decrypt(encrypted)
+exports.encrypt = (field) => {
 
-console.log('encrypted >>>>>>', encrypted)
-console.log('decrypted >>>>>>', decrypted)
+  return CryptoJS.AES.encrypt(field, key, {
+    iv: iv
+  }).toString();
+}
 
+exports.decrypt = (ciphertext) => {
 
-module.exports = AesEncryption;
+  const decrypted = CryptoJS.AES.decrypt(ciphertext, key, {
+    iv: iv
+  });
+  return decrypted.toString(CryptoJS.enc.Utf8);
+}

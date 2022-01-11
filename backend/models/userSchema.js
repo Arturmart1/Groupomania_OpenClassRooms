@@ -15,16 +15,6 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'user',
             freezeTableName: true,
-            instanceMethods: {
-                //Hash du mot de passe
-                generateHash(password) {
-                    return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-                },
-                //Validation du mot de passe
-                validPassword(password) {
-                    return bcrypt.compareSync(password, this.password);
-                },
-            }
         }
     );
     return user;

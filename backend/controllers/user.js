@@ -34,7 +34,7 @@ exports.signup = (req, res, next) => {
                     password: hash,
                 });
                 //Sauvegarde dans la DB
-                user.save()
+                user.create()
                     .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
                     .catch(error => res.status(403).json({ error, message : "Création de l'utilasteur échouée" }));
             })
@@ -46,7 +46,11 @@ exports.signup = (req, res, next) => {
 
 exports.login = (req, res, next) => {
     const cryptedEmail = AES.encrypt(req.body.email);
-    user.findOne({ email: cryptedEmail })
+    user.findOne({
+        Where:{
+            email: cryptedEmail
+        }
+        })
         .then(user => {
             if(!user){
                 return res.status(401).json({ error: 'Utilisateur non trouvé !' });
