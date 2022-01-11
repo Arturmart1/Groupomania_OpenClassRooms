@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const passwordValidator = require('password-validator');
 const AES = require('aes-encryption');
 
+//Constante de validation du mot de passe
 const passwordSchema = new passwordValidator();
   passwordSchema
   .is().min(8)                                    // Minimum 8 caractères
@@ -16,23 +17,29 @@ const passwordSchema = new passwordValidator();
 
 //Création d'un utilisateur
 
-exports.signUp = (req, res, next) => {
-    //Hash du mot de passe
-    bcrypt.hash(req.body.password, 10)
-        .then(hash => {
-            const emailEncrypt = AES.encrypt(req.body.email);
-            const user = new user({
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                email: emailEncrypt,
-                password: hash,
-            });
-            //Sauvegarde dans la DB
-            user.save()
-                .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-                .catch(error => res.status(400).json({ error }));
-        })
+exports.signup = (req, res, next) => {
+    //Verification du mot de passe
+    if (!passwordSchema.validate(req.body.password)) {
+        return res.status(401).json({ error: 'Mot de passe invalide'});
+    }else{
+        //Hash du mot de passe
+        bcrypt
+            .hash(req.body.password, 10)
+            .then(hash => {
+                const emailEncrypt = AES.encrypt(req.body.email);
+                const user = new user({
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                    email: emailEncrypt,
+                    password: hash,
+                });
+                //Sauvegarde dans la DB
+                user.save()
+                    .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+                    .catch(error => res.status(403).json({ error, message : "Création de l'utilasteur échouée" }));
+            })
         .catch(error => res.status(500).json({ error }));
+    }
 };
 
 //Module de connection

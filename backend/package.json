@@ -27,6 +27,7 @@
     "node": "^17.3.0",
     "nodemon": "^2.0.15",
     "password-validator": "^5.2.1",
-    "sequelize": "^7.0.0-alpha.4"
+    "sequelize": "^7.0.0-alpha.4",
+    "sequelize-router": "^1.0.6"
   }
 }
