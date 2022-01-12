@@ -2,7 +2,7 @@
 const CryptoJS = require("crypto-js");
 
 const key = CryptoJS.enc.Hex.parse(process.env.ENCRYPT_KEY);
-const iv = CryptoJS.enc.Hex.parse(process.env.cryptoJSiv);
+const iv = CryptoJS.enc.Hex.parse(process.env.IV_KEY);
 
 exports.encrypt = (field) => {
 

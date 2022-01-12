@@ -1,52 +1,29 @@
-const user = require('../models/userSchema');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const passwordValidator = require('password-validator');
-const AES = require('aes-encryption');
-
-//Constante de validation du mot de passe
-const passwordSchema = new passwordValidator();
-  passwordSchema
-  .is().min(8)                                    // Minimum 8 caractères
-  .is().max(100)                                  // Maximum 100 caractères
-  .has().uppercase()                              // Doit contenir au moins une majuscule
-  .has().lowercase()                              // Doit contenir au moins une minuscule
-  .has().digits(2)                                // Doit avoir au moins 2 chiffres
-  .has().not().spaces()                           // Ne doit pas avoir d'espaces
-  .is().not().oneOf(['Passw0rd', 'Password123', 'azerty1234']); // Liste de mots de passes interdits
+const User = require('../models/userSchema');
 
 //Création d'un utilisateur
-
 exports.signup = (req, res, next) => {
-    //Verification du mot de passe
-    if (!passwordSchema.validate(req.body.password)) {
-        return res.status(401).json({ error: 'Mot de passe invalide'});
-    }else{
-        //Hash du mot de passe
-        bcrypt
-            .hash(req.body.password, 10)
-            .then(hash => {
-                const emailEncrypt = AES.encrypt(req.body.email);
-                const user = new user({
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    email: emailEncrypt,
-                    password: hash,
-                });
-                //Sauvegarde dans la DB
-                user.create()
-                    .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-                    .catch(error => res.status(403).json({ error, message : "Création de l'utilasteur échouée" }));
+    
+    bcrypt
+        .hash(req.body.password, 10)
+        .then(hash => {
+            User.create({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email,
+                password: hash,
             })
+            .then(() => res.status(200).json({ message: 'Utilisateur créé !' }))
+            .catch(error => res.status(400).json({ error }));
+        })
         .catch(error => res.status(500).json({ error }));
-    }
 };
-
 //Module de connection
 
 exports.login = (req, res, next) => {
     const cryptedEmail = AES.encrypt(req.body.email);
-    user.findOne({
+    User.findOne({
         Where:{
             email: cryptedEmail
         }
