@@ -1,8 +1,9 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userSchema');
-
+const AES = require('aes-encryption');
 //Création d'un utilisateur
+
 exports.signup = (req, res, next) => {
     
     bcrypt
@@ -15,10 +16,11 @@ exports.signup = (req, res, next) => {
                 password: hash,
             })
             .then(() => res.status(200).json({ message: 'Utilisateur créé !' }))
-            .catch(error => res.status(400).json({ error }));
+            .catch(error => res.status(400).json({ error, message : 'Echech de la création' }));
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(500).json({ error: error }));
 };
+
 //Module de connection
 
 exports.login = (req, res, next) => {
@@ -56,7 +58,7 @@ exports.login = (req, res, next) => {
 exports.modifyUser = (req, res, next) => {
     const emailEncrypt = AES.encrypt(req.body.email);
     const userId = req.userId;
-    user.findOne({ _id: userId })
+    User.findOne({ _id: userId })
         .then(user => {
             if(!user){
                 return res.status(401).json({ error: 'Utilisateur non trouvé !' });
@@ -72,7 +74,7 @@ exports.modifyUser = (req, res, next) => {
 //Suppression d'un utilisateur par l'utilisateur ou un admin
 exports.deleteUser = (req, res, next) => {
     const userId = req.userId;
-    user.findOne({ _id: userId })
+    User.findOne({ _id: userId })
         .then(user => {
             if(!user){
                 return res.status(401).json({ error: 'Utilisateur non trouvé !' });

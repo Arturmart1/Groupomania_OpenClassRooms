@@ -1,4 +1,3 @@
-//require('dotenv').config();
 const CryptoJS = require("crypto-js");
 
 const key = CryptoJS.enc.Hex.parse(process.env.ENCRYPT_KEY);
