@@ -2,23 +2,23 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userSchema');
 const AES = require('aes-encryption');
+
 //Création d'un utilisateur
 
 exports.signup = (req, res, next) => {
-    
-    bcrypt
-        .hash(req.body.password, 10)
+    bcrypt.hash(req.body.password, 10)
         .then(hash => {
-            User.create({
-                firstName: req.body.firstName,
+            const user = new User({
+                fistName: req.body.fistName,
                 lastName: req.body.lastName,
                 email: req.body.email,
                 password: hash,
-            })
-            .then(() => res.status(200).json({ message: 'Utilisateur créé !' }))
-            .catch(error => res.status(400).json({ error, message : 'Echech de la création' }));
+            });
+            User.create()
+                .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+                .catch(error => res.status(400).json({ error }));
         })
-        .catch(error => res.status(500).json({ error: error }));
+        .catch(error => res.status(500).json({ error, message: error.message }));
 };
 
 //Module de connection
