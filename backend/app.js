@@ -3,6 +3,7 @@ const path = require('path');
 const helmet = require('helmet');
 const userRoutes = require('./routes/userRoute');
 const { Sequelize } = require('sequelize');
+const db = require('./config/db');
 
 const app = express();
 
@@ -15,18 +16,14 @@ app.use((req, res, next) => {
     next();
 });
 
-/*const sequelize = new Sequelize(process.env.DB_NAME,process.env.DB_USERNAME,process.env.DB_PASSWORD, {
-    host: process.env.DB_HOST,
-    dialect: 'mariadb',
-});
 //Authentification et confirmation de connexion
-sequelize.authenticate()
+db.authenticate()
     .then(() => {
         console.log('Connection successfull.');
     }).catch(err => {
         console.error('Unable to connect to the database:', err);
     }
-);*/
+);
 
 app.use(helmet());
 
