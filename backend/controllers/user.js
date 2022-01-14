@@ -9,13 +9,13 @@ exports.signup = (req, res, next) => {
     const cryptedEmail = AES.encrypt(req.body.email);
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
-            const User = new User({
+            const user = new User({
                 fistName: req.body.fistName,
                 lastName: req.body.lastName,
                 email: cryptedEmail,
                 password: hash,
             });
-            User.create()
+            user.create()
                 .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
                 .catch(error => res.status(400).json({ error }));
         })
