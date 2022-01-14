@@ -1,4 +1,5 @@
 const CryptoJS = require("crypto-js");
+const AES = require('aes-encryption')
 
 const key = CryptoJS.enc.Hex.parse(process.env.ENCRYPT_KEY);
 const iv = CryptoJS.enc.Hex.parse(process.env.IV_KEY);
