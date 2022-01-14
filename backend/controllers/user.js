@@ -1,17 +1,18 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userSchema');
-const AES = require('aes-encryption');
+
 
 //Création d'un utilisateur
 
 exports.signup = (req, res, next) => {
+    const cryptedEmail = AES.encrypt(req.body.email);
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
-            const user = new User({
+            const User = new User({
                 fistName: req.body.fistName,
                 lastName: req.body.lastName,
-                email: req.body.email,
+                email: cryptedEmail,
                 password: hash,
             });
             User.create()
