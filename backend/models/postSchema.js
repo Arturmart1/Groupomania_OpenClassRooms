@@ -1,7 +1,7 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const bcrypt = require('bcrypt');
+const DataTypes = require('sequelize');
+const db = require('../config/db');
 
-const post = Sequelize.define('Post', {
+const Post = db.define('Post', {
     title: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -29,14 +29,6 @@ const post = Sequelize.define('Post', {
         defaultValue: [],
     },
     freezeTableName: true,
-    instanceMethods: {
-        generateHash(password) {
-            return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-        },
-        validPassword(password) {
-            return bcrypt.compareSync(password, this.password);
-        },
-    },
 });
 
-return post;
+return Post;
