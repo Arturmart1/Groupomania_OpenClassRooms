@@ -1,27 +1,27 @@
+const User = require('../models/userSchema');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/userSchema');
 const AES = require('../middleware/aes-encrypt');
 const passwordValidator = require('password-validator');
 
 const passwordSchema = new passwordValidator();
-  passwordSchema
-  .is().min(8)                                    // Minimum 8 caractères
-  .is().max(100)                                  // Maximum 100 caractères
-  .has().uppercase()                              // Doit contenir au moins une majuscule
-  .has().lowercase()                              // Doit contenir au moins une minuscule
-  .has().digits(2)                                // Doit avoir au moins 2 chiffres
-  .has().not().spaces()                           // Ne doit pas avoir d'espaces
-  .is().not().oneOf(['Passw0rd', 'Password123', 'azerty1234']); // Liste de mots de passes interdits
+passwordSchema
+    .is().min(8)                                    // Minimum 8 caractères
+    .is().max(100)                                  // Maximum 100 caractères
+    .has().uppercase()                              // Doit contenir au moins une majuscule
+    .has().lowercase()                              // Doit contenir au moins une minuscule
+    .has().digits(2)                                // Doit avoir au moins 2 chiffres
+    .has().not().spaces()                           // Ne doit pas avoir d'espaces
+    .is().not().oneOf(['Passw0rd', 'Password123', 'azerty1234']); // Liste de mots de passes interdits
 
 //Création d'un utilisateur
 exports.signup = (req, res, next) => {
     const { firstName, lastName, email, password } = req.body;
     if (!firstName || !lastName || !email || !password) {
-        return res.status(400).json({ error: 'Veuillez remplir tous les champs'});
+        return res.status(400).json({ error: 'Veuillez remplir tous les champs' });
     }
     if (!passwordSchema.validate(password)) {
-        return res.status(400).json({ error: 'Mot de passe incorrect'});
+        return res.status(400).json({ error: 'Mot de passe incorrect' });
     }
     User.findOne({
         where: {
@@ -30,7 +30,7 @@ exports.signup = (req, res, next) => {
     })
         .then(user => {
             if (user) {
-                return res.status(400).json({ error: 'Cet email est déjà utilisé'});
+                return res.status(400).json({ error: 'Cet email est déjà utilisé' });
             }
             const salt = bcrypt.genSaltSync(10);
             const hashPassword = bcrypt.hashSync(password, salt);
@@ -42,13 +42,16 @@ exports.signup = (req, res, next) => {
                 password: hashPassword,
                 isAdmin: false
             })
-                .then(user => { res.status(201).json({ message: 'Utilisateur créé avec succès !'});
-            })
-                .catch(error => {res.status(400).json({ error: 'Une erreur est survenue lors de la création de l\'utilisateur'});
-            });
+                .then(user => {
+                    res.status(201).json({ message: 'Utilisateur créé avec succès !' });
+                })
+                .catch(error => {
+                    res.status(400).json({ error: 'Une erreur est survenue lors de la création de l\'utilisateur' });
+                });
         })
-        .catch(error => { res.status(500).json({ error: 'Une erreur est survenue lors de la création de l\'utilisateur', message: error.message});
-    });
+        .catch(error => {
+            res.status(500).json({ error: 'Une erreur est survenue lors de la création de l\'utilisateur', message: error.message });
+        });
 };
 
 //Module de connection
@@ -115,4 +118,14 @@ exports.deleteUser = (req, res, next) => {
                 .catch(error => res.status(400).json({ error }));
         })
         .catch(error => res.status(500).json({ error, message: error.message }));
+};
+
+exports.gets = async () => {
+    await User.findAll({ raw: true }).then((users) => {
+        for (const user of users) {
+            console.log(user);
+        }
+    }).catch((error) => {
+        console.log("error : " + error);
+    });
 };

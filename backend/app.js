@@ -3,9 +3,11 @@ const path = require('path');
 const helmet = require('helmet');
 const userRoutes = require('./routes/userRoute');
 const postRoutes = require('./routes/postRoute');
-const db = require('./config/db');
-
 const app = express();
+
+const userController = require('../backend/controllers/post');
+const postController = require('../backend/controllers/user');
+const InitDB = require('../backend/models/initdb');
 
 //CORS
 
@@ -16,14 +18,22 @@ app.use((req, res, next) => {
     next();
 });
 
-//Authentification et confirmation de connexion
+/*//Authentification et confirmation de connexion
 db.authenticate()
     .then(() => {
         console.log('Connection successfull.');
     }).catch(err => {
         console.error('Unable to connect to the database:', err);
     }
-);
+);*/
+
+InitDB().then(() => {
+    userController.gets();
+    postController.gets();
+}).catch((error) => {
+    console.log("error : " + error);
+});
+
 
 app.use(express.json());
 

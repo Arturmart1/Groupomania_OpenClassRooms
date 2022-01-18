@@ -25,10 +25,14 @@ const Post = db.define('Post', {
     },
     userliked: {
         type: DataTypes.ARRAY(DataTypes.INTEGER),
+        allowNull: true,
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
         allowNull: false,
-        defaultValue: [],
     },
     freezeTableName: true,
 });
 
-return Post;
+module.exports = Post;
