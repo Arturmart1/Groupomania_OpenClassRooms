@@ -18,15 +18,6 @@ app.use((req, res, next) => {
     next();
 });
 
-/*//Authentification et confirmation de connexion
-db.authenticate()
-    .then(() => {
-        console.log('Connection successfull.');
-    }).catch(err => {
-        console.error('Unable to connect to the database:', err);
-    }
-);*/
-
 InitDB().then(() => {
     app.use(express.json());
 

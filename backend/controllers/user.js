@@ -17,15 +17,17 @@ passwordSchema
 //Création d'un utilisateur
 exports.signup = (req, res, next) => {
     const { firstName, lastName, email, password } = req.body;
+    console.log(req.body)
     if (!firstName || !lastName || !email || !password) {
         return res.status(400).json({ error: 'Veuillez remplir tous les champs' });
     }
     if (!passwordSchema.validate(password)) {
         return res.status(400).json({ error: 'Mot de passe incorrect' });
     }
+    const cryptedEmail = AES.encrypt(email);
     User.findOne({
         where: {
-            email: email
+            email: cryptedEmail
         }
     })
         .then(user => {
@@ -34,15 +36,13 @@ exports.signup = (req, res, next) => {
             }
             const salt = bcrypt.genSaltSync(10);
             const hashPassword = bcrypt.hashSync(password, salt);
-            const cryptedEmail = AES.encrypt(email);
             User.create({
                 firstName: firstName,
                 lastName: lastName,
                 email: cryptedEmail,
                 password: hashPassword,
-                isAdmin: false
             })
-                .then(user => {
+                .then(() => {
                     res.status(201).json({ message: 'Utilisateur créé avec succès !' });
                 })
                 .catch(error => {
