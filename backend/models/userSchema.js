@@ -27,7 +27,7 @@ const User = db.define('User', {
     profilePicture: {
         type: DataTypes.STRING,
         allowNull: true
-    }
+    },
 },{
     freezeTableName : true,
 });

@@ -28,21 +28,19 @@ db.authenticate()
 );*/
 
 InitDB().then(() => {
-    userController.gets();
-    postController.gets();
+    app.use(express.json());
+
+    app.use(helmet());
+
+    app.use('/api/auth', userRoutes);
+
+    app.use('/api/posts', postRoutes);
+
+    app.use('/images', express.static(path.join(__dirname, 'images')));
+    
 }).catch((error) => {
     console.log("error : " + error);
 });
 
-
-app.use(express.json());
-
-app.use(helmet());
-
-app.use('/api/auth', userRoutes);
-
-app.use('/api/posts', postRoutes);
-
-app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;

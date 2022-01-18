@@ -23,16 +23,8 @@ const Post = db.define('Post', {
         allowNull: false,
         defaultValue: 0,
     },
-    userliked: {
-        type: DataTypes.ARRAY(DataTypes.INTEGER),
-        allowNull: true,
-    },
-    createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        allowNull: false,
-    },
-    freezeTableName: true,
+},{
+    freezeTableName : true,
 });
 
 module.exports = Post;
