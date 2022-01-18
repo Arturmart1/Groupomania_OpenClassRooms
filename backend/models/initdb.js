@@ -9,8 +9,8 @@ const Post = require('./postSchema');
 
 let Init = async () => {
     
-    await User.sync({alter: true});
-    await Post.sync({alter: true});
+    await User.sync(/*{alter: true}*/);
+    await Post.sync(/*{alter: true}*/);
 }
 
 module.exports = Init;
