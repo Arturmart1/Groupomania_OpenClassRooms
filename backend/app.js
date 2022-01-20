@@ -5,8 +5,6 @@ const userRoutes = require('./routes/userRoute');
 const postRoutes = require('./routes/postRoute');
 const app = express();
 
-const userController = require('../backend/controllers/post');
-const postController = require('../backend/controllers/user');
 const InitDB = require('../backend/models/initdb');
 
 //CORS
@@ -29,8 +27,8 @@ InitDB().then(() => {
 
     app.use('/images', express.static(path.join(__dirname, 'images')));
     
-}).catch((error) => {
-    console.log("error : " + error);
+    })
+    .catch((error) => { console.log("error : " + error);
 });
 
 
