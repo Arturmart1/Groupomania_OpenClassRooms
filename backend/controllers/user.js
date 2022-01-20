@@ -76,7 +76,7 @@ exports.login = (req, res, next) => {
                         token: jwt.sign(
                             { userId: user.id },
                             process.env.TOKEN,
-                            { expiresIn: '24h' }, 
+                            { expiresIn: '24h' },
                         ),
                         message: 'Connexion réussie !'
                     });
@@ -89,34 +89,32 @@ exports.login = (req, res, next) => {
 //Modification de l'utilisateur
 
 exports.modifyUser = (req, res, next) => {
-    const emailEncrypt = AES.encrypt(req.body.email);
-    const userId = req.userId;
-    User.findOne({ _id: userId, userId: req.token.userId })
-        .then(user => {
-            if (!user) {
-                return res.status(401).json({ error: 'Utilisateur non trouvé !' });
-            }
-            user.email = emailEncrypt;
-            user.save()
-                .then(() => res.status(200).json({ message: 'Utilisateur modifié !' }))
-                .catch(error => res.status(400).json({ error }));
+    User.findOne({ where: { id: req.params.id } })
+        .then((user) => {
+            firstName = req.body.firstName;
+            lastName = req.body.lastName;
+            //profilePicture = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+            User.update(user, { where: { id: req.params.id }})
+                .then(() => res.status(201).json({ message: 'Utilisateur modifié !' }))
+                .catch(error => res.status(400).json({ error, message : error.message }));
         })
-        .catch(error => res.status(500).json({ error, message: error.message }));
+        .catch(error => res.status(500).json({ error }));
 };
 
-//Suppression d'un utilisateur par l'utilisateur ou un admin
+//Suppression d'un utilisateur par l'utilisateur
 
-exports.deleteUser = (req, res, next) => {;
-    User.findOne ({
+exports.deleteUser = (req, res, next) => {
+    User.findOne({
         where: {
             id: req.params.id
-        }})
+        }
+    })
         .then((user) => {
             User.destroy({ where: { id: req.params.id } })
                 .then(() => res.status(200).json({ message: 'Utilisateur supprimé !' }))
-                .catch(error => res.status(400).json({ error, message : error.message }));
-    })
-    .catch(error => res.status(500).json({ error, message: error.message }));
+                .catch(error => res.status(400).json({ error, message: error.message }));
+        })
+        .catch(error => res.status(500).json({ error, message: error.message }));
 };
 
 exports.gets = async () => {
