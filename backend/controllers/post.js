@@ -1,36 +1,27 @@
 const Post = require('../models/postSchema');
 const fs = require('fs');
 
-//Creatation d'un nouveau post
+//Création d'un nouveau post
 
 exports.newPost = (req, res, next) => {
-    const { title, content } = req.body;
-    const image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-    const userId = req.userId;
     Post.create({
-        title: title,
-        content: content,
-        image: image,
-        userId: userId,
+        title: req.body.title,
+        content: req.body.content,
+        //image: `${req.protocol}://${req.get('host')}/images/postImages/${req.file.filename}`,
+        userId: req.body.userId,
     })
-    .then(() => { res.status(200).json({ message: 'Post créé !' });
-    })
-    .catch(error => { res.status(400).json({ error: 'Une erreur est survenue lors de la création du post' });
-    });
+    .then(post => { res.status(201).json(post); })
+    .catch(err => { res.status(400).json(err); });
 };
 
 //Recupération de tout les posts de tous les utilisateurs
 
-exports.getPosts = (req, res, next) => {
-    Post.findAll({
-        order: [
-            ['createdAt', 'DESC']
-        ]
-    })
-        .then(posts => {
-            res.status(200).json({ posts: posts });
-        })
-        .catch(err => {
-            res.status(500).json({ error: err, message: error.message });
-        });
+exports.gets = async () => {
+    await Post.findAll({ raw: true }).then((posts) => {
+        for (const post of posts) {
+            console.log(post);
+        }
+    }).catch((error) => {
+        console.log("error : " + error);
+    });
 };
