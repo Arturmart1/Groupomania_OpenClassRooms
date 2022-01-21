@@ -3,6 +3,7 @@ const path = require('path');
 const helmet = require('helmet');
 const userRoutes = require('./routes/userRoute');
 const postRoutes = require('./routes/postRoute');
+const commentRoutes = require('./routes/commentRoute');
 const app = express();
 
 const InitDB = require('../backend/models/initdb');
@@ -24,6 +25,8 @@ InitDB().then(() => {
     app.use('/api/auth', userRoutes);
 
     app.use('/api/posts', postRoutes);
+
+    app.use('api/comment', commentRoutes);
 
     app.use('/images', express.static(path.join(__dirname, 'images')));
     
