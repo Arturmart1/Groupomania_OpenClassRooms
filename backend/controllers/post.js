@@ -7,7 +7,7 @@ exports.newPost = (req, res, next) => {
     Post.create({
         title: req.body.title,
         content: req.body.content,
-        //image: `${req.protocol}://${req.get('host')}/images/postImages/${req.file.filename}`,
+        image: `${req.protocol}://${req.get('host')}/images/postImages/${req.file.filename}`,
         userId: req.body.userId,
     })
     .then(post => { res.status(201).json(post); })
@@ -23,7 +23,7 @@ exports.updatePost = (req, res, next) => {
                 Post.update({
                     title: req.body.title,
                     content: req.body.content,
-                    //image: `${req.protocol}://${req.get('host')}/images/postImages/${req.file.filename}`,
+                    image: `${req.protocol}://${req.get('host')}/images/postImages/${req.file.filename}`,
                 }, { where: { id: req.params.id } })
                     .then(() => res.status(201).json({ message: 'Post modifié !' }))
                     .catch(error => res.status(400).json({ error, message: error.message }));
