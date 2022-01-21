@@ -6,13 +6,13 @@ const db = require('../config/db');
 
 const User = require('./userSchema');
 const Post = require('./postSchema');
-const Comments = require('./commentSchema');
+const Comment = require('./commentSchema');
 
 let Init = async () => {
     
     await User.sync(/*{alter: true}*/);
     await Post.sync(/*{alter: true}*/);
-    await Comments.sync(/*{alter: true}*/);
+    await Comment.sync(/*{alter: true}*/);
 }
 
 module.exports = Init;

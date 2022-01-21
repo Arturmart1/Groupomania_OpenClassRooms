@@ -69,3 +69,21 @@ exports.getOnePost = (req, res, next) => {
         .then(post => { res.status(200).json(post)})
         .catch(error => res.status(500).json({ error, message: error.message }));
 };
+
+//Like d'un post
+
+exports.likePost = (req, res, next) => {
+    Post.findOne({ where: { id: req.params.id } })
+        .then(post => {
+            if (post.userId === req.token.userId) {
+                Post.update({
+                    likes: post.likes + 1,
+                }, { where: { id: req.params.id } })
+                    .then(() => res.status(201).json({ message: 'Post liké !' }))
+                    .catch((error) => res.status(400).json({ error, message: error.message }));
+            } else {
+                res.status(401).json({ message: 'Vous n\'êtes pas autorisé à liker ce post !' });
+            }
+        })
+        .catch(error => res.status(500).json({ error, message: error.message }));
+};

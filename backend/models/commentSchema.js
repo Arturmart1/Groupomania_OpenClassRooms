@@ -14,16 +14,16 @@ const Comment = db.define('Comment', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    /*likes: {
+    likes: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         defaultValue: 0,
     },
     dislikes: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         defaultValue: 0,
-    },*/
+    },
 },{
     freezeTableName : true,
 });
