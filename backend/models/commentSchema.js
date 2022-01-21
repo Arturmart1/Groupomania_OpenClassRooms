@@ -14,7 +14,7 @@ const Comment = db.define('Comment', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    likes: {
+    /*likes: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
@@ -23,7 +23,7 @@ const Comment = db.define('Comment', {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
-    },
+    },*/
 },{
     freezeTableName : true,
 });
