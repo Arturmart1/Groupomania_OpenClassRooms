@@ -1,6 +1,8 @@
 const DataTypes = require('sequelize');
 const db = require('../config/db');
 
+//Définition du schema de la table Post
+
 const Post = db.define('Post', {
     title: {
         type: DataTypes.STRING,
@@ -25,6 +27,11 @@ const Post = db.define('Post', {
     },
 },{
     freezeTableName : true,
+    //Relation avec la table Comment
+    hasMany: {
+        model: 'Comment',
+        foreignKey: 'postId',
+    },
 });
 
 module.exports = Post;
