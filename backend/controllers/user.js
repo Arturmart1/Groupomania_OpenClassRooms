@@ -96,7 +96,7 @@ exports.modifyUser = (req, res, next) => {
                 user.lastName = req.body.lastName;
                 console.log(user)
                 //user.profilePicture = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-                User.update(user, { where: { id: req.params.id } })
+                User.update(user, { where: { id: req.params.id }})
                     .then(() => res.status(201).json({ message: 'Utilisateur modifié !' }))
                     .catch(error => res.status(400).json({ error, message: error.message }));
             } else{
