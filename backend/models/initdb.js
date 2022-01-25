@@ -10,9 +10,9 @@ const Comment = require('./commentSchema');
 
 let Init = async () => {
     
-    await User.sync(/*{alter: true}*/);
-    await Post.sync(/*{alter: true}*/);
-    await Comment.sync(/*{alter: true}*/);
+    await User.sync({alter: true});
+    await Post.sync({alter: true});
+    await Comment.sync({alter: true});
 }
 
 module.exports = Init;

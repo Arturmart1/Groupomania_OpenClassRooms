@@ -19,16 +19,16 @@ exports.newPost = (req, res, next) => {
 exports.updatePost = (req, res, next) => {
     Post.findOne({ where: { id: req.params.id } })
         .then(post => {
-            if (post.userId === req.token.userId) {
-                Post.update({
-                    title: req.body.title,
-                    content: req.body.content,
-                    image: `${req.protocol}://${req.get('host')}/images/postImages/${req.file.filename}`,
-                }, { where: { id: req.params.id } })
+            if (post.userId === req.token.userId || req.token.isAdmin) {
+                post.firstName = req.body.firstName;
+                post.lastName = req.body.lastName;
+                console.log(post)
+                //post.image = `${req.protocol}://${req.get('host')}/images/postImages/${req.file.filename}`;
+                Post.update(post, { where: { id: req.params.id } })
                     .then(() => res.status(201).json({ message: 'Post modifié !' }))
                     .catch(error => res.status(400).json({ error, message: error.message }));
             } else {
-                res.status(401).json({ message: 'Vous n\'êtes pas autorisé à modifier ce post !' });
+                res.status(403).json({ message: 'Vous n\'êtes pas autorisé à modifier ce post !' });
             }
         })
         .catch(error => res.status(500).json({ error, message: error.message }));
@@ -39,7 +39,7 @@ exports.updatePost = (req, res, next) => {
 exports.deletePost = (req, res, next) => {
     Post.findOne({ where: { id: req.params.id } })
         .then(post => {
-            if (post.userId === req.token.userId) {
+            if (post.userId === req.token.userId  || req.token.isAdmin ) {
                 Post.destroy({ where: { id: req.params.id } })
                     .then(() => res.status(200).json({ message: 'Post supprimé !' }))
                     .catch(error => res.status(400).json({ error, message: error.message }));

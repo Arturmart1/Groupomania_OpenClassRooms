@@ -74,7 +74,7 @@ exports.login = (req, res, next) => {
                     res.status(200).json({
                         userId: user.id,
                         token: jwt.sign(
-                            { userId: user.id },
+                            { userId: user.id, isAdmin: user.isAdmin },
                             process.env.TOKEN,
                             { expiresIn: '24h' },
                         ),
@@ -91,12 +91,17 @@ exports.login = (req, res, next) => {
 exports.modifyUser = (req, res, next) => {
     User.findOne({ where: { id: req.params.id } })
         .then((user) => {
-            firstName = req.body.firstName;
-            lastName = req.body.lastName;
-            //profilePicture = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-            User.update(user, { where: { id: req.params.id }})
-                .then(() => res.status(201).json({ message: 'Utilisateur modifié !' }))
-                .catch(error => res.status(400).json({ error, message : error.message }));
+            if (user.id === req.token.id || req.token.isAdmin) {
+                user.firstName = req.body.firstName;
+                user.lastName = req.body.lastName;
+                console.log(user)
+                //user.profilePicture = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+                User.update(user, { where: { id: req.params.id } })
+                    .then(() => res.status(201).json({ message: 'Utilisateur modifié !' }))
+                    .catch(error => res.status(400).json({ error, message: error.message }));
+            } else{
+                res.status(403).json({message: '403: Unauthorized request'});
+            }
         })
         .catch(error => res.status(500).json({ error }));
 };
