@@ -1,7 +1,7 @@
 <template>
 <div class="container" id="container">
 	<div class="form-container sign-up-container">
-		<form action="#">
+		<form v-on:submit.prevent="signup">
 			<h1>Créer un compte</h1>
 			<input type="text" placeholder="Nom" />
             <input type="text" placeholder="Prénom" />
@@ -11,10 +11,10 @@
 		</form>
 	</div>
 	<div class="form-container sign-in-container">
-		<form action="#">
+		<form v-on:submit.prevent="login" class="loginForm">
 			<h1>Se connecter</h1>
-			<input type="email" placeholder="Email" />
-			<input type="password" placeholder="Mot de passe" />
+			<input type="email" placeholder="Email" required v-model="loginInput.email"/>
+			<input type="password" placeholder="Mot de passe" required v-model="loginInput.password"/>
 			<a href="#">Mot de passe oublié?</a>
 			<button>Connexion</button>
 		</form>
@@ -46,20 +46,27 @@ export default {
             loginInput:{
                 "email" : "",
                 "password" : "",
-            }
+            },
+			signUpInput:{
+				"firstName": "",
+				"lastName" : "",
+				"email": "",
+				"password": ""
+			}
         }
         
     },
     methods: {
         login(){
-            let credentials ={
+            const credentials ={
                 "email" : this.loginInput.email,
                 "password" : this.loginInput.password 
             }
-            let loginUrl = 'http://localhost:3000/api/auth/login'
-            let loginOptions = {
+			console.log(credentials)
+            const loginUrl = 'http://localhost:3000/api/auth/login'
+            const loginOptions = {
                 method: "POST",
-                body: JSON.strigify(credentials),
+                body: JSON.stringify(credentials),
                 headers: {
                     'Content-type' : 'application/json'
                 }
@@ -78,6 +85,30 @@ export default {
                 })
                 .catch(error => console.log(error))
         },
+		signUp() {
+			const signUpCredentials = {
+				"lastName" : this.signUpInput.lastname,
+				"firstName": this.signUpInput.firstName,
+				"email": this.signUpInput.email,
+				"password": this.signUpInput.password 
+			}
+			const signUpUrl = "http://localhost:3000/api/auth/signup"
+			const signUpOptions = {
+				method: "POST",
+				body: JSON.stringify(signUpCredentials),
+				headers: {
+					'Content-type' : 'application/json'
+				}
+			}
+			fetch(signUpUrl, signUpOptions)
+				.then(res => res.json())
+				.then ((res) =>{
+					sessionStorage.setItem("userId", res.userId);
+					sessionStorage.setItem("token", res.token);
+					this.$router.push("/")
+				})
+			.catch(error => console.log(error))
+		},
         onClick: function(){
             const signUpButton = document.getElementById('signUp');
             const signInButton = document.getElementById('signIn');
