@@ -89,14 +89,11 @@ exports.login = (req, res, next) => {
 //Modification de l'utilisateur
 
 exports.modifyUser = (req, res, next) => {
+    //const image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
     User.findOne({ where: { id: req.params.id } })
         .then((user) => {
-            if (user.id === req.token.id || req.token.isAdmin) {
-                user.firstName = req.body.firstName;
-                user.lastName = req.body.lastName;
-                console.log(user)
-                //user.profilePicture = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-                User.update(user, { where: { id: req.params.id }})
+            if (user.id === req.token.userId || req.token.isAdmin) {
+                User.update({...user, firstName: req.body.firstName, lastName: req.body.lastName}, { where: { id: req.params.id }})
                     .then(() => res.status(201).json({ message: 'Utilisateur modifié !' }))
                     .catch(error => res.status(400).json({ error, message: error.message }));
             } else{
@@ -109,15 +106,15 @@ exports.modifyUser = (req, res, next) => {
 //Suppression d'un utilisateur par l'utilisateur
 
 exports.deleteUser = (req, res, next) => {
-    User.findOne({
-        where: {
-            id: req.params.id
-        }
-    })
+    User.findOne({ here: {id: req.params.id}})
         .then((user) => {
-            User.destroy({ where: { id: req.params.id } })
-                .then(() => res.status(200).json({ message: 'Utilisateur supprimé !' }))
+            if (user.id === req.token.userId || req.token.isAdmin) {
+                User.destroy({where : {id: req.params.id}})
+                .then(() => res.status(200).json({message: 'Utilisateur supprimé avec succès'}))
                 .catch(error => res.status(400).json({ error, message: error.message }));
+            } else {
+                res.status(401).json({ message: 'Vous n\'êtes pas autorisé à supprimer ce post !' });
+            }
         })
         .catch(error => res.status(500).json({ error, message: error.message }));
 };
