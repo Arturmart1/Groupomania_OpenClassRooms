@@ -3,10 +3,10 @@
 	<div class="form-container sign-up-container">
 		<form v-on:submit.prevent="signup">
 			<h1>Créer un compte</h1>
-			<input type="text" placeholder="Nom" />
-            <input type="text" placeholder="Prénom" />
-			<input type="email" placeholder="Email" />
-			<input type="password" placeholder="Password" />
+			<input type="text" placeholder="Nom" required v-model="signUpInput.lastName" />
+            <input type="text" placeholder="Prénom" required v-model="signUpInput.firstName" />
+			<input type="email" placeholder="Email" required v-model="signUpInput.email" />
+			<input type="password" placeholder="Password" required v-model="signUpInput.password" />
 			<button>S'enregistrer</button>
 		</form>
 	</div>
@@ -336,20 +336,5 @@ input {
 
 .container.right-panel-active .overlay-right {
 	transform: translateX(20%);
-}
-
-.social-container {
-	margin: 20px 0;
-}
-
-.social-container a {
-	border: 1px solid #DDDDDD;
-	border-radius: 50%;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	margin: 0 5px;
-	height: 40px;
-	width: 40px;
 }
 </style>
