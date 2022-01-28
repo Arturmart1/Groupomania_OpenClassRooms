@@ -1,18 +1,26 @@
 <template>
-  <div id="nav">
+  <div id="app" class="main">
+    <header>
+      <img src="./assets/icon-above-font.png" alt="logo groupomania" class="header__logo">
+    </header>
     <router-view/>
   </div>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
+#app {
+  font-family: Roboto, Arial, sans-serif;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .header__logo{
+    width: 15rem;
+  }
+}
 #nav {
   padding: 30px;
 
