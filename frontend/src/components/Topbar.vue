@@ -39,7 +39,6 @@ export default {
         object-fit: cover;
     }
     .topbar__link{
-        line-height: 0;
         display: flex;
         justify-content: space-around;
         gap: 1rem;
@@ -48,7 +47,7 @@ export default {
             font-weight: 600;
             font-size: 1.1em;
             color: white;
-            padding: 0.5rem 0.5rem 0 0.5rem;
+            padding: 0.4rem;
             &:hover{
                 color: lighten($color: #FF4B2B, $amount: 5);
                 background-color: white;
