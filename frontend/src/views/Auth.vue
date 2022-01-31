@@ -1,7 +1,7 @@
 <template>
 	<div class="container" id="container">
 		<div class="form-container sign-up-container">
-			<form v-on:submit.prevent="signup">
+			<form v-on:submit.prevent="signUp">
 				<h1>Créer un compte</h1>
 				<input type="text" placeholder="Nom" required v-model="signUpInput.lastName" />
 				<input type="text" placeholder="Prénom" required v-model="signUpInput.firstName" />
@@ -78,7 +78,7 @@ export default {
                         sessionStorage.setItem("userId", res.userId)
                         sessionStorage.setItem("token", res.token)
                         sessionStorage.setItem("isAdmin", res.isAdmin)
-                        this.$router.push("Connection réussie!")
+                        this.$router.push("/home")
                     } else{
                         alert("Identifiants incorrects")
                     }
@@ -105,7 +105,7 @@ export default {
 				.then ((res) =>{
 					sessionStorage.setItem("userId", res.userId);
 					sessionStorage.setItem("token", res.token);
-					this.$router.push("/")
+					this.$router.push("/Home")
 				})
 			.catch(error => console.log(error))
 		},
