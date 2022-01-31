@@ -1,39 +1,39 @@
 <template>
-<div class="container" id="container">
-	<div class="form-container sign-up-container">
-		<form v-on:submit.prevent="signup">
-			<h1>Créer un compte</h1>
-			<input type="text" placeholder="Nom" required v-model="signUpInput.lastName" />
-            <input type="text" placeholder="Prénom" required v-model="signUpInput.firstName" />
-			<input type="email" placeholder="Email" required v-model="signUpInput.email" />
-			<input type="password" placeholder="Password" required v-model="signUpInput.password" />
-			<button>S'enregistrer</button>
-		</form>
-	</div>
-	<div class="form-container sign-in-container">
-		<form v-on:submit.prevent="login" class="loginForm">
-			<h1>Se connecter</h1>
-			<input type="email" placeholder="Email" required v-model="loginInput.email"/>
-			<input type="password" placeholder="Mot de passe" required v-model="loginInput.password"/>
-			<a href="#">Mot de passe oublié?</a>
-			<button>Connexion</button>
-		</form>
-	</div>
-	<div class="overlay-container">
-		<div class="overlay">
-			<div class="overlay-panel overlay-left">
-				<h1>Welcome Back!</h1>
-				<p>To keep connected with us please login with your personal info</p>
-				<button class="ghost" id="signIn" v-on:click="onClick">Se connecter</button>
-			</div>
-			<div class="overlay-panel overlay-right">
-				<h1>Bonjour !</h1>
-				<p>Entrer vos Identifiants afin de vous connecter</p>
-				<button class="ghost" id="signUp" v-on:click="onClick">S'inscrire</button>
+	<div class="container" id="container">
+		<div class="form-container sign-up-container">
+			<form v-on:submit.prevent="signup">
+				<h1>Créer un compte</h1>
+				<input type="text" placeholder="Nom" required v-model="signUpInput.lastName" />
+				<input type="text" placeholder="Prénom" required v-model="signUpInput.firstName" />
+				<input type="email" placeholder="Email" required v-model="signUpInput.email" />
+				<input type="password" placeholder="Password" required v-model="signUpInput.password" />
+				<button>S'enregistrer</button>
+			</form>
+		</div>
+		<div class="form-container sign-in-container">
+			<form v-on:submit.prevent="login" class="loginForm">
+				<h1>Se connecter</h1>
+				<input type="email" placeholder="Email" required v-model="loginInput.email"/>
+				<input type="password" placeholder="Mot de passe" required v-model="loginInput.password"/>
+				<a href="#">Mot de passe oublié?</a>
+				<button>Connexion</button>
+			</form>
+		</div>
+		<div class="overlay-container">
+			<div class="overlay">
+				<div class="overlay-panel overlay-left">
+					<h1>Welcome Back!</h1>
+					<p>To keep connected with us please login with your personal info</p>
+					<button class="ghost" id="signIn" v-on:click="onClick">Se connecter</button>
+				</div>
+				<div class="overlay-panel overlay-right">
+					<h1>Bonjour !</h1>
+					<p>Entrer vos Identifiants afin de vous connecter</p>
+					<button class="ghost" id="signUp" v-on:click="onClick">S'inscrire</button>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 </template>
 
 <script>
@@ -136,9 +136,7 @@ body {
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-	font-family: 'Montserrat', sans-serif;
-	height: 100vh;
-	margin: -20px 0 50px;
+	font-family: 'Montserrat', sans-serif;	
 }
 
 h1 {
@@ -226,6 +224,7 @@ input {
 	width: 768px;
 	max-width: 100%;
 	min-height: 480px;
+	margin: 20rem auto 0;
 }
 
 .form-container {
