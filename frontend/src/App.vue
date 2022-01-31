@@ -11,23 +11,5 @@
 #app {
   font-family: Roboto, Arial, sans-serif;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  .header__logo{
-    width: 15rem;
-  }
-}
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    //color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
 }
 </style>
