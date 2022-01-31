@@ -1,8 +1,5 @@
 <template>
   <div id="app" class="main">
-    <header>
-      <img src="./assets/icon-above-font.png" alt="logo groupomania" class="header__logo">
-    </header>
     <router-view/>
   </div>
 </template>
