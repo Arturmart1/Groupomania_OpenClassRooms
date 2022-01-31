@@ -1,12 +1,12 @@
 <template>
     <div id="topbar" class="topbar--container">
         <div class="topbar__logo">
-            <img src="../assets/icon-left-font.png" alt="logo groupomania">
+            <img src="../assets/icon-left-font-monochrome-white.svg" alt="logo groupomania" class="topbar__image">
         </div>
         <div class="topbar__navigation">
-            <nav>
-                <router-link to="/account" title="Account"><i @click="account" class="fas fa-user"></i>Mon compte</router-link>
-                <router-link to="/" title="Disconnect"><i @click="disconnect" class="fas fa-sign-out-alt"></i>Déconnexion</router-link>
+            <nav class="topbar__link">
+                <router-link to="/account" title="Account"><i @click="account" class="fas fa-user"></i><p>Mon compte</p></router-link>
+                <router-link to="/" title="Disconnect"><i @click="disconnect" class="fas fa-sign-out-alt"></i><p>Déconnexion</p></router-link>
             </nav>
         </div>
     </div>
@@ -26,27 +26,36 @@ export default {
 
 <style lang="scss" scoped>
 .topbar--container{
-    height: 10rem;
-    width: 100%;
+    height: 4rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #FF4B2B;
     color: white;
-    .topbar__navigation{
+    padding: 0 2rem 0 2rem;
+    margin-bottom: 2rem;
+    .topbar__image{
+        width: 18rem;
+        object-fit: cover;
+    }
+    .topbar__link{
+        line-height: 0;
         display: flex;
         justify-content: space-around;
-        align-items: center;
-        width: 50%;
+        gap: 1rem;
         a{
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
             text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            color: white;
+            padding: 0.5rem 0.5rem 0 0.5rem;
             &:hover{
-                color: #42b983;
+                color: lighten($color: #FF4B2B, $amount: 5);
+                background-color: white;
+                border-radius: 1rem;
             }
         }
     }
 }
+
 </style>
