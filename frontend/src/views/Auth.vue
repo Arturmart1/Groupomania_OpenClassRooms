@@ -87,7 +87,7 @@ export default {
         },
 		signUp() {
 			const signUpCredentials = {
-				"lastName" : this.signUpInput.lastname,
+				"lastName" : this.signUpInput.lastName,
 				"firstName": this.signUpInput.firstName,
 				"email": this.signUpInput.email,
 				"password": this.signUpInput.password 
