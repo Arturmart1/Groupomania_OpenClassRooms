@@ -4,7 +4,7 @@ const auth = require('../middleware/auth');
 
 const postController = require('../controllers/post');
 
-router.get('/', postController.gets);
+router.get('/', postController.getAllPosts);
 router.get('/:id', postController.getOnePost);
 router.post('/new', postController.newPost);
 router.put('/:id',auth, postController.updatePost);
