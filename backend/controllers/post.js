@@ -1,6 +1,5 @@
 const Post = require('../models/postSchema');
 const fs = require('fs');
-const User = require('../models/userSchema');
 
 //Création d'un nouveau post
 
@@ -50,14 +49,12 @@ exports.deletePost = (req, res, next) => {
 
 //Recupération de tout les posts de tous les utilisateurs
 
-exports.gets = async () => {
-    await Post.findAll({ raw: true }).then((posts) => {
-        for (const post of posts) {
-            console.log(post);
-        }
-    }).catch((error) => {
-        console.log("error : " + error);
-    });
+exports.getAllPosts = (req, res, next) => {
+    Post.findAll({
+        order: [['createdAt', 'DESC']],
+    })
+    .then(posts => { res.status(200).json(posts); })
+    .catch(error => res.status(500).json({ error, message: error.message }));
 };
 
 //Récupération d'un seul post
