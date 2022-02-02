@@ -5,7 +5,7 @@
         </div>
         <div class="topbar__navigation">
             <nav class="topbar__link">
-                <router-link to="/account" title="Account"><i @click="account" class="fas fa-user"></i><p>Mon compte</p></router-link>
+                <router-link to="/" title="Account"><i @click="account" class="fas fa-user"></i><p>Mon compte</p></router-link>
                 <router-link to="/" title="Disconnect"><i @click="disconnect" class="fas fa-sign-out-alt"></i><p>Déconnexion</p></router-link>
             </nav>
         </div>

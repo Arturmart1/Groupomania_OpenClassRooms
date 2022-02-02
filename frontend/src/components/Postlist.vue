@@ -14,22 +14,44 @@
                 </div>
             </div>
         </aside>
-        <section class="post--list">
+        <section v-for="post in posts" :key="post.id" class="post--list">
+            <div class="post--card">
+                <div class="post--form">
+                    <h2>A vous de partager!</h2>
+                    <input type="text" placeholder="Titre" required v-model="title">
+                    <input type="text" placeholder="Votre message ici" required v-model="content">
+                    <input type="file" name="image" id="postImage">
+                </div>
+                <div>
+                    <div class="command__button" >
+                        <p>Envoi</p>
+                    </div>
+                    <div class="command__button" >
+                        <p>Annuler</p>
+                    </div>
+                </div>                
+            </div>
             <div class="post--card">
                 <div class="post--card__text">
-                    <h2 class="post__title">Titre</h2>
-                    <p class="post__author">Prénom Nom</p>
-                    <p class="post__date">31/01/2021 à 10h15</p>
+                    <h2 class="post__title">{{post.title}}</h2>
+                    <p class="post__author"></p>
+                    <p class="post__date">{{post.createdAt}}</p>
                 </div>
                 <div class="post__image">
                     <img src="../assets/test_image.jpg" alt="post image" class="post__picture">
                 </div>
                 <div class="post__content">
-                    <p class="content">Lorem ipsum bla bla coucou ça va? ouais nickel on sait l'andouilette tout ça</p>
+                    <p class="content">{{post.content}}</p>
                 </div>
                 <div class="post__command">
-                    <div class="reply">
+                    <div class="command__button" >
                         <p>Répondre</p>
+                    </div>
+                    <div v-if="post.userIF || isAdmin == true" @click="delete(post.id)" class="command__button">
+                        <p>Supprimer</p>
+                    </div>
+                    <div class="command__button">
+                        <p>Modifier</p>
                     </div>
                     <div class="rate__post">
                         <i class="far fa-thumbs-up"></i>
@@ -46,9 +68,58 @@
 export default {
     name:"Postlist",
     components: {
-    }
+    },
+    data(){
+        return {
+            firstName: "",
+            lastName: "",
+            title: "",
+            userId: "",
+            //image: "",
+            content: "",
+            isAdmin: "",
+            posts: [],
+        }
+    },
+    mounted() {
+        this.userId = JSON.parse(sessionStorage.getItem("userId"));
+        this.isAdmin = JSON.parse(sessionStorage.getItem("isAdmin"));
+
+        const url = "http://localhost:3000/api/posts";
+        const options = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + sessionStorage.getItem("token")
+            }
+        };
+        fetch(url, options)
+        .then(response => response.json())
+        .then(data => {
+            this.posts = data;
+        })
+        .catch(error => console.log(error));
+    },
+    methods: { //Methode Delete modify
+        delete(postId){
+            const url = `http://localhost:3000/api/posts/${postId}`
+            const option = {
+                method: "DELETE",
+                headers:{
+                    'Authotization': 'Bearer'  + sessionStorage.getItem("token"),
+                }
+            };
+            fetch(url, option)
+                .then(() => {
+                    alert("Message supprimé !");
+                    window.location.reload();
+                })
+                .catch(error => console.lor(error))
+        },
+    },
 }
 </script>
+
 <style lang="scss" scoped>
 #main--container{
     display: flex;
@@ -145,13 +216,14 @@ export default {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                .reply{
+                .command__button{
                     background-color: #FF4B2B;
                     color: white;
                     padding: 0.5rem;
                     border-radius: 1rem;
                     &:hover{
                         background-color: lighten($color: #FF4B2B, $amount: 10);
+                        cursor: pointer;
                     } 
                 }
                 .far{
