@@ -12,6 +12,7 @@
 		</div>
 		<div class="form-container sign-in-container">
 			<form v-on:submit.prevent="login" class="loginForm">
+				<img src="../../src/assets/icon.svg" alt="logo groupomania">
 				<h1>Se connecter</h1>
 				<input type="email" placeholder="Email" required v-model="loginInput.email"/>
 				<input type="password" placeholder="Mot de passe" required v-model="loginInput.password"/>
@@ -238,6 +239,10 @@ input {
 	left: 0;
 	width: 50%;
 	z-index: 2;
+	img{
+		width: 8rem;
+		padding-bottom: 2.8rem;
+	}
 }
 
 .container.right-panel-active .sign-in-container {
