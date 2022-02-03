@@ -15,14 +15,14 @@
             </div>
         </aside>
         <section v-for="post in posts" :key="post.id" class="post--list">
-            <div class="post--card">
+            <div class="form--card">
                 <div class="post--form">
                     <h2>A vous de partager!</h2>
                     <input type="text" placeholder="Titre" required v-model="title">
                     <input type="text" placeholder="Votre message ici" required v-model="content">
                     <input type="file" name="image" id="postImage">
                 </div>
-                <div>
+                <div class="command__center">
                     <div class="command__button" >
                         <p>Envoi</p>
                     </div>
@@ -241,5 +241,46 @@ export default {
             }
         }
     }
+}
+.form--card{
+    @extend .post--card;
+    margin-bottom: 1.2rem!important;
+    .post--form{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-around;
+    }
+    .command__center{
+        display: flex;
+        gap: 20rem;
+        justify-content: space-between;
+        margin: auto;
+        .command__button{
+            background-color: #FF4B2B;
+            color: white;
+            width: 5rem;
+            margin-top: 0.8rem;
+            padding: 0.5rem;
+            border-radius: 1rem;
+            &:hover{
+                background-color: lighten($color: #FF4B2B, $amount: 10);
+                cursor: pointer;
+            }
+        }
+    }
+    h2{
+        padding: 0.5rem 0 0.5rem 0;
+        font-size: 1.2em;
+        font-weight: 600;
+    }
+    input{
+        background-color: #eee;
+        border: none;
+        padding: 12px 15px;
+        margin: 8px 0;
+        width: 100%;
+    }
+
 }
 </style>
