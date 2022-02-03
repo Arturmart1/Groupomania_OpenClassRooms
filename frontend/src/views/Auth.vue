@@ -225,7 +225,7 @@ input {
 	width: 768px;
 	max-width: 100%;
 	min-height: 480px;
-	margin: 20rem auto 0;
+	margin: 10rem auto 0;
 }
 
 .form-container {
