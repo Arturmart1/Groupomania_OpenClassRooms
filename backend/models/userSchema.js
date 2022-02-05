@@ -31,6 +31,11 @@ const User = db.define('User', {
     },
 },{
     freezeTableName : true,
+    hasMany: {
+        model: 'Post',
+        foreignKey: 'userId',
+        as: 'posts'
+    },
 });
 
 module.exports = User;

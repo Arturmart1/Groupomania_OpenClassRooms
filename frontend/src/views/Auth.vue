@@ -63,7 +63,7 @@ export default {
                 "email" : this.loginInput.email,
                 "password" : this.loginInput.password 
             }
-			console.log(credentials)
+			
             const loginUrl = 'http://localhost:3000/api/auth/login'
             const loginOptions = {
                 method: "POST",

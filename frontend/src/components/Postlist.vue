@@ -6,24 +6,24 @@
             </div>
             <div class="profile--preview__text">
                 <div class="profile--preview__info">
-                    <h3 class="firstName">Prénom</h3>
-                    <h2 class="lastName">Nom</h2>
+                    <h3 class="firstName">{{user.firstName}}</h3>
+                    <h2 class="lastName">{{user.lastName}}</h2>
                 </div>
                 <div class="profil--preview__link">
-                    <a href="#">Voir mon profil</a>
+                    <router-link to="/Account" title="Account" class="toAccount">Mon compte</router-link>
                 </div>
             </div>
         </aside>
-        <section v-for="post in posts" :key="post.id" class="post--list">
+        <section class="post--list">
             <div class="form--card">
                 <div class="post--form">
                     <h2>A vous de partager!</h2>
-                    <input type="text" placeholder="Titre" required v-model="title">
-                    <input type="text" placeholder="Votre message ici" required v-model="content">
-                    <input type="file" name="image" id="postImage">
+                    <input type="text" placeholder="Titre" required v-model="postInput.title">
+                    <input type="text" placeholder="Votre message ici" required v-model="postInput.content">
+                    <input @change="uploadImage" type="file" accept="image/png, image/jpeg, image/jpg, image/gif" ref="file" name=" charger une image"/>
                 </div>
                 <div class="command__center">
-                    <div class="command__button" >
+                    <div class="command__button" @click="sendPost()">
                         <p>Envoi</p>
                     </div>
                     <div class="command__button" >
@@ -31,14 +31,14 @@
                     </div>
                 </div>                
             </div>
-            <div class="post--card">
+            <div v-for="post in posts" :key="post.id" class="post--card">
                 <div class="post--card__text">
                     <h2 class="post__title">{{post.title}}</h2>
-                    <p class="post__author"></p>
+                    <p class="post__author">{{user.firstName}} {{user.lastName}}Prénom NOM</p>
                     <p class="post__date">{{post.createdAt}}</p>
                 </div>
                 <div class="post__image">
-                    <img src="../assets/test_image.jpg" alt="post image" class="post__picture">
+                    <img src="" alt="post image" class="post__picture">
                 </div>
                 <div class="post__content">
                     <p class="content">{{post.content}}</p>
@@ -47,7 +47,7 @@
                     <div class="command__button" >
                         <p>Répondre</p>
                     </div>
-                    <div v-if="post.userIF || isAdmin == true" @click="delete(post.id)" class="command__button">
+                    <div v-if="post.userId || isAdmin == true" @click="deletePost(post.id)" class="command__button">
                         <p>Supprimer</p>
                     </div>
                     <div class="command__button">
@@ -67,24 +67,29 @@
 
 export default {
     name:"Postlist",
-    components: {
+    components:{
     },
     data(){
         return {
-            firstName: "",
-            lastName: "",
             title: "",
-            userId: "",
-            //image: "",
+            userId: sessionStorage.getItem('userId'),
+            file: "",
             content: "",
-            isAdmin: "",
+            isAdmin: sessionStorage.getItem('isAdmin'),
             posts: [],
+            postInput: {
+                title:"",
+                content:"",
+                imageUrl:"",
+            },
+            user: {
+                firstName: "",
+                lastName: "",
+            },
         }
     },
     mounted() {
-        this.userId = JSON.parse(sessionStorage.getItem("userId"));
-        this.isAdmin = JSON.parse(sessionStorage.getItem("isAdmin"));
-
+        
         const url = "http://localhost:3000/api/posts";
         const options = {
             method: "GET",
@@ -100,23 +105,72 @@ export default {
         })
         .catch(error => console.log(error));
     },
-    methods: { //Methode Delete modify
-        delete(postId){
-            const url = `http://localhost:3000/api/posts/${postId}`
-            const option = {
+    methods: {
+        deletePost(id){
+            const url = "http://localhost:3000/api/posts/" + id;
+            const options = {
                 method: "DELETE",
-                headers:{
-                    'Authotization': 'Bearer'  + sessionStorage.getItem("token"),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + sessionStorage.getItem("token")
                 }
             };
-            fetch(url, option)
-                .then(() => {
-                    alert("Message supprimé !");
-                    window.location.reload();
-                })
-                .catch(error => console.lor(error))
+            fetch(url, options)
+            .then(response => response.json())
+            .then(data => {
+                this.posts = data;
+                location.reload();
+                //this.$router.reload("/Home");
+            })
+            .catch(error => console.log(error));
         },
-    },
+        uploadImage() {
+            const file = this.$refs.file.files[0];
+            this.file = file;
+        },
+        sendPost(){
+            const postData = {
+                "title": this.postInput.title,
+                "content": this.postInput.content,
+                "imageUrl": this.file,
+                "userId": sessionStorage.getItem("userId")
+            }
+            const sendPostUrl = "http://localhost:3000/api/posts/new"
+            const sendPostOptions = {
+                method: "POST",
+                body: JSON.stringify(postData),
+                headers:{
+                    'Content-type' : 'application/json',
+                    'Authorization': 'Bearer'  + sessionStorage.getItem("token")
+                },
+            }
+            fetch(sendPostUrl,sendPostOptions)
+            .then(response => response.json())
+            .then(data => {
+                this.posts = data;
+                location.reload();
+            })
+            .catch(error => console.log(error));
+        },
+        getUserInfo(){
+            
+            const url = "http://localhost:3000/api/auth/" + this.userId;
+            const options = {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + sessionStorage.getItem("token")
+                }
+            };
+            fetch(url, options)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    this.user.firstName = data.firstName;
+                    this.user.lastName = data.lastName;
+                })
+                .catch(error => console.log(error));
+        },
+    }
 }
 </script>
 
@@ -165,7 +219,7 @@ export default {
             font-size: 2em;
             font-weight: 800;
         }
-        a{
+        .toAccount{
             text-decoration: unset;
             color: #FF4B2B;
             border-radius: 1rem;
@@ -250,12 +304,15 @@ export default {
         flex-direction: column;
         align-items: flex-start;
         justify-content: space-around;
+        width: 95%;
+        margin: auto;
     }
     .command__center{
+        width: 95%;
         display: flex;
-        gap: 20rem;
         justify-content: space-between;
-        margin: auto;
+        align-items: center;
+        margin: 0.5rem auto 0.5rem auto;
         .command__button{
             background-color: #FF4B2B;
             color: white;
@@ -279,7 +336,7 @@ export default {
         border: none;
         padding: 12px 15px;
         margin: 8px 0;
-        width: 100%;
+        width: 95%;
     }
 
 }

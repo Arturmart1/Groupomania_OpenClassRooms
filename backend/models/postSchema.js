@@ -12,7 +12,7 @@ const Post = db.define('Post', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    image: {
+    imageUrl: {
         type: DataTypes.STRING,
         allowNull: true,
     },
@@ -31,6 +31,13 @@ const Post = db.define('Post', {
     hasMany: {
         model: 'Comment',
         foreignKey: 'postId',
+        onDelete: 'CASCADE',
+    },
+    belongsTo: {
+        model: 'User',
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+        as:"user"
     },
 });
 
