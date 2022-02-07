@@ -27,18 +27,7 @@ const Post = db.define('Post', {
     },
 },{
     freezeTableName : true,
-    //Relation avec la table Comment
-    hasMany: {
-        model: 'Comment',
-        foreignKey: 'postId',
-        onDelete: 'CASCADE',
-    },
-    belongsTo: {
-        model: 'User',
-        foreignKey: 'userId',
-        onDelete: 'CASCADE',
-        as:"user"
-    },
 });
+
 
 module.exports = Post;

@@ -22,23 +22,14 @@ exports.deleteComment = (req, res, next) => {
 };
 
 exports.getComment = (req, res, next) => {
-    Comment.findOne({ postId : req.params.id })
+    Comment.findOne({ where: {postId: req.params.id}})
         .then((comment)=>{ res.status(200).json(comment);
         })
         .catch(error => res.status(500).json({ error }));
 };
 
-exports.rateComment = (req, res, next) => {
-    Comment.findOne({ where: { id: req.params.id } })
-      .then (comment => {
-        if (req.body.like === 'true') {
-          comment.likes = comment.likes + 1;
-        } else {
-          comment.dislikes = comment.dislikes + 1;
-        }
-        comment.update()
-          .then(() => res.status(200).json(comment))
-          .catch(error => res.status(400).json({ error }));
-      })
-        .catch(error => res.status(500).json({ error }));
+exports.getOneComment = (req, res, next) => {
+    Comment.findAll({ where: {postId: req.params.id}, include: ["User", "Post"] })
+      .then((comments) => res.status(200).json(comments))
+      .catch(error => res.status(404).json(error, "Commentaire non trouvé"))
 };

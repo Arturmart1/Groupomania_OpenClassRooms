@@ -5,9 +5,9 @@
                 <img src="../assets/test_image.jpg" alt="profile picture" class="profile_picture">
             </div>
             <div class="profile--preview__text">
-                <div class="profile--preview__info">
-                    <h3 class="firstName">{{user.firstName}}</h3>
-                    <h2 class="lastName">{{user.lastName}}</h2>
+                <div class="profile--preview__info" @change="getUserInfo()">
+                    <h3 class="firstName">{{firstName}}</h3>
+                    <h2 class="lastName">{{lastName}}</h2>
                 </div>
                 <div class="profil--preview__link">
                     <router-link to="/Account" title="Account" class="toAccount">Mon compte</router-link>
@@ -20,7 +20,7 @@
                     <h2>A vous de partager!</h2>
                     <input type="text" placeholder="Titre" required v-model="postInput.title">
                     <input type="text" placeholder="Votre message ici" required v-model="postInput.content">
-                    <input @change="uploadImage" type="file" accept="image/png, image/jpeg, image/jpg, image/gif" ref="file" name=" charger une image"/>
+                    <input type="file" name="file" id="file" class="inputfile" ref="postInput.imageUrl">
                 </div>
                 <div class="command__center">
                     <div class="command__button" @click="sendPost()">
@@ -34,7 +34,7 @@
             <div v-for="post in posts" :key="post.id" class="post--card">
                 <div class="post--card__text">
                     <h2 class="post__title">{{post.title}}</h2>
-                    <p class="post__author">{{user.firstName}} {{user.lastName}}Prénom NOM</p>
+                    <p class="post__author">Prénom NOM</p>
                     <p class="post__date">{{post.createdAt}}</p>
                 </div>
                 <div class="post__image">
@@ -44,9 +44,6 @@
                     <p class="content">{{post.content}}</p>
                 </div>
                 <div class="post__command">
-                    <div class="command__button" >
-                        <p>Répondre</p>
-                    </div>
                     <div v-if="post.userId || isAdmin == true" @click="deletePost(post.id)" class="command__button">
                         <p>Supprimer</p>
                     </div>
@@ -58,33 +55,34 @@
                         <i class="far fa-thumbs-down"></i>
                     </div>
                 </div>
+                <!--<Reply :postId="postId" :postUserId="post.userId"/>-->
             </div>
         </section>
     </main>
 </template>
 
 <script>
+//import Reply from './Reply.vue'
 
 export default {
     name:"Postlist",
     components:{
+        //Reply
     },
     data(){
         return {
             title: "",
             userId: sessionStorage.getItem('userId'),
-            file: "",
+            imageUrl: "",
             content: "",
             isAdmin: sessionStorage.getItem('isAdmin'),
+            firstName:"",
+            lastName:"",
             posts: [],
             postInput: {
                 title:"",
                 content:"",
-                imageUrl:"",
-            },
-            user: {
-                firstName: "",
-                lastName: "",
+                imageUrl: "",
             },
         }
     },
@@ -124,15 +122,11 @@ export default {
             })
             .catch(error => console.log(error));
         },
-        uploadImage() {
-            const file = this.$refs.file.files[0];
-            this.file = file;
-        },
         sendPost(){
             const postData = {
                 "title": this.postInput.title,
                 "content": this.postInput.content,
-                "imageUrl": this.file,
+                "imageUrl": this.postInput.imageUrl,
                 "userId": sessionStorage.getItem("userId")
             }
             const sendPostUrl = "http://localhost:3000/api/posts/new"
@@ -152,7 +146,7 @@ export default {
             })
             .catch(error => console.log(error));
         },
-        getUserInfo(){
+        getUserInfo: function(){
             
             const url = "http://localhost:3000/api/auth/" + this.userId;
             const options = {
@@ -164,13 +158,15 @@ export default {
             fetch(url, options)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
-                    this.user.firstName = data.firstName;
-                    this.user.lastName = data.lastName;
+                    this.firstName = data.firstName;
+                    this.lastName = data.lastName;
                 })
-                .catch(error => console.log(error));
+                .catch(error => console.log(error,));
         },
-    }
+    },
+    created: function() {
+        this.getUserInfo();
+    },
 }
 </script>
 
