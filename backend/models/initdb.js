@@ -13,11 +13,9 @@ let Init = async () => {
     await User.sync({/*alter: true*/});
     await Post.sync({/*alter: true*/});
     await Comment.sync({/*alter: true*/});
-    //User.belongsTo(Post, {through: 'PostLikes', foreignKey: 'userId'});
-    //Post.belongsTo(User, {foreignKey: 'userId'});
-    //Post.hasMany(Comment, {foreignKey: 'postId'});
-    //Comment.belongsTo(Post, {foreignKey: 'postId'});
-    //Comment.belongsTo(User, {foreignKey: 'userId'});
 }
+User.belongsTo(Post, {foreignKey: 'post_id'}, {onDelete:'CASCADE'});
+Post.hasMany(Comment, {foreignKey: 'post_id'}, {onDelete:'CASCADE'});
+Comment.belongsTo(User, {foreignKey: 'user_id'});
 
 module.exports = Init;

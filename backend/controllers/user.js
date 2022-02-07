@@ -133,5 +133,5 @@ exports.gets = async () => {
 exports.getOneUser = (req, res, next) => {
     User.findOne({ where: { id: req.params.id } })
         .then((user) => res.status(200).json(user))
-        .catch((error) => res.status(404).json(error, "Utilisateur non trouvé"));
+        .catch((error) => res.status(404).json(error));
 };

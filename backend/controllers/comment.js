@@ -27,9 +27,3 @@ exports.getComment = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
 };
-
-exports.getOneComment = (req, res, next) => {
-    Comment.findAll({ where: {postId: req.params.id}, include: ["User", "Post"] })
-      .then((comments) => res.status(200).json(comments))
-      .catch(error => res.status(404).json(error, "Commentaire non trouvé"))
-};

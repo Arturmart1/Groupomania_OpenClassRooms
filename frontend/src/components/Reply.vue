@@ -7,7 +7,7 @@
             </div>
             <div class="reply__display">
                 <div class="reply__list" v-for="comment in comments" :key="comment.id">
-                    <h3>{{comment.user.firstName}} {{comment.user.lastName}}</h3>
+                    <!--h3>{{comment.user.firstName}} {{comment.user.lastName}}</h3-->
                     <p>{{comment.content}}</p>
                 </div>
             </div>
@@ -22,36 +22,33 @@ export default {
         return {
             comment: "",
             comments: [],
-            user: "",
-            users: [],
         }
     },
     props:{
         postId: Number,
-        userId: Number,
+        postUserId: Number,
     },
     mounted() {
         const url = "http://localhost:3000/api/comment/" + this.postId + "/display"
         const options = {
             method: "GET",
             headers: {
-                'Authoeization' : 'Bearer' + sessionStorage.getItem("token"),
+                'Authorization' : 'Bearer' + sessionStorage.getItem("token"),
             }
         };
         fetch(url, options)
             .then(response => response.json())
             .then(data =>{
                 this.comments = data;
-                this.users = data;
             })
             .catch(error => console.log(error))
     },
     methods: {
         sendReply(){
             const replyInput = {
-                "content": this.content,
+                "content": this.replyContent,
                 "postId": this.postId,
-                "userId" : sessionStorage.getItem("userId")
+                "userId": sessionStorage.getItem("userId"),
             }
             const url = "http://localhost:3000/api/comment/reply"
             const options = {
@@ -65,13 +62,13 @@ export default {
             fetch(url, options)
                 .then(response => response.json())
                 .then((response)=>{
-                    if (!response.ok){
+                    if (response.ok){
                         this.content = {}
                     } else{
-                        alert("Erreur, veuillez réessayer");
+                        alert("Commentaire enregistré");
                     }
                 })
-                .then(location.reload())
+                .then(window.location.reload())
                 .catch(error => console.log(error))
         }
     },

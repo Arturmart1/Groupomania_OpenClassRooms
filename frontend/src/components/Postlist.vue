@@ -55,19 +55,19 @@
                         <i class="far fa-thumbs-down"></i>
                     </div>
                 </div>
-                <!--<Reply :postId="postId" :postUserId="post.userId"/>-->
+                <Reply :postId="post.id" :postUserId="post.userId"/>
             </div>
         </section>
     </main>
 </template>
 
 <script>
-//import Reply from './Reply.vue'
+import Reply from './Reply.vue'
 
 export default {
     name:"Postlist",
     components:{
-        //Reply
+        Reply
     },
     data(){
         return {
