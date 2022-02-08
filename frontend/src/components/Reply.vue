@@ -1,14 +1,18 @@
 <template>
     <div class="reply--container">
         <div class="reply--bloc">
-            <div class="leave--reply">
-                <textarea type="text" id="reply" v-model="replyContent" placeholder="Commentaire" rows="4"></textarea>
-                <a @click="sendReply()"><i class="fas fa-share" title="Répondre"></i></a>
-            </div>
-            <div class="reply__display">
-                <div class="reply__list" v-for="comment in comments" :key="comment.id">
+            <div v-for="comment in comments" :key="comment.id" class="reply__display">
+                <div class="reply__list">
                     <!--h3>{{comment.user.firstName}} {{comment.user.lastName}}</h3-->
                     <p>{{comment.content}}</p>
+                </div>
+            </div>
+            <div class="leave--reply">
+                <div class="reply__input">
+                    <textarea type="text" id="reply" v-model="replyContent" placeholder="Commentaire" ></textarea>
+                </div>
+                <div>
+                    <a @click="sendReply()"><i class="fas fa-share" aria-label="Répondre"></i></a>
                 </div>
             </div>
         </div>
@@ -22,6 +26,7 @@ export default {
         return {
             comment: "",
             comments: [],
+            replyContent: "",
         }
     },
     props:{
@@ -40,6 +45,7 @@ export default {
             .then(response => response.json())
             .then(data =>{
                 this.comments = data;
+                console.log(data);
             })
             .catch(error => console.log(error))
     },
@@ -74,3 +80,42 @@ export default {
     },
 }
 </script>
+
+<style lang="scss" scoped>
+.reply--container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    .reply__display{
+        width: 95%;
+        color: black;
+        font-size: 1.2em;
+        font-weight: 500;
+    }
+    .leave--reply{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5rem;
+    .reply__input{
+        width: 80%;
+        border: 0.5px solid lightcoral;
+        border-radius: 5px;
+        font-size: 1.2em;
+        font-weight: 500;
+        textarea{
+            
+            border: unset;
+        }
+    }
+    .fas{
+        color: lightcoral;
+        font-size: 1.5em;
+        cursor: pointer;
+    }
+}
+}
+</style>
