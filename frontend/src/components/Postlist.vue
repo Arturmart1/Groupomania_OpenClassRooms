@@ -51,7 +51,7 @@
                         <p>Modifier</p>
                     </div>
                 </div>
-                <div>
+                <div class="reply--bloc">
                     <Reply :postId="post.id" :postUserId="post.userId"/>
                 </div>
             </div>
@@ -337,5 +337,8 @@ export default {
         margin: 0.5rem auto 0.5rem auto;
     }
 
+}
+.reply--bloc{
+    width: 100%;
 }
 </style>
