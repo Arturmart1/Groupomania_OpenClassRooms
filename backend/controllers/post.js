@@ -1,4 +1,6 @@
 const Post = require('../models/postSchema');
+const User = require('../models/userSchema');
+const Comment = require('../models/commentSchema');
 const fs = require('fs');
 
 //Création d'un nouveau post
@@ -7,7 +9,7 @@ exports.newPost = (req, res, next) => {
     Post.create({
         title: req.body.title,
         content: req.body.content,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        //imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         userId: req.body.userId,
     })
     .then(post => { res.status(201).json(post); })
@@ -52,6 +54,7 @@ exports.deletePost = (req, res, next) => {
 exports.getAllPosts = (req, res, next) => {
     Post.findAll({
         order: [['createdAt', 'DESC']],
+        include: [User, Comment]
     })
     .then(posts => { res.status(200).json(posts); })
     .catch(error => res.status(500).json({ error, message: error.message }));
@@ -60,7 +63,19 @@ exports.getAllPosts = (req, res, next) => {
 //Récupération d'un seul post
 
 exports.getOnePost = (req, res, next) => {
-    Post.findOne({ where: { id: req.params.id } })
+    Post.findOne({
+        where: {
+            id: req.params.id
+        },
+        include: [{
+            model: User,
+            as: 'user',
+            attributes: ['id', 'firstName', 'lastName', 'imageUrl']
+        },{
+            model: Comment,
+            as: 'comments',
+        }]
+    })
         .then(post => { res.status(200).json(post)})
         .catch(error => res.status(500).json({ error, message: error.message }));
 };

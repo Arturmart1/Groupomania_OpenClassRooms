@@ -1,4 +1,6 @@
+const Post = require('../models/postSchema');
 const User = require('../models/userSchema');
+const Comment = require('../models/commentSchema');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const AES = require('../middleware/aes-encrypt');
@@ -114,7 +116,8 @@ exports.deleteUser = (req, res, next) => {
 };
 
 exports.gets = async () => {
-    await User.findAll({ raw: true }).then((users) => {
+    await User.findAll({ raw: true })
+    .then((users) => {
         for (const user of users) {
             console.log(user);
         }
@@ -124,7 +127,9 @@ exports.gets = async () => {
 };
 
 exports.getOneUser = (req, res, next) => {
-    User.findOne({ where: { id: req.params.id } })
+    User.findOne({ 
+        where: { id: req.params.id}
+    })
         .then((user) => res.status(200).json(user))
         .catch((error) => res.status(404).json(error));
 };

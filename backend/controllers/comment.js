@@ -1,4 +1,6 @@
 const Comment = require('../models/commentSchema');
+const Post = require('../models/postSchema');
+const User = require('../models/userSchema');
 
 //Create a new comment on a post in function of the postId
 exports.newComment = (req, res, next) => {
@@ -12,7 +14,11 @@ exports.newComment = (req, res, next) => {
 };
 
 exports.deleteComment = (req, res, next) => {
-    Comment.findOne({ where: { id: req.params.id } })
+    Comment.findOne({ 
+        where: { 
+            id: req.params.id 
+        },
+    })
         .then((comment)=>{
             Comment.destroy({ where: { id: req.params.id } })
                 .then(() => res.status(200).json({ message : "Commentaire supprimé"}))
@@ -21,9 +27,31 @@ exports.deleteComment = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
-exports.getComment = (req, res, next) => {
-    Comment.findOne({ where: {postId: req.params.id}})
-        .then((comment)=>{ res.status(200).json(comment);
+exports.getAllComments = (req, res, next) => {
+    Comment.findAll({
+        order: [['createdAt', 'DESC']],
+        include: [{
+            model: User,
+            attributes: ['id', 'firstName', 'lastName']
+        }] 
+    }) 
+        .then((comments)=>{ res.status(200).json(comments);
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(500).json({ error, message: error.message }));
+};
+
+exports.getOneComment = (res, req, next) => {
+    Comment.findOne({
+        where: {
+            id: req.params.id
+        },
+        include: [{
+            model: User,
+            as: 'user',
+            attributes: ['id', 'firstName', 'lastName', 'imageUrl']
+        }]
+    })
+    .then((comment)=>{ res.status(200).json(comment);
+    })
+    .catch(error => res.status(500).json({ error, message: error.message }));
 };

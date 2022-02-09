@@ -20,10 +20,10 @@
                     <h2>A vous de partager!</h2>
                     <input type="text" placeholder="Titre" required v-model="postInput.title">
                     <input type="text" placeholder="Votre message ici" required v-model="postInput.content">
-                    <input type="file" name="file" id="file" class="inputfile" ref="postInput.imageUrl">
+                    <input type="file" placeholder="Importez votre image" ref="imageUrl" accept="image/*">
                 </div>
                 <div class="command__center">
-                    <div class="command__button" @click="sendPost()">
+                    <div class="command__button" @click.prevent="sendPost()">
                         <p>Envoi</p>
                     </div>
                     <div class="command__button" >
@@ -34,7 +34,7 @@
             <div v-for="post in posts" :key="post.id" class="post--card">
                 <div class="post--card__text">
                     <h2 class="post__title">{{post.title}}</h2>
-                    <p class="post__author">Prénom NOM</p>
+                    <p class="post__author">{{post.User.firstName}} {{post.User.lastName}}</p>
                     <p class="post__date">{{post.createdAt}}</p>
                 </div>
                 <div class="post__image">
@@ -50,12 +50,10 @@
                     <div class="command__button">
                         <p>Modifier</p>
                     </div>
-                    <div class="rate__post">
-                        <i class="far fa-thumbs-up"></i>
-                        <i class="far fa-thumbs-down"></i>
-                    </div>
                 </div>
-                <Reply :postId="post.id" :postUserId="post.userId"/>
+                <div>
+                    <Reply :postId="post.id" :postUserId="post.userId"/>
+                </div>
             </div>
         </section>
     </main>
@@ -63,11 +61,12 @@
 
 <script>
 import Reply from './Reply.vue'
+//import { ref } from 'vue'
 
 export default {
     name:"Postlist",
     components:{
-        Reply
+        Reply,
     },
     data(){
         return {
@@ -87,7 +86,6 @@ export default {
         }
     },
     mounted() {
-        
         const url = "http://localhost:3000/api/posts";
         const options = {
             method: "GET",
@@ -118,17 +116,18 @@ export default {
             .then(data => {
                 this.posts = data;
                 location.reload();
-                //this.$router.reload("/Home");
             })
             .catch(error => console.log(error));
         },
         sendPost(){
+            //const file = ref(null);
             const postData = {
                 "title": this.postInput.title,
                 "content": this.postInput.content,
-                "imageUrl": this.postInput.imageUrl,
+                //"imageUrl": this.$refs.imageUrl,
                 "userId": sessionStorage.getItem("userId")
             }
+            //console.log("ici" + file.value.files);
             const sendPostUrl = "http://localhost:3000/api/posts/new"
             const sendPostOptions = {
                 method: "POST",
@@ -144,7 +143,7 @@ export default {
                 this.posts = data;
                 location.reload();
             })
-            .catch(error => console.log(error));
+            .catch(error => console.log(error, "L'erreur vient du front"));
         },
         getUserInfo: function(){
             
@@ -259,6 +258,9 @@ export default {
                 width: 40%;
                 margin: 0.5rem;
             }
+            .post__content{
+                text-align: left;
+            }
             .post__command{
                 width: 95%;
                 margin: 1rem auto 0.5rem auto;
@@ -330,9 +332,9 @@ export default {
     input{
         background-color: #eee;
         border: none;
-        padding: 12px 15px;
-        margin: 8px 0;
-        width: 95%;
+        width: 90%;
+        padding: 0.5rem;
+        margin: 0.5rem auto 0.5rem auto;
     }
 
 }

@@ -10,6 +10,7 @@ const Comment = require('./commentSchema');
 
 const Init = async () => {
     User.belongsTo(Post, {onDelete:'CASCADE'});
+    User.hasMany(Comment, {onDelete:'CASCADE'});
     Post.belongsTo(User, {onDelete:'CASCADE'});
     Post.hasMany(Comment, {onDelete:'CASCADE'});
     Comment.belongsTo(User);

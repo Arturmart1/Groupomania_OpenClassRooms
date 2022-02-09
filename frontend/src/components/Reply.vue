@@ -3,7 +3,7 @@
         <div class="reply--bloc">
             <div v-for="comment in comments" :key="comment.id" class="reply__display">
                 <div class="reply__list">
-                    <!--h3>{{comment.user.firstName}} {{comment.user.lastName}}</h3-->
+                    <h3>{{comment.User.firstName}} {{comment.User.lastName}}</h3>
                     <p>{{comment.content}}</p>
                 </div>
             </div>
@@ -34,7 +34,7 @@ export default {
         postUserId: Number,
     },
     mounted() {
-        const url = "http://localhost:3000/api/comment/" + this.postId + "/display"
+        const url = "http://localhost:3000/api/comment/allComments"
         const options = {
             method: "GET",
             headers: {
