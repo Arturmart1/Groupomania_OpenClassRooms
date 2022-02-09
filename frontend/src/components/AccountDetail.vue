@@ -5,13 +5,52 @@
                 <img src="../assets/test_image.jpg" alt="profile picture" class="profile_picture">
             </div>
             <div class="profile--preview__text">
-                <div class="profile--preview__info" :key="user.id">
+                <div class="profile--preview__info">
                     <h3 class="firstName">{{user.firstName}}</h3>
                     <h2 class="lastName">{{user.lastName}}</h2>
-                    <button @click="deleteAccount()" class="accountbutton">Supprimez votre compte</button>
+                    <button @click="deletePersonnalAccount()" class="accountbutton">Supprimez votre compte</button>
                 </div>
             </div>
         </aside>
+        <section id="main--section">
+            <div>
+                <h2>Liste des utilisateurs</h2>
+            </div>
+            <div class="user--list" v-for="user in users" :key="user.id">
+                <div>
+                    <p> {{user.firstName}} {{user.lastName}} </p>
+                </div>
+                <div class="delete__user">
+                    <button>Supprimer</button>
+                </div>
+            </div>
+            <div class="latest--postList">
+                <div>
+                <h2>Derniers post</h2>
+            </div>
+            <div class="post--list" v-for="post in posts" :key="post.id">
+                <div>
+                    <p> {{post.title}} {{post.content}} </p>
+                </div>
+                <div class="delete__user">
+                    <button>Supprimer</button>
+                </div>
+            </div>
+            </div>
+            <div class="latest--comentList">
+                <div>
+                <h2>Derniers commentaires</h2>
+            </div>
+            <div class="user--list" v-for="comment in comments" :key="comment.id">
+                <div>
+                    <p> {{comment.Post.title}} {{comment.content}} </p>
+                </div>
+                <div class="delete__user">
+                    <button>Supprimer</button>
+                </div>
+            </div>
+            </div>
+        </section>
     </main>
 </template>
 
@@ -28,7 +67,10 @@ export default {
                 firstName: "",
                 lastName: "",
                 email: "",
-            }
+            },
+            posts: [],
+            comments: [],
+            users: [],
         }
     },
     mounted() {
@@ -48,12 +90,12 @@ export default {
             .catch(error => console.log(error));
     },
     methods:{
-        deleteAccount(){
+        deletePersonnalAccount(){
             const url = "http://localhost:3000/api/auth/" + this.user.userId;
             const options = {
                 method: "DELETE",
                 headers: {
-                    "Authorization": "Bearer " + sessionStorage.getItem("token")
+                    'Authorization': "Bearer " + sessionStorage.getItem("token")
                 }
             };
             fetch(url, options)
@@ -63,9 +105,54 @@ export default {
                     alert("Suppression du compte confirmée ! Vous allez être redirigé vers la page d'accueil.");
                 })
                 .catch(error => console.log(error));
-        }
+        },
+        getAllPost(){
+            const url = "http://localhost:3000/api/posts/"
+            const options = {
+                method: "GET",
+                headers: {
+                    'Authorization' : "Bearer" + sessionStorage.getItem("token")
+                }
+            };
+            fetch(url, options)
+                .then(response => response.json())
+                .then(data => {
+                    this.posts = data;
+                })
+                .catch(error => console.log(error));
+        },
+        getAllUsers(){
+            const url = "http://localhost:3000/api/auth/"
+            const options = {
+                method: "GET",
+                headers: {
+                    'Authorization' : "Bearer" + sessionStorage.getItem("token")
+                }
+            };
+            fetch(url, options)
+                .then(response => response.json())
+                .then(data => {
+                    this.users = data;
+                })
+                .catch(error => console.log(error));
+            }
+        },
+        getAllComments(){
+            const url = "http://localhost:3000/api/comments"
+            const options = {
+                method: "GET",
+                headers: {
+                    'Authorization' : "Bearer" + sessionStorage.getItem("token")
+                }
+            };
+            fetch(url, options)
+                .then(response => response.json())
+                .then(data=>{
+                    this.comments = data;
+                })
+                .catch(error => console.log(error));
+        },
     }
-}
 </script>
 
 <style lang="scss" scoped>
