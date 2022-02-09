@@ -7,7 +7,7 @@
             <nav class="topbar__link">
                 <router-link to="/Home" title="Home"><i class="fas fa-home"></i><p>Accueil</p></router-link>
                 <router-link to="/Account" title="Account"><i class="fas fa-user"></i><p>Mon compte</p></router-link>
-                <router-link to="/" title="Disconnect"><i v-on:click="disconnect()" class="fas fa-sign-out-alt"></i><p>Déconnexion</p></router-link>
+                <a title="Disconnect" @click="disconnect()"><i class="fas fa-sign-out-alt"></i><p>Déconnexion</p></a>
             </nav>
         </div>
     </div>
@@ -18,9 +18,7 @@ export default {
     name: "Topbar",
     methods:{
         disconnect(){
-            sessionStorage.clear("userId");
-            sessionStorage.clear("token");
-            sessionStorage.clear("isAdmin");
+            sessionStorage.clear();
             this.$router.push('/');
         }
     }
@@ -55,6 +53,7 @@ export default {
                 color: lighten($color: #FF4B2B, $amount: 5);
                 background-color: white;
                 border-radius: 1rem;
+                cursor: pointer;
             }
         }
     }
