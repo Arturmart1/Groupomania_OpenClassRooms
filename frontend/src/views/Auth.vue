@@ -30,7 +30,7 @@
 				<div class="overlay-panel overlay-right">
 					<h1>Bonjour !</h1>
 					<p>Entrer vos Identifiants afin de vous connecter</p>
-					<button class="ghost" id="signUp" v-on:click="onClick">S'inscrire</button>
+					<button class="ghost" id="signUp" v-on:click.prevent="onClick">S'inscrire</button>
 				</div>
 			</div>
 		</div>
@@ -93,19 +93,20 @@ export default {
 				"email": this.signUpInput.email,
 				"password": this.signUpInput.password 
 			}
-			const signUpUrl = "http://localhost:3000/api/auth/signup"
-			const signUpOptions = {
+			const url = "http://localhost:3000/api/auth/signup"
+			const options = {
 				method: "POST",
 				body: JSON.stringify(signUpCredentials),
 				headers: {
 					'Content-type' : 'application/json'
 				}
 			}
-			fetch(signUpUrl, signUpOptions)
+			fetch(url, options)
 				.then(res => res.json())
 				.then ((res) =>{
 					sessionStorage.setItem("userId", res.userId);
 					sessionStorage.setItem("token", res.token);
+					sessionStorage.setItem("isAdmin", res.isAdmin)
 					this.$router.push("/Home")
 				})
 			.catch(error => console.log(error))
@@ -114,12 +115,12 @@ export default {
             const signUpButton = document.getElementById('signUp');
             const signInButton = document.getElementById('signIn');
             const container = document.getElementById('container');
-
+			
+			signInButton.addEventListener('click', () => { 
+			container.classList.remove("right-panel-active");
+			});
             signUpButton.addEventListener('click', () => { 
 				container.classList.add("right-panel-active");
-			});
-            signInButton.addEventListener('click', () => { 
-				container.classList.remove("right-panel-active");
 			});
         }
     }

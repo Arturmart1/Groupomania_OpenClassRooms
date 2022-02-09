@@ -55,36 +55,29 @@ exports.signup = (req, res, next) => {
 
 //Module de connection
 
-exports.login = (req, res, next) => {
+exports.login = (req, res, next) =>{
     const cryptedEmail = AES.encrypt(req.body.email);
     User.findOne({
-        Where: {
+        where: {
             email: cryptedEmail
         }
     })
         .then(user => {
             if (!user) {
-                return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+                return res.status(400).json({ error: 'Utilisateur non trouvé' });
             }
-            bcrypt.compare(req.body.password, user.password)
-                .then(valid => {
-                    if (!valid) {
-                        return res.status(401).json({ error: 'Mot de passe incorrect !' });
-                    }
-                    res.status(200).json({
-                        userId: user.id,
-                        isAdmin:user.isAdmin,
-                        token: jwt.sign(
-                            { userId: user.id, isAdmin: user.isAdmin },
-                            process.env.TOKEN,
-                            { expiresIn: '24h' },
-                        ),
-                        message: 'Connexion réussie !'
-                    });
-                }
-                )
-                .catch(error => res.status(500).json({ error, message: error.message }));
+            if (!bcrypt.compareSync(req.body.password, user.password)) {
+                return res.status(400).json({ error: 'Mot de passe incorrect' });
+            }
+            const token = jwt.sign({ userId: user.id }, 'process.env.TOKEN', { expiresIn: '24h' });
+            res.status(200).json({
+                userId: user.id,
+                token: token,
+                expiresIn: '24h',
+                isAdmin: user.isAdmin
+            });
         })
+        .catch(error => res.status(500).json({ error: 'Une erreur est survenue lors de la connexion', message: error.message }));
 };
 
 //Modification de l'utilisateur
