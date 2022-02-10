@@ -47,10 +47,11 @@
                     <div v-if="post.userId || isAdmin == true" @click="deletePost(post.id)" class="command__button">
                         <p>Supprimer</p>
                     </div>
-                    <div class="command__button">
+                    <div v-if="post.userId || isAdmin == true" @click="showModal = true" class="command__button">
                         <p>Modifier</p>
                     </div>
                 </div>
+                <PostEdit v-show="showModal" :postId="post.id" />
                 <div class="reply--bloc">
                     <Reply :postId="post.id" :postUserId="post.userId"/>
                 </div>
@@ -61,12 +62,14 @@
 
 <script>
 import Reply from './Reply.vue'
+import PostEdit from './PostEdit.vue'
 //import { ref } from 'vue'
 
 export default {
     name:"Postlist",
     components:{
         Reply,
+        PostEdit
     },
     data(){
         return {
@@ -83,6 +86,7 @@ export default {
                 content:"",
                 imageUrl: "",
             },
+            showModal: false,
         }
     },
     mounted() {
