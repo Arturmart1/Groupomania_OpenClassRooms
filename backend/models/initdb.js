@@ -1,7 +1,3 @@
-// Database
-
-const db = require('../config/db');
-
 // DAO model
 
 const User = require('./userSchema');

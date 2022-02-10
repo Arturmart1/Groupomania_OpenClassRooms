@@ -6,6 +6,8 @@ const postRoutes = require('./routes/postRoute');
 const commentRoutes = require('./routes/commentRoute');
 const app = express();
 
+//Initialisation et synchronisation de la base de données
+
 const InitDB = require('../backend/models/initdb');
 
 //CORS
