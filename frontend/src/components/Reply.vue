@@ -31,8 +31,6 @@ export default {
             comment: "",
             comments: [],
             replyContent: "",
-            defaultLimit: 2,
-            limit_by: 6,
         }
     },
     props:{
@@ -40,11 +38,12 @@ export default {
         postUserId: Number,
     },
     mounted() {
-        const url = "http://localhost:3000/api/comment/allComments"
+        const url = "http://localhost:3000/api/comment/" + this.postId + "/display"
         const options = {
             method: "GET",
             headers: {
                 'Authorization' : 'Bearer' + sessionStorage.getItem("token"),
+                'Content-type' : 'application/json'
             }
         };
         fetch(url, options)
@@ -81,10 +80,6 @@ export default {
                 })
                 .catch(error => console.log(error))
         },
-        dynamic_toggle(findex){
-            let currentFilter = this.dynamic_filters[findex];
-            this.dynamic_filters[findex].limit_by = (currentFilter.limit_by === currentFilter.default_limit) ? currentFilter.list.length : currentFilter.default_limit;
-        }
     },
 }
 </script>
