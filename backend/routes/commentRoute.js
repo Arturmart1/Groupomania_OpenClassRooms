@@ -3,8 +3,7 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const commentController = require('../controllers/comment');
 
-router.get('/:id/display', commentController.getOneComment);
-router.get('/allComments', commentController.getAllComments);
+router.get('/:id/display', commentController.getAllComments);
 router.post('/reply',auth, commentController.newComment);
 router.delete('/:id',auth, commentController.deleteComment);
 

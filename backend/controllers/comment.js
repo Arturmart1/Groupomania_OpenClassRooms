@@ -27,19 +27,6 @@ exports.deleteComment = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
-exports.getAllComments = (req, res, next) => {
-    Comment.findAll({
-        order: [['createdAt', 'DESC']],
-        include: [{
-            model: User,
-            attributes: ['id', 'firstName', 'lastName']
-        }] 
-    }) 
-        .then((comments)=>{ res.status(200).json(comments);
-        })
-        .catch(error => res.status(500).json({ error, message: error.message }));
-};
-
 exports.getOneComment = (res, req, next) => {
     Comment.findOne({
         where: {
@@ -54,4 +41,14 @@ exports.getOneComment = (res, req, next) => {
     .then((comment)=>{ res.status(200).json(comment);
     })
     .catch(error => res.status(500).json({ error, message: error.message }));
+};
+exports.getAllComments = (req, res, next) => {
+    Comment.findAll({
+        order: [['createdAt', 'DESC']],
+        where: { postId: req.params.id },
+        include: [User, Post]
+    }
+    )
+        .then((answers) => res.status(200).json(answers))
+        .catch(error => res.status(400).json({ error }));
 };
