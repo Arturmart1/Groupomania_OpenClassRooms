@@ -25,12 +25,12 @@
 				<div class="overlay-panel overlay-left">
 					<h1>Welcome Back!</h1>
 					<p>To keep connected with us please login with your personal info</p>
-					<button class="ghost" id="signIn" v-on:click="onClick">Se connecter</button>
+					<button class="ghost" id="signIn" @click="onClick">Se connecter</button>
 				</div>
 				<div class="overlay-panel overlay-right">
 					<h1>Bonjour !</h1>
 					<p>Entrer vos Identifiants afin de vous connecter</p>
-					<button class="ghost" id="signUp" v-on:click.prevent="onClick">S'inscrire</button>
+					<button class="ghost" id="signUp" @click="onClick">S'inscrire</button>
 				</div>
 			</div>
 		</div>
@@ -111,7 +111,7 @@ export default {
 				})
 			.catch(error => console.log(error))
 		},
-        onClick: function(){
+		onClick: function(){
             const signUpButton = document.getElementById('signUp');
             const signInButton = document.getElementById('signIn');
             const container = document.getElementById('container');
@@ -122,7 +122,7 @@ export default {
             signUpButton.addEventListener('click', () => { 
 				container.classList.add("right-panel-active");
 			});
-        }
+        },
     }
 }
 </script>
