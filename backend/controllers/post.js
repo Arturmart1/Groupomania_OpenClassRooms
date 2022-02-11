@@ -69,11 +69,10 @@ exports.getOnePost = (req, res, next) => {
         },
         include: [{
             model: User,
-            as: 'user',
-            attributes: ['id', 'firstName', 'lastName', 'imageUrl']
+            attributes: ['id', 'firstName', 'lastName']
         },{
             model: Comment,
-            as: 'comments',
+            attributes: ['id', 'content', 'createdAt'],
         }]
     })
         .then(post => { res.status(200).json(post)})

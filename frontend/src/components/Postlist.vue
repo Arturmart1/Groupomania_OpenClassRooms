@@ -43,18 +43,18 @@
                 <div class="post__content">
                     <p class="content">{{post.content}}</p>
                 </div>
-                <div class="post__command">
-                    <div v-if="post.userId || isAdmin == true" @click="deletePost(post.id)" class="command__button">
+                <div class="post__command" v-if="post.userId == userId || this.isAdmin == 'true'">
+                    <div @click="deletePost(post.id)" class="command__button">
                         <p>Supprimer</p>
                     </div>
-                    <div v-if="post.userId || isAdmin == true" @click="showModal = true" class="command__button">
+                    <div @click="showModal = true" class="command__button">
                         <p>Modifier</p>
                     </div>
                 </div>
-                <PostEdit v-show="showModal" :postId="post.id" />
                 <div class="reply--bloc">
                     <Reply :postId="post.id" :postUserId="post.userId"/>
                 </div>
+                <PostEdit v-show="showModal" :postId="post.id" />
             </div>
         </section>
     </main>

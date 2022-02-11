@@ -12,45 +12,80 @@
                 </div>
             </div>
         </aside>
-        <section id="main--section">
-            <div>
-                <h2>Liste des utilisateurs</h2>
-            </div>
-            <div class="user--list" v-for="user in users" :key="user.id">
+        <section id="main--section" v-if="isAdmin = true">
+            <div class="list-container">
                 <div>
-                    <p> {{user.firstName}} {{user.lastName}} </p>
+                    <h2>Liste des utilisateurs</h2>
                 </div>
-                <div class="delete__user">
-                    <button>Supprimer</button>
+                <div class="user--list" v-for="user in users" :key="user.id">
+                    <div>
+                        <p>{{user.firstName}} {{user.lastName}}</p>
+                    </div>
+                    <div class="delete__user">
+                        <button>Supprimer</button>
+                    </div>
                 </div>
             </div>
-            <div class="latest--postList">
+            <div class="list-container">
                 <div>
-                <h2>Derniers post</h2>
+                    <h2>Derniers messages</h2>
+                </div>
+                <div class="post--list" v-for="post in posts" :key="post.id">
+                    <div>
+                        <h3>{{post.title}}</h3>
+                    </div>
+                    <div class="delete__post">
+                        <button>Supprimer</button>
+                    </div>
+                </div>
             </div>
-            <div class="post--list" v-for="post in posts" :key="post.id">
+            <div class="list-container">
                 <div>
-                    <p> {{post.title}} {{post.content}} </p>
+                    <h2>Derniers commentaires</h2>
                 </div>
-                <div class="delete__user">
-                    <button>Supprimer</button>
-                </div>
-            </div>
-            </div>
-            <div class="latest--comentList">
-                <div>
-                <h2>Derniers commentaires</h2>
-            </div>
-            <div class="user--list" v-for="comment in comments" :key="comment.id">
-                <div>
-                    <p> {{comment.Post.title}} {{comment.content}} </p>
-                </div>
-                <div class="delete__user">
-                    <button>Supprimer</button>
+                <div class="comment--list" v-for="comment in comments" :key="comment.id">
+                    <div>
+                        <p> {{comment.content}} </p>
+                    </div>
+                    <div class="delete__comment">
+                        <button>Supprimer</button>
+                    </div>
                 </div>
             </div>
-            </div>
+            <!--div class="form-container sign-up-container">
+                <form v-on:submit.prevent="updateUser">
+                    <input type="text" placeholder="Nom" v-model="input.lastName" />
+                    <input type="text" placeholder="Prénom" v-model="input.firstName" />
+                    <input type="file" placeholder="Photo de profil" />
+                    <input type="password" placeholder="Password" required v-model="input.password" />
+                    <button>Modification</button>
+                </form>
+            </div-->
         </section>
+        <!--section id="main--section" v-else>
+            <div class="latest-post-container">
+                <div>
+                    <h2>Mes derniers messages</h2>
+                </div>
+                <div class="post--list" v-for="post in posts" :key="post.id">
+                    <div>
+                        <p> {{post.title}} {{post.content}} </p>
+                    </div>
+                    <div class="delete__post">
+                        <button>Supprimer</button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-container sign-up-container">
+                <form v-on:submit.prevent="updateUser">
+                    <input type="text" placeholder="Nom" v-model="input.lastName" />
+                    <input type="text" placeholder="Prénom" v-model="input.firstName" />
+                    <input type="file" placeholder="Photo de profil" />
+                    <input type="password" placeholder="Password" required v-model="input.password" />
+                    <button>Modification</button>
+                </form>
+            </div>
+        </section-->
     </main>
 </template>
 
@@ -61,9 +96,11 @@ export default {
     },
     data() {
         return {
+            userId: sessionStorage.getItem('userId'),
+            isAdmin: sessionStorage.getItem('isAdmin'),
             user: {
-                userId: sessionStorage.getItem('userId'),
-                isAdmin: sessionStorage.getItem('isAdmin'),
+                userId: "",
+                isAdmin: this.isAdmin,
                 firstName: "",
                 lastName: "",
                 email: "",
@@ -75,7 +112,7 @@ export default {
     },
     mounted() {
 
-        const url = "http://localhost:3000/api/auth/" + this.user.userId;
+        const url = "http://localhost:3000/api/auth/" + this.userId;
         const options = {
             method: "GET",
             headers: {
@@ -106,7 +143,7 @@ export default {
                 })
                 .catch(error => console.log(error));
         },
-        getAllPost(){
+        getAllPost: function(){
             const url = "http://localhost:3000/api/posts/"
             const options = {
                 method: "GET",
@@ -121,8 +158,8 @@ export default {
                 })
                 .catch(error => console.log(error));
         },
-        getAllUsers(){
-            const url = "http://localhost:3000/api/auth/"
+        getAllUsers: function(){
+            const url = "http://localhost:3000/api/auth/allusers/"
             const options = {
                 method: "GET",
                 headers: {
@@ -135,10 +172,9 @@ export default {
                     this.users = data;
                 })
                 .catch(error => console.log(error));
-            }
         },
-        getAllComments(){
-            const url = "http://localhost:3000/api/comments"
+        getAllComments: function(){
+            const url = "http://localhost:3000/api/comment/allComments/"
             const options = {
                 method: "GET",
                 headers: {
@@ -147,19 +183,24 @@ export default {
             };
             fetch(url, options)
                 .then(response => response.json())
-                .then(data=>{
+                .then(data => {
                     this.comments = data;
                 })
                 .catch(error => console.log(error));
         },
+    },
+    created: function() {
+        this.getAllUsers();
+        this.getAllPost();
+        this.getAllComments();
     }
+}
 </script>
 
 <style lang="scss" scoped>
 
 #main--container{
     display: flex;
-    justify-content: space-between;
     width: 95%;
     margin: auto;
     .profile--preview{
@@ -201,17 +242,64 @@ export default {
             font-size: 2em;
             font-weight: 800;
         }
-        a{
-            text-decoration: unset;
+        button{
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            border: unset;
             color: #FF4B2B;
             border-radius: 1rem;
             padding: 0.5rem;
             &:hover{
                 background-color: #FF4B2B;
                 color: white;
+                cursor: pointer;
             }
 
         }
+    }
+}
+#main--section{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 75%;
+    margin: auto;
+    .list-container{
+        border: 1px solid red;
+        border-radius: 2rem;
+        width: 18rem;
+        height: 18rem;
+        padding: 1rem;
+        box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+        button{
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            border: unset;
+            color: #FF4B2B;
+            border-radius: 1rem;
+            padding: 0.5rem;
+            &:hover{
+                background-color: #FF4B2B;
+                color: white;
+                cursor: pointer;
+            }
+
+        }
+    }
+    .user--list{
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        margin-top: 1rem;
+        p{
+            font-size: 1.2em;
+        }
+    }
+    .post--list{
+        @extend .user--list;
+    }
+    .comment--list{
+        @extend .user--list
     }
 }
 </style>

@@ -34,6 +34,7 @@ export default {
     },
     data() {
         return {
+            postId: 39,
             title: "",
             userId: sessionStorage.getItem('userId'),
             imageUrl: "",
@@ -67,8 +68,8 @@ export default {
         goBack(){
             this.$router.push('/Home');
         },
-        modifyPost(id){
-            const url = "http://localhost:3000/api/posts/" + id;
+        modifyPost(postId){
+            const url = "http://localhost:3000/api/posts/" + postId;
             const options = {
                 method: "PUT",
                 headers: {
