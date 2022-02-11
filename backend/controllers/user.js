@@ -115,15 +115,13 @@ exports.deleteUser = (req, res, next) => {
         .catch(error => res.status(500).json({ error, message: error.message }));
 };
 
-exports.gets = async () => {
-    await User.findAll({ raw: true })
-    .then((users) => {
-        for (const user of users) {
-            console.log(user);
-        }
-    }).catch((error) => {
-        console.log("error : " + error);
-    });
+exports.getAllUsers = (req, res, next) => {
+    User.findAll({
+        order: [['createdAt', 'DESC']],
+        include: [Post, Comment]
+    })
+    .then(users => { res.status(200).json(users); })
+    .catch(error => res.status(500).json({ error, message: error.message }));
 };
 
 exports.getOneUser = (req, res, next) => {
