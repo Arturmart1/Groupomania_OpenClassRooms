@@ -18,6 +18,11 @@ const routes = [
     path: '/Account',
     name: 'Account',
     component: () => import(/* webpackChunkName: "about" */ '../views/Account.vue')
+  },
+  {
+    path: '/PostEdit/:id',
+    name: 'PostEdit',
+    component: () => import(/* webpackChunkName: "about" */ '../views/PostEdit.vue')
   }
 ]
 

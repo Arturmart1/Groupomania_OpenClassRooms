@@ -35,7 +35,7 @@
                         <h3>{{post.title}}</h3>
                     </div>
                     <div class="delete__post">
-                        <button>Supprimer</button>
+                        <button @click="adminDeletePost(post.id)">Supprimer</button>
                     </div>
                 </div>
             </div>
@@ -52,31 +52,20 @@
                     </div>
                 </div>
             </div>
-            <!--div class="form-container sign-up-container">
+            <div class="form-container">
                 <form v-on:submit.prevent="updateUser">
-                    <input type="text" placeholder="Nom" v-model="input.lastName" />
-                    <input type="text" placeholder="Prénom" v-model="input.firstName" />
+                    <input type="text" placeholder="Nom" autocomplete="current-firstName" v-model="input.lastName" />
+                    <input type="text" placeholder="Prénom" autocomplete="current-lastName" v-model="input.firstName" />
                     <input type="file" placeholder="Photo de profil" />
-                    <input type="password" placeholder="Password" required v-model="input.password" />
-                    <button>Modification</button>
+                    <input type="password" placeholder="Password" autocomplete="current-password" v-model="input.password" />
                 </form>
-            </div-->
-        </section>
-        <!--section id="main--section" v-else>
-            <div class="latest-post-container">
                 <div>
-                    <h2>Mes derniers messages</h2>
-                </div>
-                <div class="post--list" v-for="post in posts" :key="post.id">
-                    <div>
-                        <p> {{post.title}} {{post.content}} </p>
-                    </div>
-                    <div class="delete__post">
-                        <button>Supprimer</button>
-                    </div>
+                    <button>Modification</button>
                 </div>
             </div>
-            <div class="form-container sign-up-container">
+        </section>
+        <section id="main--section__noAdmin" v-else>
+            <div class="form-container">
                 <form v-on:submit.prevent="updateUser">
                     <input type="text" placeholder="Nom" v-model="input.lastName" />
                     <input type="text" placeholder="Prénom" v-model="input.firstName" />
@@ -85,7 +74,7 @@
                     <button>Modification</button>
                 </form>
             </div>
-        </section-->
+        </section>
     </main>
 </template>
 
@@ -108,6 +97,12 @@ export default {
             posts: [],
             comments: [],
             users: [],
+            input:{
+                lastName: "",
+                firstName: "",
+                //profilePicture: "",
+                password: "",
+            }
         }
     },
     mounted() {
@@ -174,7 +169,7 @@ export default {
                 .catch(error => console.log(error));
         },
         getAllComments: function(){
-            const url = "http://localhost:3000/api/comment/allComments/"
+            const url = "http://localhost:3000/api/comment/all/"
             const options = {
                 method: "GET",
                 headers: {
@@ -187,6 +182,38 @@ export default {
                     this.comments = data;
                 })
                 .catch(error => console.log(error));
+        },
+        adminDeleteUser(userId){
+            const url = "http://localhost:3000/api/auth/" + userId
+            const options ={
+                method: "DELETE",
+                headers: {
+                    'Authorization' : "Bearer" + sessionStorage.getItem("token")
+                }
+            };
+            fetch(url, options)
+                .then(response => response.json())
+                .then(data =>{
+                    this.users = data;
+                })
+                .catch(error => console.log(error));
+        },
+        adminDeletePost(id){
+            const url = "http://localhost:3000/api/posts/" + id;
+            const options = {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + sessionStorage.getItem("token")
+                }
+            };
+            fetch(url, options)
+            .then(response => response.json())
+            .then(data => {
+                this.posts = data;
+                //location.reload();
+            })
+            .catch(error => console.log(error));
         },
     },
     created: function() {
@@ -262,6 +289,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     width: 75%;
     margin: auto;
     .list-container{
@@ -271,6 +299,7 @@ export default {
         height: 18rem;
         padding: 1rem;
         box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+        overflow: scroll;
         button{
             margin-top: 1rem;
             margin-bottom: 0.5rem;
@@ -299,7 +328,19 @@ export default {
         @extend .user--list;
     }
     .comment--list{
-        @extend .user--list
+        @extend .user--list;
     }
 }
+.form-container{
+    @extend .list-container;
+    order: 2;
+    margin: 2rem auto;
+    width: 100vw!important;
+    overflow: unset!important;
+    form{
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 </style>

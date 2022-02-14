@@ -15,6 +15,7 @@ const Post = db.define('Post', {
     imageUrl: {
         type: DataTypes.STRING,
         allowNull: true,
+        defaultValue: null
     },
     userId: {
         type: DataTypes.INTEGER,

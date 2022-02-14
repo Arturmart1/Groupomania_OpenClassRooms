@@ -27,28 +27,21 @@ exports.deleteComment = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
-exports.getOneComment = (res, req, next) => {
-    Comment.findOne({
-        where: {
-            id: req.params.id
-        },
-        include: [{
-            model: User,
-            as: 'user',
-            attributes: ['id', 'firstName', 'lastName', 'imageUrl']
-        }]
-    })
-    .then((comment)=>{ res.status(200).json(comment);
-    })
-    .catch(error => res.status(500).json({ error, message: error.message }));
-};
 exports.getAllComments = (req, res, next) => {
     Comment.findAll({
         order: [['createdAt', 'DESC']],
         where: { postId: req.params.id },
         include: [User, Post]
-    }
-    )
+    })
         .then((answers) => res.status(200).json(answers))
         .catch(error => res.status(400).json({ error }));
+};
+
+exports.commentsList = (req, res, next) =>{
+    Comment.findAll({
+        wher: { id: req.params.id},
+        order: [['createdAt', 'DESC']]
+    })
+    .then((list) => res.status(200).json(list))
+    .catch(error => res.status(400).json({ error}));
 };

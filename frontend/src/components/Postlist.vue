@@ -2,7 +2,7 @@
     <main id="main--container">
         <aside class="profile--preview">
             <div class="profile--preview__image">
-                <img src="../assets/test_image.jpg" alt="profile picture" class="profile_picture">
+                <img :src=imageUrl alt="profile picture" class="profile_picture">
             </div>
             <div class="profile--preview__text">
                 <div class="profile--preview__info" @change="getUserInfo()">
@@ -20,7 +20,7 @@
                     <h2>A vous de partager!</h2>
                     <input type="text" placeholder="Titre" required v-model="postInput.title">
                     <input type="text" placeholder="Votre message ici" required v-model="postInput.content">
-                    <input type="file" placeholder="Importez votre image" ref="imageUrl" accept="image/*">
+                    <input type="file" placeholder="Importez votre image" ref="imageUrl" name="imageUrl" @change="fileUpload" accept="image/*">
                 </div>
                 <div class="command__center">
                     <div class="command__button" @click.prevent="sendPost()">
@@ -47,14 +47,13 @@
                     <div @click="deletePost(post.id)" class="command__button">
                         <p>Supprimer</p>
                     </div>
-                    <div @click="showModal = true" class="command__button">
+                    <div @click="editPost(post.id)" class="command__button">
                         <p>Modifier</p>
                     </div>
                 </div>
                 <div class="reply--bloc">
                     <Reply :postId="post.id" :postUserId="post.userId"/>
                 </div>
-                <PostEdit v-show="showModal" :postId="post.id" />
             </div>
         </section>
     </main>
@@ -62,14 +61,13 @@
 
 <script>
 import Reply from './Reply.vue'
-import PostEdit from './PostEdit.vue'
 //import { ref } from 'vue'
 
 export default {
     name:"Postlist",
     components:{
         Reply,
-        PostEdit
+        //ref,
     },
     data(){
         return {
@@ -86,7 +84,6 @@ export default {
                 content:"",
                 imageUrl: "",
             },
-            showModal: false,
         }
     },
     mounted() {
@@ -112,14 +109,14 @@ export default {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + sessionStorage.getItem("token")
-                }
+                    "Authorization": "Bearer " + sessionStorage.getItem("token"),
+                },
             };
             fetch(url, options)
             .then(response => response.json())
             .then(data => {
                 this.posts = data;
-                location.reload();
+                window.location.reload();
             })
             .catch(error => console.log(error));
         },
@@ -128,20 +125,20 @@ export default {
             const postData = {
                 "title": this.postInput.title,
                 "content": this.postInput.content,
-                //"imageUrl": this.$refs.imageUrl,
+                "imageUrl": this.postInput.file,
                 "userId": sessionStorage.getItem("userId")
             }
             //console.log("ici" + file.value.files);
-            const sendPostUrl = "http://localhost:3000/api/posts/new"
-            const sendPostOptions = {
+            const url = "http://localhost:3000/api/posts/new"
+            const options = {
                 method: "POST",
-                body: JSON.stringify(postData),
                 headers:{
                     'Content-type' : 'application/json',
                     'Authorization': 'Bearer'  + sessionStorage.getItem("token")
                 },
+                body: JSON.stringify(postData),
             }
-            fetch(sendPostUrl,sendPostOptions)
+            fetch(url, options)
             .then(response => response.json())
             .then(data => {
                 this.posts = data;
@@ -163,9 +160,15 @@ export default {
                 .then(data => {
                     this.firstName = data.firstName;
                     this.lastName = data.lastName;
+                    this.imageUrl = data.profilePicture;
                 })
                 .catch(error => console.log(error,));
         },
+        editPost(postId){
+            this.$router.push({
+                path: "/PostEdit/" + postId
+            });
+        }
     },
     created: function() {
         this.getUserInfo();
@@ -238,7 +241,7 @@ export default {
             flex-direction: column;
             align-items: flex-start;
             width: 40%;
-            margin: auto;
+            margin: auto auto 1.5rem auto;
             padding: 0.5rem;
             box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
             border-radius: 1rem;
