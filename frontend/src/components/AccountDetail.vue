@@ -22,7 +22,7 @@
                         <p>{{user.firstName}} {{user.lastName}}</p>
                     </div>
                     <div class="delete__user">
-                        <button>Supprimer</button>
+                        <button @click="adminDeleteUser(user.id)">Supprimer</button>
                     </div>
                 </div>
             </div>
@@ -58,10 +58,8 @@
                     <input type="text" placeholder="Prénom" autocomplete="current-lastName" v-model="input.firstName" />
                     <input type="file" placeholder="Photo de profil" />
                     <input type="password" placeholder="Password" autocomplete="current-password" v-model="input.password" />
-                </form>
-                <div>
                     <button>Modification</button>
-                </div>
+                </form>
             </div>
         </section>
         <section id="main--section__noAdmin" v-else>
@@ -123,7 +121,7 @@ export default {
     },
     methods:{
         deletePersonnalAccount(){
-            const url = "http://localhost:3000/api/auth/" + this.user.userId;
+            const url = "http://localhost:3000/api/auth/" + this.userId;
             const options = {
                 method: "DELETE",
                 headers: {
@@ -183,11 +181,13 @@ export default {
                 })
                 .catch(error => console.log(error));
         },
-        adminDeleteUser(userId){
-            const url = "http://localhost:3000/api/auth/" + userId
+        adminDeleteUser(id){
+            const url = "http://localhost:3000/api/auth/" + id
+            console.log(id)
             const options ={
                 method: "DELETE",
                 headers: {
+                    "Content-Type": "application/json",
                     'Authorization' : "Bearer" + sessionStorage.getItem("token")
                 }
             };
@@ -195,6 +195,7 @@ export default {
                 .then(response => response.json())
                 .then(data =>{
                     this.users = data;
+                    //window.location.reload();
                 })
                 .catch(error => console.log(error));
         },
@@ -211,10 +212,32 @@ export default {
             .then(response => response.json())
             .then(data => {
                 this.posts = data;
-                //location.reload();
+                window.location.reload();
             })
             .catch(error => console.log(error));
         },
+        updateUser(){
+            const inputs = {
+                "firstName" : this.input.fistName,
+                "lastName" : this.input.lastName,
+            }
+            const url = "http://localhost:3000/api/auth/update/" + this.userId
+            const options = {
+                method: 'PUT',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + sessionStorage.getItem("token")
+                },
+                body: JSON.stringify(inputs),
+            };
+            fetch(url, options)
+            .then(response => response.json())
+            .then(data => {
+                this.users = data;
+                window.location.reload();
+            })
+            .catch(error => console.log(error));
+        }
     },
     created: function() {
         this.getAllUsers();
@@ -299,7 +322,7 @@ export default {
         height: 18rem;
         padding: 1rem;
         box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-        overflow: scroll;
+        overflow: hidden;
         button{
             margin-top: 1rem;
             margin-bottom: 0.5rem;
