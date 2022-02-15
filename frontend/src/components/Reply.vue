@@ -181,7 +181,9 @@ input:focus ~ .left, input:focus ~ .right {
     .reply__display{
         width: 95%;
         margin: 0 auto 0.5rem auto;
+        padding: 0.5rem;
         text-align: left;
+        border-radius: 0.5em;
         box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
     }
     h3{
