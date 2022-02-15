@@ -103,13 +103,13 @@ exports.modifyUser = (req, res, next) => {
 
 exports.deleteUser = (req, res, next) => {
     User.findOne({ where: {id: req.params.id}})
-        .then((user) => {
-            if (user.id === req.token.userId || req.token.isAdmin) {
+        .then(user => {
+            if (user.id === req.params.userId || user.isAdmin === req.token.isAdmin) {
                 User.destroy({where : {id: req.params.id}})
                 .then(() => res.status(200).json({message: 'Utilisateur supprimé avec succès'}))
                 .catch(error => res.status(400).json({ error, message: error.message }));
             } else {
-                res.status(401).json({ message: 'Vous n\'êtes pas autorisé à supprimer ce post !' });
+                res.status(401).json({ message: 'Vous n\'êtes pas autorisé à supprimer cet utilisateur' });
             }
         })
         .catch(error => res.status(500).json({ error, message: error.message }));
