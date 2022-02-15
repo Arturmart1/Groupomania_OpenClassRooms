@@ -10,7 +10,7 @@ exports.newPost = (req, res, next) => {
         title: req.body.title,
         content: req.body.content,
         //imageUrl: `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}`,
-        userId: req.body.userId,
+        userId: req.token.userId,
     })
     .then(post => { res.status(201).json(post); })
     .catch(err => { res.status(400).json(err); });
@@ -38,7 +38,7 @@ exports.updatePost = (req, res, next) => {
 exports.deletePost = (req, res, next) => {
     Post.findOne({ where: { id: req.params.id } })
         .then(post => {
-            if (post.userId === req.token.userId  || post.isAdmin === req.token.isAdmin) {
+            if (post.userId === req.token.userId  || req.token.isAdmin) {
                 Post.destroy({ where: { id: req.params.id } })
                     .then(() => res.status(200).json({ message: 'Post supprimé !' }))
                     .catch(error => res.status(400).json({ error, message: error.message }));

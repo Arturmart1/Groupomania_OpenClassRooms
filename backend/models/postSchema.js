@@ -17,10 +17,10 @@ const Post = db.define('Post', {
         allowNull: true,
         defaultValue: null
     },
-    userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
+    //userId: {
+        //type: DataTypes.INTEGER,
+        //allowNull: false,
+    //},
     likes: {
         type: DataTypes.INTEGER,
         allowNull: false,

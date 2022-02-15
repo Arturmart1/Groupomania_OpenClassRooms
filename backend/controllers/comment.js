@@ -15,10 +15,8 @@ exports.newComment = (req, res, next) => {
 
 exports.deleteComment = (req, res, next) => {
     Comment.findOne({ 
-        where: { 
-            id: req.params.id 
-        },
-    })
+        where: { id: req.params.id },
+        })
         .then((comment)=>{
             Comment.destroy({ where: { id: req.params.id } })
                 .then(() => res.status(200).json({ message : "Commentaire supprimé"}))

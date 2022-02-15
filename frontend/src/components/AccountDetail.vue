@@ -48,7 +48,7 @@
                         <p> {{comment.content}} </p>
                     </div>
                     <div class="delete__comment">
-                        <button>Supprimer</button>
+                        <button @click="adminDeleteComment(comment.id)">Supprimer</button>
                     </div>
                 </div>
             </div>
@@ -121,7 +121,7 @@ export default {
     },
     methods:{
         deletePersonnalAccount(){
-            const url = "http://localhost:3000/api/auth/" + this.userId;
+            const url = "http://localhost:3000/api/auth/delete/" + this.userId;
             const options = {
                 method: "DELETE",
                 headers: {
@@ -182,22 +182,21 @@ export default {
                 .catch(error => console.log(error));
         },
         adminDeleteUser(id){
-            const url = "http://localhost:3000/api/auth/" + id
-            console.log(id)
+            const url = "http://localhost:3000/api/auth/delete/" + id;
             const options ={
                 method: "DELETE",
                 headers: {
-                    "Content-Type": "application/json",
-                    'Authorization' : "Bearer" + sessionStorage.getItem("token")
+                    "Content-Type" : "application/json",
+                    "Authorization" : "Bearer" + sessionStorage.getItem("token")
                 }
             };
             fetch(url, options)
-                .then(response => response.json())
-                .then(data =>{
-                    this.users = data;
-                    //window.location.reload();
-                })
-                .catch(error => console.log(error));
+            .then(response => response.json())
+            .then(data =>{
+                this.users = data;
+                //window.location.reload();
+            })
+            .catch(error => console.log(error));
         },
         adminDeletePost(id){
             const url = "http://localhost:3000/api/posts/" + id;
@@ -212,6 +211,23 @@ export default {
             .then(response => response.json())
             .then(data => {
                 this.posts = data;
+                window.location.reload();
+            })
+            .catch(error => console.log(error));
+        },
+        adminDeleteComment(id){
+            const url = "http://localhost:3000/api/comment/delete/" + id;
+            const options = {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + sessionStorage.getItem("token")
+                }
+            };
+            fetch(url, options)
+            .then(response => response.json())
+            .then(data => {
+                this.comments = data;
                 window.location.reload();
             })
             .catch(error => console.log(error));

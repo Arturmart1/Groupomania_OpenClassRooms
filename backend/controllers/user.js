@@ -71,12 +71,10 @@ exports.login = (req, res, next) =>{
             if (!bcrypt.compareSync(req.body.password, user.password)) {
                 return res.status(400).json({ error: 'Mot de passe incorrect' });
             }
-            const token = jwt.sign({ userId: user.id }, 'process.env.TOKEN', { expiresIn: '24h' });
             res.status(200).json({
                 userId: user.id,
-                token: token,
-                expiresIn: '24h',
-                isAdmin: user.isAdmin
+                isAdmin: user.isAdmin,
+                token: jwt.sign({ userId: user.id, isAdmin: user.isAdmin}, 'process.env.TOKEN',{ expiresIn: '24h' })
             });
         })
         .catch(error => res.status(500).json({ error: 'Une erreur est survenue lors de la connexion', message: error.message }));
@@ -104,10 +102,11 @@ exports.modifyUser = (req, res, next) => {
 exports.deleteUser = (req, res, next) => {
     User.findOne({ where: {id: req.params.id}})
         .then(user => {
-            if (user.id === req.params.userId || user.isAdmin === req.token.isAdmin) {
+            console.log("id" + req.token.userId);
+            if (user.id === req.token.userId || req.token.isAdmin) {
                 User.destroy({where : {id: req.params.id}})
-                .then(() => res.status(200).json({message: 'Utilisateur supprimé avec succès'}))
-                .catch(error => res.status(400).json({ error, message: error.message }));
+                    .then(() => res.status(200).json({message: 'Utilisateur supprimé avec succès'}))
+                    .catch(error => res.status(400).json({ error, message: error.message }));
             } else {
                 res.status(401).json({ message: 'Vous n\'êtes pas autorisé à supprimer cet utilisateur' });
             }

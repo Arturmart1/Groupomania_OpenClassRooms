@@ -61,13 +61,11 @@
 
 <script>
 import Reply from './Reply.vue'
-//import { ref } from 'vue'
 
 export default {
     name:"Postlist",
     components:{
         Reply,
-        //ref,
     },
     data(){
         return {
