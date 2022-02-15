@@ -17,14 +17,9 @@ const Post = db.define('Post', {
         allowNull: true,
         defaultValue: null
     },
-    //userId: {
-        //type: DataTypes.INTEGER,
-        //allowNull: false,
-    //},
-    likes: {
+    userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 0,
     },
 },{
     freezeTableName : true,

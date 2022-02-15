@@ -2,7 +2,7 @@
     <main id="main--container">
         <aside class="profile--preview">
             <div class="profile--preview__image">
-                <img :src=imageUrl alt="profile picture" class="profile_picture">
+                <img src="#" alt="profile picture" class="profile_picture">
             </div>
             <div class="profile--preview__text">
                 <div class="profile--preview__info" @change="getUserInfo()">
@@ -16,20 +16,7 @@
         </aside>
         <section class="post--list">
             <div class="form--card">
-                <div class="post--form">
-                    <h2>A vous de partager!</h2>
-                    <input type="text" placeholder="Titre" required v-model="postInput.title">
-                    <input type="text" placeholder="Votre message ici" required v-model="postInput.content">
-                    <input type="file" placeholder="Importez votre image" ref="imageUrl" name="imageUrl" @change="fileUpload" accept="image/*">
-                </div>
-                <div class="command__center">
-                    <div class="command__button" @click.prevent="sendPost()">
-                        <p>Envoi</p>
-                    </div>
-                    <div class="command__button" >
-                        <p>Annuler</p>
-                    </div>
-                </div>                
+                <NewPost/>              
             </div>
             <div v-for="post in posts" :key="post.id" class="post--card">
                 <div class="post--card__text">
@@ -61,11 +48,13 @@
 
 <script>
 import Reply from './Reply.vue'
+import NewPost from './NewPost.vue'
 
 export default {
     name:"Postlist",
     components:{
         Reply,
+        NewPost,
     },
     data(){
         return {
@@ -77,11 +66,6 @@ export default {
             firstName:"",
             lastName:"",
             posts: [],
-            postInput: {
-                title:"",
-                content:"",
-                imageUrl: "",
-            },
         }
     },
     mounted() {
@@ -117,32 +101,6 @@ export default {
                 window.location.reload();
             })
             .catch(error => console.log(error));
-        },
-        sendPost(){
-            //const file = ref(null);
-            const postData = {
-                "title": this.postInput.title,
-                "content": this.postInput.content,
-                "imageUrl": this.postInput.file,
-                "userId": sessionStorage.getItem("userId")
-            }
-            //console.log("ici" + file.value.files);
-            const url = "http://localhost:3000/api/posts/new"
-            const options = {
-                method: "POST",
-                headers:{
-                    'Content-type' : 'application/json',
-                    'Authorization': 'Bearer'  + sessionStorage.getItem("token")
-                },
-                body: JSON.stringify(postData),
-            }
-            fetch(url, options)
-            .then(response => response.json())
-            .then(data => {
-                this.posts = data;
-                location.reload();
-            })
-            .catch(error => console.log(error, "L'erreur vient du front"));
         },
         getUserInfo: function(){
             
@@ -283,65 +241,9 @@ export default {
                         cursor: pointer;
                     } 
                 }
-                .far{
-                    padding-left: 1rem;
-                    &:hover{
-                        cursor: pointer;
-                    }
-                }
-                .fa-thumbs-up:hover{
-                    color: rgb(0, 197, 0);
-                }
-                .fa-thumbs-down:hover{
-                    color: red;
-                }
             }
         }
     }
-}
-.form--card{
-    @extend .post--card;
-    margin-bottom: 1.2rem!important;
-    .post--form{
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: space-around;
-        width: 95%;
-        margin: auto;
-    }
-    .command__center{
-        width: 95%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 0.5rem auto 0.5rem auto;
-        .command__button{
-            background-color: #FF4B2B;
-            color: white;
-            width: 5rem;
-            margin-top: 0.8rem;
-            padding: 0.5rem;
-            border-radius: 1rem;
-            &:hover{
-                background-color: lighten($color: #FF4B2B, $amount: 10);
-                cursor: pointer;
-            }
-        }
-    }
-    h2{
-        padding: 0.5rem 0 0.5rem 0;
-        font-size: 1.2em;
-        font-weight: 600;
-    }
-    input{
-        background-color: #eee;
-        border: none;
-        width: 90%;
-        padding: 0.5rem;
-        margin: 0.5rem auto 0.5rem auto;
-    }
-
 }
 .reply--bloc{
     width: 100%;

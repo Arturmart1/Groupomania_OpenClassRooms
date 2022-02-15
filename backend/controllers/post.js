@@ -9,7 +9,7 @@ exports.newPost = (req, res, next) => {
     Post.create({
         title: req.body.title,
         content: req.body.content,
-        //imageUrl: `${req.protocol}://${req.get('host')}/images/posts/${req.file.filename}`,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         userId: req.token.userId,
     })
     .then(post => { res.status(201).json(post); })
