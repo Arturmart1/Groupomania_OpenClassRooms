@@ -6,7 +6,7 @@
 				<input type="text" placeholder="Nom" required v-model="signUpInput.lastName" />
 				<input type="text" placeholder="Prénom" required v-model="signUpInput.firstName" />
 				<input type="email" placeholder="Email" required v-model="signUpInput.email" />
-				<input type="password" placeholder="Password" required v-model="signUpInput.password" />
+				<input type="password" placeholder="Password" autocomplete="none" required v-model="signUpInput.password" />
 				<button>S'enregistrer</button>
 			</form>
 		</div>
@@ -15,7 +15,7 @@
 				<img src="../../src/assets/icon.svg" alt="logo groupomania">
 				<h1>Se connecter</h1>
 				<input type="email" placeholder="Email" required v-model="loginInput.email"/>
-				<input type="password" placeholder="Mot de passe" required v-model="loginInput.password"/>
+				<input type="password" placeholder="Mot de passe" autocomplete="none" required v-model="loginInput.password"/>
 				<a href="#">Mot de passe oublié?</a>
 				<button>Connexion</button>
 			</form>
@@ -23,8 +23,8 @@
 		<div class="overlay-container">
 			<div class="overlay">
 				<div class="overlay-panel overlay-left">
-					<h1>Welcome Back!</h1>
-					<p>To keep connected with us please login with your personal info</p>
+					<h1>Bienvenue</h1>
+					<p>Déjà enregistré? connectez vous !</p>
 					<button class="ghost" id="signIn" @click="onClick">Se connecter</button>
 				</div>
 				<div class="overlay-panel overlay-right">
@@ -106,20 +106,21 @@ export default {
 				.then ((res) =>{
 					sessionStorage.setItem("userId", res.userId);
 					sessionStorage.setItem("token", res.token);
-					sessionStorage.setItem("isAdmin", res.isAdmin)
-					this.$router.push("/Home")
+					sessionStorage.setItem("isAdmin", res.isAdmin);
+					window.location.reload();
+					alert("Inscription confirmée, vous pouvez vous connecter")
 				})
 			.catch(error => console.log(error))
 		},
-		onClick: function(){
+		onClick() {
             const signUpButton = document.getElementById('signUp');
             const signInButton = document.getElementById('signIn');
             const container = document.getElementById('container');
 			
 			signInButton.addEventListener('click', () => { 
-			container.classList.remove("right-panel-active");
+				container.classList.remove("right-panel-active");
 			});
-            signUpButton.addEventListener('click', () => { 
+            signUpButton.addEventListener('click', () => {
 				container.classList.add("right-panel-active");
 			});
         },
