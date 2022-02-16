@@ -33,7 +33,7 @@ InitDB().then(() => {
     app.use('/images', express.static(path.join(__dirname, 'images')));
     
     })
-    .catch((error) => { console.log("error : " + error);
+    .catch((error) => { console.log("error from app.js: " + error);
 });
 
 

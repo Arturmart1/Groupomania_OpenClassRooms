@@ -2,9 +2,11 @@
     <div class="form--card">
         <div class="post--form">
             <h2>A vous de partager!</h2>
-            <input type="text" placeholder="Titre" required v-model="postInput.title">
-            <input type="text" placeholder="Votre message ici" required v-model="postInput.content">
-            <input type="file" placeholder="Importez votre image" ref="imageUrl" name="imageUrl" accept="image/*">
+            <form name="newPost" id="newPost">
+                <input type="text" placeholder="Titre" name="title" id="title" required v-model="title">
+                <input type="text" placeholder="Votre message ici" name="content" id="content" required v-model="content">
+                <input type="file" placeholder="Importez votre image" ref="imageUrl" name="image" id="imageUrl" accept="image/*">
+            </form>
         </div>
         <div class="command__center">
             <div class="command__button" @click.prevent="sendPost()">
@@ -22,43 +24,44 @@ export default {
     name: 'NewPost',
     data() {
         return {
-            inputTitle: "",
-            inputContent: "",
+            title: "",
+            content: "",
             imageUrl: "",
+            userId: sessionStorage.getItem('userId'),
             posts:[],
-            postInput:{
-                title: "",
-                content: "",
-                //imageUrl: "",
-                userId: sessionStorage.getItem('userId'),
-            }
         }
     },
     methods: {
         sendPost(){
-            let input = document.querySelector('input[type="file"]')
-            let data = new FormData();
-            data.append('title', this.postInput.title);
-            data.append('content', this.postInput.content);
-            data.append('imageUrl', input.files[0], input.files[0].name);
-            data.append('userId', this.postInput.userId);
-            fetch('http://localhost:3000/api/posts/new', {
+            let input = document.getElementById('imageUrl');
+            let formData = new FormData();
+            formData.append('title', this.title);
+            formData.append('content', this.content);
+            formData.append('image', input.files[0]);
+            formData.append('userId', this.userId);
+            console.log(this.title, this.content, this.userId);
+            console.log(input.files[0]);
+            const url = 'http://localhost:3000/api/posts/new';
+            const options = {
                 method: 'POST',
+                body: formData,
                 headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                },
-                body: JSON.stringify(data),
-            })
+                    //'Content-Type': 'multipart/form-data',
+                    'Authorization': 'Bearer' + sessionStorage.getItem("token")
+                }
+            }
+            fetch(url, options)
             .then(response => response.json())
             .then(data => {
-                this.posts.push(data)
-                this.inputTitle = ""
-                this.inputContent = ""
-                this.imageUrl = ""
+                this.posts.push(data);
+                this.title = "";
+                this.content = "";
+                this.imageUrl = "";
+                window.location.reload();
             })
+            .catch(error => console.error(error))
         },
-    },
+    }
 }
 </script>
 

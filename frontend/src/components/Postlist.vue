@@ -98,7 +98,7 @@ export default {
             .then(response => response.json())
             .then(data => {
                 this.posts = data;
-                window.location.reload();
+                //window.location.reload();
             })
             .catch(error => console.log(error));
         },
