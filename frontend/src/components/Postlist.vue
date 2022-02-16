@@ -25,7 +25,7 @@
                     <p class="post__date">{{post.createdAt}}</p>
                 </div>
                 <div class="post__image">
-                    <img src="" alt="post image" class="post__picture">
+                    <img :src="post.imageUrl" alt="post image" class="post__picture">
                 </div>
                 <div class="post__content">
                     <p class="content">{{post.content}}</p>
@@ -58,10 +58,7 @@ export default {
     },
     data(){
         return {
-            title: "",
             userId: sessionStorage.getItem('userId'),
-            imageUrl: "",
-            content: "",
             isAdmin: sessionStorage.getItem('isAdmin'),
             firstName:"",
             lastName:"",
@@ -74,7 +71,7 @@ export default {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + sessionStorage.getItem("token")
+                "Authorization": "Bearer" + sessionStorage.getItem("token"),
             }
         };
         fetch(url, options)
@@ -98,7 +95,7 @@ export default {
             .then(response => response.json())
             .then(data => {
                 this.posts = data;
-                //window.location.reload();
+                window.location.reload();
             })
             .catch(error => console.log(error));
         },
