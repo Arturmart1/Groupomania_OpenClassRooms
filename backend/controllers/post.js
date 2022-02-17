@@ -22,11 +22,11 @@ exports.newPost = (req, res, next) => {
 //Mise à jour du post par son auteur
 
 exports.updatePost = (req, res, next) => {
-    //const postImage = `${req.protocol}://${req.get('host')}/images/postImages/${req.file.filename}`;
+    const postImage = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
     Post.findOne({ where: { id: req.params.id } })
         .then(post => {
             if (post.userId === req.token.userId || post.isAdmin === req.token.isAdmin ) {
-                Post.update({...post, title: req.body.title, content: req.body.content, /*image: postImage */}, { where: { id: req.params.id }})
+                Post.update({...post, title: req.body.title, content: req.body.content, imageUrl: postImage}, { where: { id: req.params.id }})
                     .then(() => res.status(201).json({ message: 'Post modifié !' }))
                     .catch(error => res.status(400).json({ error, message: error.message }));
             } else {

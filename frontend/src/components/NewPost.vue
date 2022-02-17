@@ -39,8 +39,7 @@ export default {
             formData.append('content', this.content);
             formData.append('image', input.files[0]);
             formData.append('userId', this.userId);
-            console.log(this.title, this.content, this.userId);
-            console.log(input.files[0]);
+            
             const url = 'http://localhost:3000/api/posts/new';
             const options = {
                 method: 'POST',

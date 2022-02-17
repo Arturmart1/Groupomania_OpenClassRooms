@@ -1,10 +1,12 @@
 <template>
     <div class="form--card">
         <div class="post--form">
-            <h2>A vous de partager!</h2>
-            <input type="text" placeholder="{{title}}" required v-model="postInput.title">
-            <input type="text" placeholder="{{content}}" required v-model="postInput.content">
-            <input type="file" placeholder="Importez votre image" ref="imageUrl" accept="image/*">
+            <h2>Modification</h2>
+            <form name="editPost" id="editPost">
+                <input type="text" placeholder="{{title}}" required v-model="postInput.title">
+                <input type="text" placeholder="{{content}}" required v-model="postInput.content">
+                <input type="file" placeholder="Importez votre image" ref="imageUrl" name="image" id="imageUrl" accept="image/*">
+            </form>
         </div>
         <div class="command__center">
             <div class="command__button" @click.prevent="updatePost(postInput.postId)">
@@ -59,19 +61,29 @@ export default {
     },
     methods: {
         updatePost(id){
+            let input = document.getElementById('imageUrl');
+            let formData = new FormData();
+            formData.append('title', this.postInput.title);
+            formData.append('content', this.postInput.content);
+            formData.append('image', input.files[0]);
+            formData.append('userId', this.userId);
+
             const url = "http://localhost:3000/api/posts/" + id;
             const options = {
                 method: 'PUT',
+                body: formData,
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+                    'Authorization': 'Bearer ' + sessionStorage.getItem("token")
                 },
-                body: JSON.stringify(this.postInput)
             };
             fetch(url, options)
                 .then(response => response.json())
                 .then(data => {
-                    this.posts = data;
+                    this.posts.push(data);
+                    this.postInput.title = "";
+                    this.postInput.content = "";
+                    this.postInput.imageUrl = "";
+                    alert("Votre post a bien été modifié");
                     this.$router.push('/Home');
                 })
                 .catch(error => console.error(error));
