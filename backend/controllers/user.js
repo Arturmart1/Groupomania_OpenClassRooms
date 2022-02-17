@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const AES = require('../middleware/aes-encrypt');
 const passwordValidator = require('password-validator');
+const fs = require('fs');
 
 const passwordSchema = new passwordValidator();
 passwordSchema
@@ -86,6 +87,13 @@ exports.modifyUser = (req, res, next) => {
     const userImage = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     User.findOne({ where: { id: req.params.id } })
         .then(user => {
+            if (user.profilePicture !== '/profilPictures/default_profil_pict.jpg') {
+                fs.unlink(`images/${user.profilePicture}`, (error) => {
+                    if (error) {
+                        console.log(error);
+                    }
+                });
+            }
             if (user.id === req.token.userId){
                 User.update({...user, firstName: req.body.firstName, lastName: req.body.lastName, image: userImage}, { where: { id: req.params.id } })
                     .then(() => { res.status(201).json({ message: 'Utilisateur modifié avec succès !' }); })
