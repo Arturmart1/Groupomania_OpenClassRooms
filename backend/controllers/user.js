@@ -100,18 +100,18 @@ exports.modifyUser = (req, res, next) => {
 //Suppression d'un utilisateur par l'utilisateur
 
 exports.deleteUser = (req, res, next) => {
-    User.findOne({ where: {id: req.params.id}})
-        .then(user => {
-            console.log("id" + req.token.userId);
+    console.log("token");
+    User.findOne({ where: { id: req.params.id } })
+        .then((user) => {
             if (user.id === req.token.userId || req.token.isAdmin) {
-                User.destroy({where : {id: req.params.id}})
-                    .then(() => res.status(200).json({message: 'Utilisateur supprimé avec succès'}))
+                User.destroy({ where: { id: req.params.id } })
+                    .then(() => res.status(201).json({ message: 'Utilisateur supprimé !' }))
                     .catch(error => res.status(400).json({ error, message: error.message }));
-            } else {
-                res.status(401).json({ message: 'Vous n\'êtes pas autorisé à supprimer cet utilisateur' });
+            } else{
+                res.status(403).json({message: '403: Unauthorized request'});
             }
         })
-        .catch(error => res.status(500).json({ error, message: error.message }));
+        .catch(error => res.status(500).json({ error, message : error.message }));
 };
 
 exports.getAllUsers = (req, res, next) => {

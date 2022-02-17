@@ -105,7 +105,7 @@ export default {
     },
     mounted() {
 
-        const url = "http://localhost:3000/api/auth/" + this.userId;
+        const url = "http://localhost:3000/api/auth/user/" + this.userId;
         const options = {
             method: "GET",
             headers: {
@@ -125,14 +125,16 @@ export default {
             const options = {
                 method: "DELETE",
                 headers: {
-                    'Authorization': "Bearer " + sessionStorage.getItem("token")
+                    "Authorization" : "Bearer " + sessionStorage.getItem('token')
                 }
             };
             fetch(url, options)
-                .then((response) => {
-                    console.log(response);
-                    sessionStorage.clear();
-                    alert("Suppression du compte confirmée ! Vous allez être redirigé vers la page d'accueil.");
+                .then(response => response.json())
+                .then(data => {
+                    this.users = data;
+                    alert("Votre compte a bien été supprimé, vous allez être redirigé vers la page d'accueil");
+                    //sessionStorage.clear();
+                    //this.$router.push('/');
                 })
                 .catch(error => console.log(error));
         },
@@ -141,7 +143,7 @@ export default {
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization' : "Bearer" + sessionStorage.getItem("token")
+                    'Authorization' : "Bearer " + sessionStorage.getItem("token")
                 }
             };
             fetch(url, options)
@@ -156,7 +158,7 @@ export default {
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization' : "Bearer" + sessionStorage.getItem("token")
+                    'Authorization' : "Bearer " + sessionStorage.getItem("token")
                 }
             };
             fetch(url, options)
@@ -171,7 +173,7 @@ export default {
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization' : "Bearer" + sessionStorage.getItem("token")
+                    'Authorization' : "Bearer " + sessionStorage.getItem("token")
                 }
             };
             fetch(url, options)
@@ -186,8 +188,7 @@ export default {
             const options ={
                 method: "DELETE",
                 headers: {
-                    "Content-Type" : "application/json",
-                    "Authorization" : "Bearer" + sessionStorage.getItem("token")
+                    "Authorization" : "Bearer " + sessionStorage.getItem('token')
                 }
             };
             fetch(url, options)
