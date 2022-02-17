@@ -2,17 +2,17 @@
     <main id="main--container">
         <aside class="profile--preview">
             <div class="profile--preview__image">
-                <img src="../assets/test_image.jpg" alt="profile picture" class="profile_picture">
+                <img :src="imageUrl" alt="profile picture" v-if="this.isAdmin = true" class="profile_picture">
             </div>
             <div class="profile--preview__text">
                 <div class="profile--preview__info">
-                    <h3 class="firstName">{{user.firstName}}</h3>
-                    <h2 class="lastName">{{user.lastName}}</h2>
+                    <h3 class="firstName">{{firstName}}</h3>
+                    <h2 class="lastName">{{lastName}}</h2>
                     <button @click="deletePersonnalAccount()" class="accountbutton">Supprimez votre compte</button>
                 </div>
             </div>
         </aside>
-        <section id="main--section" v-if="isAdmin = true">
+        <section id="main--section" v-bind="isAdmin = true">
             <div class="list-container">
                 <div>
                     <h2>Liste des utilisateurs</h2>
@@ -52,55 +52,32 @@
                     </div>
                 </div>
             </div>
-            <div class="form-container">
-                <form v-on:submit.prevent="updateUser">
-                    <input type="text" placeholder="Nom" autocomplete="current-firstName" v-model="input.lastName" />
-                    <input type="text" placeholder="Prénom" autocomplete="current-lastName" v-model="input.firstName" />
-                    <input type="file" placeholder="Photo de profil" />
-                    <input type="password" placeholder="Password" autocomplete="current-password" v-model="input.password" />
-                    <button>Modification</button>
-                </form>
-            </div>
+            <EditAccount :userId="this.userId"/>
         </section>
-        <section id="main--section__noAdmin" v-else>
-            <div class="form-container">
-                <form v-on:submit.prevent="updateUser">
-                    <input type="text" placeholder="Nom" v-model="input.lastName" />
-                    <input type="text" placeholder="Prénom" v-model="input.firstName" />
-                    <input type="file" placeholder="Photo de profil" />
-                    <input type="password" placeholder="Password" required v-model="input.password" />
-                    <button>Modification</button>
-                </form>
-            </div>
+        <section id="main--section__noAdmin">
+            
         </section>
     </main>
 </template>
 
 <script>
+import EditAccount from './EditAccount.vue'
+
 export default {
     name: 'AccountDetail',
-    component:{
+    components:{
+        EditAccount,
     },
     data() {
         return {
             userId: sessionStorage.getItem('userId'),
             isAdmin: sessionStorage.getItem('isAdmin'),
-            user: {
-                userId: "",
-                isAdmin: this.isAdmin,
-                firstName: "",
-                lastName: "",
-                email: "",
-            },
+            firstName: "",
+            lastName: "",
+            imageUrl: "",
             posts: [],
             comments: [],
             users: [],
-            input:{
-                lastName: "",
-                firstName: "",
-                //profilePicture: "",
-                password: "",
-            }
         }
     },
     mounted() {
@@ -115,7 +92,10 @@ export default {
         fetch(url, options)
             .then(response => response.json())
             .then(data => {
-                this.user = data
+                this.firstName = data.firstName;
+                this.lastName = data.lastName;
+                this.imageUrl = data.profilePicture;
+                
             })
             .catch(error => console.log(error));
     },
@@ -133,8 +113,8 @@ export default {
                 .then(data => {
                     this.users = data;
                     alert("Votre compte a bien été supprimé, vous allez être redirigé vers la page d'accueil");
-                    //sessionStorage.clear();
-                    //this.$router.push('/');
+                    sessionStorage.clear();
+                    this.$router.push('/');
                 })
                 .catch(error => console.log(error));
         },
@@ -233,28 +213,6 @@ export default {
             })
             .catch(error => console.log(error));
         },
-        updateUser(){
-            const inputs = {
-                "firstName" : this.input.fistName,
-                "lastName" : this.input.lastName,
-            }
-            const url = "http://localhost:3000/api/auth/update/" + this.userId
-            const options = {
-                method: 'PUT',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + sessionStorage.getItem("token")
-                },
-                body: JSON.stringify(inputs),
-            };
-            fetch(url, options)
-            .then(response => response.json())
-            .then(data => {
-                this.users = data;
-                window.location.reload();
-            })
-            .catch(error => console.log(error));
-        }
     },
     created: function() {
         this.getAllUsers();

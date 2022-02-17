@@ -83,24 +83,23 @@ exports.login = (req, res, next) =>{
 //Modification de l'utilisateur
 
 exports.modifyUser = (req, res, next) => {
-    //const image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+    const userImage = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     User.findOne({ where: { id: req.params.id } })
-        .then((user) => {
-            if (user.id === req.token.userId || req.token.isAdmin) {
-                User.update({...user, firstName: req.body.firstName, lastName: req.body.lastName}, { where: { id: req.params.id }})
-                    .then(() => res.status(201).json({ message: 'Utilisateur modifié !' }))
-                    .catch(error => res.status(400).json({ error, message: error.message }));
-            } else{
-                res.status(403).json({message: '403: Unauthorized request'});
+        .then(user => {
+            if (user.id === req.token.userId){
+                User.update({...user, firstName: req.body.firstName, lastName: req.body.lastName, image: userImage}, { where: { id: req.params.id } })
+                    .then(() => { res.status(201).json({ message: 'Utilisateur modifié avec succès !' }); })
+                    .catch(error => { res.status(400).json({ error: 'Une erreur est survenue lors de la modification de l\'utilisateur', message: error.message }); });
+            } else {
+                res.status(401).json({ error: 'Vous n\'avez pas les droits pour effectuer cette action' });
             }
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => { res.status(500).json({ error: 'Une erreur est survenue lors de la modification de l\'utilisateur', message: error.message }); });
 };
 
 //Suppression d'un utilisateur par l'utilisateur
 
 exports.deleteUser = (req, res, next) => {
-    console.log("token");
     User.findOne({ where: { id: req.params.id } })
         .then((user) => {
             if (user.id === req.token.userId || req.token.isAdmin) {

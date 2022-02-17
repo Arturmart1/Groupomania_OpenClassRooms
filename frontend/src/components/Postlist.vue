@@ -2,7 +2,7 @@
     <main id="main--container">
         <aside class="profile--preview">
             <div class="profile--preview__image">
-                <img src="#" alt="profile picture" class="profile_picture">
+                <img :src="imageUrl" alt="profile picture" class="profile_picture">
             </div>
             <div class="profile--preview__text">
                 <div class="profile--preview__info" @change="getUserInfo()">
@@ -62,6 +62,7 @@ export default {
             isAdmin: sessionStorage.getItem('isAdmin'),
             firstName:"",
             lastName:"",
+            imageUrl: "",
             posts: [],
         }
     },

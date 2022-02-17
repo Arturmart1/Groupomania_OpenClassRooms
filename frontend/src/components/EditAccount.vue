@@ -3,15 +3,15 @@
         <div class="post--form">
             <h2>Modification</h2>
             <form name="editUser" id="editUser">
-                <input type="text" placeholder="{{firstName}}" autocomplete="current-firstName" v-model="input.lastName" />
-                <input type="text" placeholder="{{lastName}}" autocomplete="current-lastName" v-model="input.firstName" />
+                <input type="text" :placeholder="firstName" autocomplete="current-firstName" v-model="input.firstName" />
+                <input type="text" :placeholder="lastName" autocomplete="current-lastName" v-model="input.lastName" />
                 <input type="file" placeholder="Importez votre photo de profil" ref="imageUrl" name="image" id="imageUrl" accept="image/*">
                 <input type="password" placeholder="Password" autocomplete="current-password" v-model="input.password" />
-        </form>
+            </form>
         </div>
         <div class="command__center">
-            <div class="command__button" @click.prevent="updateUser(input.userId)">
-                <p>Modifier/p>
+            <div>
+                <button @click.prevent="updateUser(input.userId)">Modifier</button>
             </div>
         </div>                
     </div>
@@ -34,6 +34,7 @@ export default {
                 lastName: "",
                 imageUrl: "",
                 password: "",
+                userId: "",
             },
         }
     },
@@ -42,7 +43,6 @@ export default {
         const options = {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token')
             }
         };
@@ -55,7 +55,7 @@ export default {
             .catch(error => console.error(error));
     },
     methods: {
-        updateUser(id){
+        updateUser(){
             let input = document.getElementById('imageUrl');
             let formData = new FormData();
             formData.append('firstName', this.input.firstName);
@@ -63,7 +63,7 @@ export default {
             formData.append('password', this.input.password);
             formData.append('image', input.files[0]);
 
-            const url = "http://localhost:3000/api/auth/update/" + id;
+            const url = "http://localhost:3000/api/auth/update/" + this.userId;
             const options = {
                 method: 'PUT',
                 body: formData,
@@ -79,6 +79,8 @@ export default {
                     this.input.lastName = "";
                     this.input.password = "";
                     this.input.imageUrl = "";
+                    //window.location.reload();
+                    alert("Modification(s) enregistrée(s)")
                 })
                 .catch(error => console.error(error));
         },
@@ -87,5 +89,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.form--card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    border: 1px solid red;
+    border-radius: 2rem;
+    padding: 1rem;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    margin: 2rem auto;
+    width: 100vw;
+    #editUser{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+    button{
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+        border: unset;
+        color: #FF4B2B;
+        border-radius: 1rem;
+        padding: 0.5rem;
+        &:hover{
+            background-color: #FF4B2B;
+            color: white;
+            cursor: pointer;
+        }
+    }
+}
 </style>
