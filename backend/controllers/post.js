@@ -22,8 +22,21 @@ exports.newPost = (req, res, next) => {
 //Mise à jour du post par son auteur
 
 exports.updatePost = (req, res, next) => {
-    const postImage = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-    Post.findOne({ where: { id: req.params.id } })
+    if (req.filename === undefined) {
+        Post.findOne({ where: { id: req.params.id } })
+            .then(post => {
+                if (post.userId === req.token.userId || post.isAdmin === req.token.isAdmin ) {
+                    Post.update({...post, title: req.body.title, content: req.body.content}, { where: { id: req.params.id }})
+                        .then(() => res.status(201).json({ message: 'Post modifié !' }))
+                        .catch(error => res.status(400).json({ error, message: error.message }));
+                } else {
+                    res.status(403).json({ message: 'Vous n\'êtes pas autorisé à modifier ce post !' });
+                }
+            })
+            .catch(error => res.status(500).json({ error, message: error.message }));
+    } else {
+        const postImage = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+        Post.findOne({ where: { id: req.params.id } })
         .then(post => {
             if (post.userId === req.token.userId || post.isAdmin === req.token.isAdmin ) {
                 Post.update({...post, title: req.body.title, content: req.body.content, imageUrl: postImage}, { where: { id: req.params.id }})
@@ -33,7 +46,8 @@ exports.updatePost = (req, res, next) => {
                 res.status(403).json({ message: 'Vous n\'êtes pas autorisé à modifier ce post !' });
             }
         })
-        .catch(error => res.status(500).json({ error, message: error.message }));
+    .catch(error => res.status(500).json({ error, message: error.message }));
+    }    
 };
 
 //Suppression d'un post
