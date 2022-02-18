@@ -3,8 +3,8 @@
         <div class="post--form">
             <h2>Modification</h2>
             <form name="editUser" id="editUser">
-                <input type="text" :placeholder="firstName" autocomplete="current-firstName" v-model="input.firstName" />
-                <input type="text" :placeholder="lastName" autocomplete="current-lastName" v-model="input.lastName" />
+                <input type="text" :placeholder="firstName" required v-model="input.firstName" />
+                <input type="text" :placeholder="lastName" required v-model="input.lastName" />
                 <input type="file" ref="imageUrl" name="image" id="imageUrl" accept="image/*">
             </form>
         </div>
