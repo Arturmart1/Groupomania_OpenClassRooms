@@ -18,7 +18,7 @@ const Post = db.define('Post', {
     },
     userId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
 },{
     freezeTableName : true,
