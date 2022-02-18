@@ -94,7 +94,7 @@ export default {
             .then(data => {
                 this.firstName = data.firstName;
                 this.lastName = data.lastName;
-                this.imageUrl = data.profilePicture;
+                this.imageUrl = data.imageUrl;
                 
             })
             .catch(error => console.log(error));
