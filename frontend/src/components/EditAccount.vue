@@ -77,7 +77,7 @@ export default {
                     this.input.firstName = "";
                     this.input.lastName = "";
                     this.input.imageUrl = "";
-                    //window.location.reload();
+                    window.location.reload();
                     alert("Modification(s) enregistrée(s)")
                 })
                 .catch(error => console.error(error));
@@ -96,8 +96,7 @@ export default {
     border-radius: 2rem;
     padding: 1rem;
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-    margin: 2rem auto;
-    width: 100vw;
+
     #editUser{
         display: flex;
         flex-direction: column;

@@ -2,7 +2,7 @@
     <main id="main--container">
         <aside class="profile--preview">
             <div class="profile--preview__image">
-                <img :src="imageUrl" alt="profile picture" v-if="this.isAdmin = true" class="profile_picture">
+                <img :src="imageUrl" alt="profile picture" class="profile_picture">
             </div>
             <div class="profile--preview__text">
                 <div class="profile--preview__info">
@@ -12,7 +12,7 @@
                 </div>
             </div>
         </aside>
-        <section id="main--section" v-bind="isAdmin = true">
+        <section id="main--section" v-if="this.isAdmin === true">
             <div class="list-container">
                 <div>
                     <h2>Liste des utilisateurs</h2>
@@ -54,8 +54,8 @@
             </div>
             <EditAccount :userId="this.userId"/>
         </section>
-        <section id="main--section__noAdmin">
-            
+        <section id="main--section__noAdmin" v-else>
+            <EditAccount :userId="this.userId"/>
         </section>
     </main>
 </template>
@@ -329,16 +329,9 @@ export default {
         @extend .user--list;
     }
 }
-.form-container{
-    @extend .list-container;
-    order: 2;
-    margin: 2rem auto;
-    width: 100vw!important;
-    overflow: unset!important;
-    form{
-        display: flex;
-        flex-direction: column;
-    }
+#main--section__noAdmin{
+    margin: auto;
+    width: 50%;
 }
 
 </style>
