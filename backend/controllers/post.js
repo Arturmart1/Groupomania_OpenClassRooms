@@ -13,7 +13,6 @@ exports.newPost = (req, res, next) => {
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         userId: req.body.userId,
     };
-    console.log(post);
     Post.create(post)
         .then(() => res.status(201).json({ message: 'Post créé !' }))
         .catch(error => res.status(400).json({ error, message: error.message }));

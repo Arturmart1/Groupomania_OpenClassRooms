@@ -57,26 +57,23 @@ export default {
         sendReply(){
             const replyInput = {
                 "content": this.replyContent,
-                "postId": this.postId,
-                "userId": sessionStorage.getItem("userId"),
+                //"postId": this.postId,
             }
             const url = "http://localhost:3000/api/comment/reply"
             const options = {
                 method: "POST",
                 body: JSON.stringify(replyInput),
                 headers: {
-                    'Authorization' : 'Bearer' + sessionStorage.getItem("token"),
+                    'Authorization' : 'Bearer ' + sessionStorage.getItem("token"),
                     'Content-type': 'application/json'
                 }
             }
             fetch(url, options)
                 .then(response => response.json())
-                .then((response)=>{
-                    if (response.ok){
-                        this.content = {}
-                    } else{
-                        window.location.reload()
-                    }
+                .then(data =>{
+                    this.comments.push(data);
+                    this.replyContent = "";
+                    //window.location.reload();
                 })
                 .catch(error => console.log(error))
         },

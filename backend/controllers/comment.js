@@ -4,13 +4,12 @@ const User = require('../models/userSchema');
 
 //Create a new comment on a post in function of the postId
 exports.newComment = (req, res, next) => {
-    Comment.create({
-        content: req.body.content,
-        postId: req.body.postId,
-        userId: req.body.userId
-    })
-    .then(comment => { res.status(201).json(comment); })
-    .catch(error => { res.status(400).json({ error: error }); });
+    const reply= {
+        content: req.body.content
+    };
+    Comment.create(reply)
+    .then(() => res.status(201).json({ message: 'Réponse envoyée' }))
+    .catch(error => res.status(400).json({ error, message: error.message }));
 };
 
 exports.deleteComment = (req, res, next) => {
