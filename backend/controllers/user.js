@@ -89,7 +89,7 @@ exports.modifyUser = (req, res, next) => {
             .then(user =>{
                 if (user.id === req.token.userId){
                     User.update({...user, firstName: req.body.firstName, lastName: req.body.lastName}, { where: { id: req.params.id }})
-                    .then(() => res.status(201).json({ message: 'Post modifié !' }))
+                    .then(() => res.status(201).json({ message: 'Utilisateur modifié !' }))
                     .catch(error => res.status(400).json({ error, message: error.message }));
                 } else {
                     res.status(403).json({ message: 'Vous n\'êtes pas autorisé à modifier cet utilisateur !' });
@@ -131,7 +131,7 @@ exports.deleteUser = (req, res, next) => {
 exports.getAllUsers = (req, res, next) => {
     User.findAll({
         order: [['createdAt', 'DESC']],
-        include: [Post, Comment]
+        //include: [Post, Comment]
     })
     .then(users => { res.status(200).json(users); })
     .catch(error => res.status(500).json({ error, message: error.message }));

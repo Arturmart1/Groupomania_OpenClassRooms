@@ -77,7 +77,7 @@ export default {
                     this.input.firstName = "";
                     this.input.lastName = "";
                     this.input.imageUrl = "";
-                    window.location.reload();
+                    //window.location.reload();
                     alert("Modification(s) enregistrée(s)")
                 })
                 .catch(error => console.error(error));

@@ -5,7 +5,9 @@ const User = require('../models/userSchema');
 //Create a new comment on a post in function of the postId
 exports.newComment = (req, res, next) => {
     const reply= {
-        content: req.body.content
+        content: req.body.content,
+        PostId: req.body.postId,
+        UserId: req.body.userId
     };
     Comment.create(reply)
     .then(() => res.status(201).json({ message: 'Réponse envoyée' }))
@@ -28,7 +30,7 @@ exports.getAllComments = (req, res, next) => {
     Comment.findAll({
         order: [['createdAt', 'DESC']],
         where: { postId: req.params.id },
-        include: [User, Post]
+        include: [User]
     })
         .then((answers) => res.status(200).json(answers))
         .catch(error => res.status(400).json({ error }));

@@ -6,10 +6,6 @@ const Comment = db.define('Comment', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    postId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-    }
 },{
     freezeTableName : true,
 });
