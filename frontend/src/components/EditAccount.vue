@@ -5,8 +5,7 @@
             <form name="editUser" id="editUser">
                 <input type="text" :placeholder="firstName" autocomplete="current-firstName" v-model="input.firstName" />
                 <input type="text" :placeholder="lastName" autocomplete="current-lastName" v-model="input.lastName" />
-                <input type="file" placeholder="Importez votre photo de profil" ref="imageUrl" name="image" id="imageUrl" accept="image/*">
-                <input type="password" placeholder="Password" autocomplete="current-password" v-model="input.password" />
+                <input type="file" ref="imageUrl" name="image" id="imageUrl" accept="image/*">
             </form>
         </div>
         <div class="command__center">
@@ -28,6 +27,7 @@ export default {
             isAdmin: sessionStorage.getItem('isAdmin'),
             firstName:"",
             lastName:"",
+            imageUrl: "",
             users:[],
             input: {
                 firstName: "",
@@ -60,7 +60,6 @@ export default {
             let formData = new FormData();
             formData.append('firstName', this.input.firstName);
             formData.append('lastName', this.input.lastName);
-            formData.append('password', this.input.password);
             formData.append('image', input.files[0]);
 
             const url = "http://localhost:3000/api/auth/update/" + this.userId;
@@ -77,14 +76,13 @@ export default {
                     this.users.push(data);
                     this.input.firstName = "";
                     this.input.lastName = "";
-                    this.input.password = "";
                     this.input.imageUrl = "";
                     //window.location.reload();
                     alert("Modification(s) enregistrée(s)")
                 })
                 .catch(error => console.error(error));
         },
-    }
+    },
 }
 </script>
 

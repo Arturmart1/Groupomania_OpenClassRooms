@@ -25,7 +25,7 @@ const User = db.define('User', {
         allowNull: false,
         defaultValue: false
     },
-    profilePicture: {
+    imageUrl: {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: 'http://localhost:3000/images/profilPictures/default_profil_pict.jpg'
