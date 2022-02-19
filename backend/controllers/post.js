@@ -4,13 +4,14 @@ const Comment = require('../models/commentSchema');
 const fs = require('fs');
 
 
-//Création d'un nouveau post
+//Création d'un nouveau post en tenant compte de l'utilisateur connecté
 
 exports.newPost = (req, res, next) => { 
     const post = {
         title: req.body.title,
         content: req.body.content,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        UserId: req.body.userId
     };
     Post.create(post)
         .then(() => res.status(201).json({ message: 'Post créé !' }))

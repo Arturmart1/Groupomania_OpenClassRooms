@@ -38,7 +38,7 @@ export default {
             formData.append('title', this.title);
             formData.append('content', this.content);
             formData.append('image', input.files[0]);
-            formData.append('userId', this.userId);
+            formData.append('UserId', this.userId);
             
             const url = 'http://localhost:3000/api/posts/new';
             const options = {
@@ -55,7 +55,8 @@ export default {
                 this.title = "";
                 this.content = "";
                 this.imageUrl = "";
-                window.location.reload();
+                this.UserId = "";
+                //window.location.reload();
             })
             .catch(error => console.error(error))
         },

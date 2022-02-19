@@ -58,7 +58,7 @@ export default {
     },
     data(){
         return {
-            userId: sessionStorage.getItem('userId'),
+            UserId: sessionStorage.getItem('userId'),
             isAdmin: sessionStorage.getItem('isAdmin'),
             firstName:"",
             lastName:"",
