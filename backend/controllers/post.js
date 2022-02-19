@@ -11,7 +11,6 @@ exports.newPost = (req, res, next) => {
         title: req.body.title,
         content: req.body.content,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        UserId: req.body.userId,
     };
     Post.create(post)
         .then(() => res.status(201).json({ message: 'Post créé !' }))
@@ -54,7 +53,7 @@ exports.updatePost = (req, res, next) => {
 exports.deletePost = (req, res, next) => {
     Post.findOne({ where: { id: req.params.id } })
         .then(post => {
-            if (post.userId === req.token.userId  || req.token.isAdmin) {
+            if (post.UserId === req.token.userId  || req.token.isAdmin) {
                 const filename = post.imageUrl.split('/images/')[1];
                 fs.unlink(`images/${filename}`, () =>
                 Post.destroy({ where: { id: req.params.id } })
