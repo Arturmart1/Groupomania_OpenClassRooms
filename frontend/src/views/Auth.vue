@@ -1,92 +1,79 @@
 <template>
-	<div class="container" id="container">
-		<div class="form-container sign-up-container">
-			<form v-on:submit.prevent="signUp">
-				<h1>Créer un compte</h1>
-				<input type="text" placeholder="Nom" required v-model="signUpInput.lastName" />
-				<input type="text" placeholder="Prénom" required v-model="signUpInput.firstName" />
-				<input type="email" placeholder="Email" required v-model="signUpInput.email" />
-				<input type="password" placeholder="Password" autocomplete="none" required v-model="signUpInput.password" />
-				<button>S'enregistrer</button>
-			</form>
-		</div>
-		<div class="form-container sign-in-container">
-			<form v-on:submit.prevent="login" class="loginForm">
-				<img src="../../src/assets/icon.svg" alt="logo groupomania">
-				<h1>Se connecter</h1>
-				<input type="email" placeholder="Email" required v-model="loginInput.email"/>
-				<input type="password" placeholder="Mot de passe" autocomplete="none" required v-model="loginInput.password"/>
-				<a href="#">Mot de passe oublié?</a>
-				<button>Connexion</button>
-			</form>
-		</div>
-		<div class="overlay-container">
-			<div class="overlay">
-				<div class="overlay-panel overlay-left">
-					<h1>Bienvenue</h1>
-					<p>Déjà enregistré? connectez vous !</p>
-					<button class="ghost" id="signIn" @click="onClick">Se connecter</button>
-				</div>
-				<div class="overlay-panel overlay-right">
-					<h1>Bonjour !</h1>
-					<p>Entrer vos Identifiants afin de vous connecter</p>
-					<button class="ghost" id="signUp" @click="onClick">S'inscrire</button>
-				</div>
-			</div>
-		</div>
-	</div>
+    <section>
+		<img src="../assets/icon-left-font-monochrome-white.png" alt="Vue.js">
+        <div class="main">  	
+            <input type="checkbox" id="chk" aria-hidden="true">
+            <div class="signup">
+                <form v-on:submit.prevent="signUp">
+                    <label for="chk" aria-hidden="true">Inscription</label>
+                    <input type="text" name="txt" placeholder="Prénom" required v-model="signUpInput.firstName">
+                    <input type="text" name="txt" placeholder="Nom" required v-model="signUpInput.lastName">
+                    <input type="email" name="email" placeholder="Email" required v-model="signUpInput.email">
+                    <input type="password" name="pswd" placeholder="Password" required v-model="signUpInput.password">
+                    <button>S'inscrire</button>
+                </form>
+            </div>
+            <div class="login">
+                <form v-on:submit.prevent="login">
+                    <label for="chk" aria-hidden="true" class="login--label">Connexion</label>
+                    <input type="email" name="email" placeholder="Email" required v-model="loginInput.email">
+                    <input type="password" name="pswd" placeholder="Password" required v-model="loginInput.password">
+                    <button>Connexion</button>
+                </form>
+            </div>
+        </div>
+    </section>
 </template>
 
 <script>
 
 export default {
-    name: "Auth",
+    name: 'Auth',
 
-    data(){
+    data() {
         return {
-            loginInput:{
-                "email" : "",
-                "password" : "",
+            loginInput: {
+                "email": "",
+                "password": "",
             },
-			signUpInput:{
-				"firstName": "",
-				"lastName" : "",
-				"email": "",
-				"password": ""
-			}
+            signUpInput: {
+                "firstName": "",
+                "lastName": "",
+                "email": "",
+                "password": ""
+            }
         }
-        
     },
     methods: {
-        login(){
-            const credentials ={
-                "email" : this.loginInput.email,
-                "password" : this.loginInput.password 
+        login() {
+            const credentials = {
+                "email": this.loginInput.email,
+                "password": this.loginInput.password
             }
-			
-            const loginUrl = 'http://localhost:3000/api/auth/login'
-            const loginOptions = {
-                method: "POST",
+
+            const url = 'http://localhost:3000/api/auth/login';
+            const options = {
+                method: 'POST',
                 body: JSON.stringify(credentials),
                 headers: {
-                    'Content-type' : 'application/json'
+                    'Content-Type': 'application/json'
                 }
             }
-            fetch(loginUrl, loginOptions)
+            fetch(url, options)
                 .then(res => res.json())
-                .then((res)=>{
-                    if(res.userId && res.token){
+                .then(res => {
+                    if (res.userId && res.token) {
                         sessionStorage.setItem("userId", res.userId)
                         sessionStorage.setItem("token", res.token)
                         sessionStorage.setItem("isAdmin", res.isAdmin)
-                        this.$router.push("/home")
-                    } else{
-                        alert("Identifiants incorrects")
+                        this.$router.push('/Home');
+                    } else {
+                        alert("Identifiants incorrects");
                     }
                 })
                 .catch(error => console.log(error))
         },
-		signUp() {
+        signUp() {
 			const signUpCredentials = {
 				"lastName" : this.signUpInput.lastName,
 				"firstName": this.signUpInput.firstName,
@@ -103,244 +90,110 @@ export default {
 			}
 			fetch(url, options)
 				.then(res => res.json())
-				.then ((res) =>{
-					sessionStorage.setItem("userId", res.userId);
-					sessionStorage.setItem("token", res.token);
-					sessionStorage.setItem("isAdmin", res.isAdmin);
+				.then (() =>{
 					window.location.reload();
 					alert("Inscription confirmée, vous pouvez vous connecter")
 				})
 			.catch(error => console.log(error))
 		},
-		onClick() {
-            const signUpButton = document.getElementById('signUp');
-            const signInButton = document.getElementById('signIn');
-            const container = document.getElementById('container');
-			
-			signInButton.addEventListener('click', () => { 
-				container.classList.remove("right-panel-active");
-			});
-            signUpButton.addEventListener('click', () => {
-				container.classList.add("right-panel-active");
-			});
-        },
-    }
+    },
 }
+
 </script>
 
 <style lang="scss" scoped>
-* {
-	box-sizing: border-box;
-}
-
-body {
-	background: #f6f5f7;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	font-family: 'Montserrat', sans-serif;	
-}
-
-h1 {
-	font-weight: bold;
+section{
 	margin: 0;
-}
-
-h2 {
-	text-align: center;
-}
-
-p {
-	font-size: 14px;
-	font-weight: 100;
-	line-height: 20px;
-	letter-spacing: 0.5px;
-	margin: 20px 0 30px;
-}
-
-span {
-	font-size: 12px;
-}
-
-a {
-	color: #333;
-	font-size: 14px;
-	text-decoration: none;
-	margin: 15px 0;
-}
-
-button {
-	border-radius: 20px;
-	border: 1px solid #FF4B2B;
-	background-color: #FF4B2B;
-	color: #FFFFFF;
-	font-size: 12px;
-	font-weight: bold;
-	padding: 12px 45px;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	transition: transform 80ms ease-in;
-    &:hover{
-        cursor: pointer;
-    }
-}
-
-button:active {
-	transform: scale(0.95);
-}
-
-button:focus {
-	outline: none;
-}
-
-button.ghost {
-	background-color: transparent;
-	border-color: #FFFFFF;
-}
-
-form {
-	background-color: #FFFFFF;
+	padding: 0;
 	display: flex;
-	align-items: center;
-	justify-content: center;
 	flex-direction: column;
-	padding: 0 50px;
-	height: 100%;
-	text-align: center;
-}
-
-input {
-	background-color: #eee;
-	border: none;
-	padding: 12px 15px;
-	margin: 8px 0;
-	width: 100%;
-}
-
-.container {
-	background-color: #fff;
-	border-radius: 10px;
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-	position: relative;
-	overflow: hidden;
-	width: 768px;
-	max-width: 100%;
-	min-height: 480px;
-	margin: 10rem auto 0;
-}
-
-.form-container {
-	position: absolute;
-	top: 0;
-	height: 100%;
-	transition: all 0.6s ease-in-out;
-}
-
-.sign-in-container {
-	left: 0;
-	width: 50%;
-	z-index: 2;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	background: linear-gradient(to bottom, #ff745c, #ff4b2b, #ff2f0a);
 	img{
-		width: 8rem;
-		padding-bottom: 2.8rem;
+		width: 25rem;
+		margin-bottom: 2rem;
 	}
 }
-
-.container.right-panel-active .sign-in-container {
-	transform: translateX(100%);
-}
-
-.sign-up-container {
-	left: 0;
-	width: 50%;
-	opacity: 0;
-	z-index: 1;
-}
-
-.container.right-panel-active .sign-up-container {
-	transform: translateX(100%);
-	opacity: 1;
-	z-index: 5;
-	animation: show 0.6s;
-}
-
-@keyframes show {
-	0%, 49.99% {
-		opacity: 0;
-		z-index: 1;
-	}
-	
-	50%, 100% {
-		opacity: 1;
-		z-index: 5;
-	}
-}
-
-.overlay-container {
-	position: absolute;
-	top: 0;
-	left: 50%;
-	width: 50%;
-	height: 100%;
+.main{
+	width: 350px;
+	height: 530px;
+    background: #fff;
 	overflow: hidden;
-	transition: transform 0.6s ease-in-out;
-	z-index: 100;
+	border-radius: 10px;
+	box-shadow: 5px 20px 50px #000;
 }
-
-.container.right-panel-active .overlay-container{
-	transform: translateX(-100%);
+#chk{
+	display: none;
 }
-
-.overlay {
-	background: #FF416C;
-	background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
-	background: linear-gradient(to right, #FF4B2B, #FF416C);
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-position: 0 0;
-	color: #FFFFFF;
+.signup{
 	position: relative;
-	left: -100%;
+	width:100%;
 	height: 100%;
-	width: 200%;
-    transform: translateX(0);
-	transition: transform 0.6s ease-in-out;
 }
-
-.container.right-panel-active .overlay {
-    transform: translateX(50%);
-}
-
-.overlay-panel {
-	position: absolute;
-	display: flex;
-	align-items: center;
+label{
+	color: #ff4b2b;
+	font-size: 2.3em;
 	justify-content: center;
-	flex-direction: column;
-	padding: 0 40px;
-	text-align: center;
-	top: 0;
-	height: 100%;
-	width: 50%;
-	transform: translateX(0);
-	transition: transform 0.6s ease-in-out;
+	display: flex;
+	margin: 60px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: .5s ease-in-out;
+}
+input{
+	width: 60%;
+	height: 20px;
+	background: #e0dede;
+	justify-content: center;
+	display: flex;
+	margin: 20px auto;
+	padding: 10px;
+	border: none;
+	outline: none;
+	border-radius: 5px;
+}
+button{
+	width: 60%;
+	height: 40px;
+	margin: 10px auto;
+	justify-content: center;
+	display: block;
+	color: #fff;
+	background: #ff4b2b;
+	font-size: 1em;
+	font-weight: bold;
+	margin-top: 20px;
+	outline: none;
+	border: none;
+	border-radius: 5px;
+	transition: .2s ease-in;
+	cursor: pointer;
+}
+button:hover{
+	background: lighten($color: #ff4b2b, $amount: 10);
+}
+.login{
+	height: 460px;
+	background: #eee;
+	border-radius: 60% / 10%;
+	transform: translateY(-180px);
+	transition: .8s ease-in-out;
+}
+.login label{
+	color: #ff4b2b;
+    padding-top: 0.4em;
+	transform: scale(.6);
 }
 
-.overlay-left {
-	transform: translateX(-20%);
+#chk:checked ~ .login{
+	transform: translateY(-500px);
 }
-
-.container.right-panel-active .overlay-left {
-	transform: translateX(0);
+#chk:checked ~ .login label{
+	transform: scale(1);	
 }
-
-.overlay-right {
-	right: 0;
-	transform: translateX(0);
-}
-
-.container.right-panel-active .overlay-right {
-	transform: translateX(20%);
+#chk:checked ~ .signup label{
+	transform: scale(.6);
 }
 </style>
