@@ -101,9 +101,12 @@ exports.modifyUser = (req, res, next) => {
         User.findOne({ where: { id : req.params.id } })
             .then(user =>{ 
                 if (user.id === req.token.userId){
-                    User.update({...user, image: userImage}, { where: { id: req.params.id }})
+                    const filename = user.imageUrl.split('/images/')[1];
+                    fs.unlink(`images/${filename}`, () => {
+                    User.update({...user, imageUrl: userImage}, { where: { id: req.params.id }})
                     .then(() => res.status(201).json({ message: 'Image modifiée !' }))
                     .catch(error => res.status(400).json({ error, message: error.message }));
+                    });
                 } else {
                     res.status(403).json({ message: 'Vous n\'êtes pas autorisé à modifier cet utilisateur !' });
                 }
@@ -114,9 +117,12 @@ exports.modifyUser = (req, res, next) => {
         User.findOne({ where: { id: req.params.id } })
             .then((user) => { 
                 if (user.id === req.token.userId){
+                    const filename = user.imageUrl.split('/images/')[1];
+                    fs.unlink(`images/${filename}`, () => {
                     User.update({...user, firstName: req.body.firstName, lastName: req.body.lastName, imageUrl: userImage}, {where: {id: req.params.id}})
                         .then(() => res.status(201).json({ message: 'Utilisateur modifié !' }))
                         .catch(error => res.status(400).json({ error, message: error.message }));
+                    });
                 } else {
                     res.status(403).json({ message: 'Vous n\'êtes pas autorisé à modifier cet utilisateur.' });
                 }
