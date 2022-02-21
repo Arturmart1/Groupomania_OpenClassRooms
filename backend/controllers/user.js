@@ -84,7 +84,7 @@ exports.login = (req, res, next) =>{
 //Modification de l'utilisateur
 
 exports.modifyUser = (req, res, next) => {
-    if(req.filename === undefined){
+    if(req.file === undefined){ //Changement des données de l'utilisateur sans modification de l'image
         User.findOne({ where: { id : req.params.id } })
             .then(user =>{
                 if (user.id === req.token.userId){
@@ -96,7 +96,20 @@ exports.modifyUser = (req, res, next) => {
                 }
             })
             .catch(error => res.status(500).json({ error, message: error.message }));
-    } else {
+    } else if (req.body.firstName === '' || req.body.lastName === ''){ //Modification de l'image uniquement
+        const userImage = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        User.findOne({ where: { id : req.params.id } })
+            .then(user =>{ 
+                if (user.id === req.token.userId){
+                    User.update({...user, image: userImage}, { where: { id: req.params.id }})
+                    .then(() => res.status(201).json({ message: 'Image modifiée !' }))
+                    .catch(error => res.status(400).json({ error, message: error.message }));
+                } else {
+                    res.status(403).json({ message: 'Vous n\'êtes pas autorisé à modifier cet utilisateur !' });
+                }
+            })
+            .catch(error => res.status(500).json({ error, message: error.message }));        
+    } else { // Modification de toutes les données de l'utilisateur
         const userImage = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
         User.findOne({ where: { id: req.params.id } })
             .then((user) => { 
@@ -118,15 +131,20 @@ exports.deleteUser = (req, res, next) => {
     User.findOne({ where: { id: req.params.id } })
         .then((user) => {
             if (user.id === req.token.userId || req.token.isAdmin) {
-                User.destroy({ where: { id: req.params.id } })
-                    .then(() => res.status(201).json({ message: 'Utilisateur supprimé !' }))
-                    .catch(error => res.status(400).json({ error, message: error.message }));
+                const filename = user.imageUrl.split('/images/')[1];
+                fs.unlink(`images/${filename}`, () => {
+                    User.destroy({ where: { id: req.params.id } })
+                        .then(() => res.status(201).json({ message: 'Utilisateur supprimé !' }))
+                        .catch(error => res.status(400).json({ error, message: error.message }));
+                });
             } else{
                 res.status(403).json({message: '403: Unauthorized request'});
             }
         })
         .catch(error => res.status(500).json({ error, message : error.message }));
 };
+
+//Récuperation de tous les utilisateurs
 
 exports.getAllUsers = (req, res, next) => {
     User.findAll({
@@ -136,6 +154,8 @@ exports.getAllUsers = (req, res, next) => {
     .then(users => { res.status(200).json(users); })
     .catch(error => res.status(500).json({ error, message: error.message }));
 };
+
+//Récupération d'un seul utilisateur
 
 exports.getOneUser = (req, res, next) => {
     User.findOne({ 

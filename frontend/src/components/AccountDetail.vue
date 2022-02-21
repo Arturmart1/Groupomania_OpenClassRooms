@@ -12,7 +12,7 @@
                 </div>
             </div>
         </aside>
-        <section id="main--section" >
+        <section id="main--section" v-if="isAdmin === true" >
             <div class="list-container">
                 <div>
                     <h2>Liste des utilisateurs</h2>
@@ -54,9 +54,9 @@
             </div>
             <EditAccount :userId="this.userId"/>
         </section>
-        <!--section id="main--section__noAdmin">
+        <section id="main--section__noAdmin">
             <EditAccount :userId="this.userId"/>
-        </section-->
+        </section>
     </main>
 </template>
 

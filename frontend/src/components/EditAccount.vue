@@ -12,6 +12,9 @@
             <div>
                 <button @click.prevent="updateUser(input.userId)">Modifier</button>
             </div>
+            <div>
+                <button @click.prevent="deleteProfilPicture()">Supprimer la photo</button>
+            </div>
         </div>                
     </div>
 </template>
@@ -77,8 +80,31 @@ export default {
                     this.input.firstName = "";
                     this.input.lastName = "";
                     this.input.imageUrl = "";
-                    //window.location.reload();
+                    window.location.reload();
                     alert("Modification(s) enregistrée(s)")
+                })
+                .catch(error => console.error(error));
+        },
+        deleteProfilPicture(){
+            let defaultPicture = "https://i.postimg.cc/MHrVKYGM/default-profil-pict.jpg"
+            let formData = new FormData();
+            formData.append('image', defaultPicture);
+            
+            const url = "http://localhost:3000/api/auth/update/" + this.userId;
+            const options = {
+                method: 'PUT',
+                body: formData,
+                headers: {
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+                },
+            };
+            fetch(url, options)
+                .then(response => response.json())
+                .then(data => {
+                    this.users.push(data);
+                    this.input.imageUrl = "";
+                    window.location.reload();
+                    alert("Photo supprimée")
                 })
                 .catch(error => console.error(error));
         },
