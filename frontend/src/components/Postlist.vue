@@ -246,4 +246,20 @@ export default {
 .reply--bloc{
     width: 100%;
 }
+@media only screen and (max-width: 400px){
+    aside{
+        display: none;
+    }
+    .post--list{
+        width: 90%!important;
+        margin: auto!important;;
+        .post--card{
+            width: 95%!important;
+            margin: auto;
+        }
+        .form--card{
+            width: 100%;
+        }
+    }
+}
 </style>

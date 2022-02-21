@@ -58,5 +58,9 @@ export default {
         }
     }
 }
-
+@media only screen and (max-width: 400px){
+    .topbar__image{
+        width: 9rem!important;
+    }
+}
 </style>

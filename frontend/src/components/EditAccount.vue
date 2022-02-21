@@ -3,7 +3,7 @@
         <div class="post--form">
             <h2>Modification</h2>
             <form name="editUser" id="editUser">
-                <input type="text" :placeholder="firstName" v-model="input.firstName" />
+                <input type="text" :placeholder="firstName" :autocomplete="firstName" v-model="input.firstName" />
                 <input type="text" :placeholder="lastName" v-model="input.lastName" />
                 <input type="file" ref="imageUrl" name="image" id="imageUrl" accept="image/*">
             </form>

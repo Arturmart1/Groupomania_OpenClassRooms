@@ -96,7 +96,7 @@ exports.modifyUser = (req, res, next) => {
                 }
             })
             .catch(error => res.status(500).json({ error, message: error.message }));
-    } else if (req.body === undefined){ //Modification de l'image uniquement
+    } else if (req.file !== undefined && req.body.firstName || req.body.lastName === undefined){ //Modification de l'image uniquement
         const userImage = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
         User.findOne({ where: { id : req.params.id } })
             .then(user =>{ 
