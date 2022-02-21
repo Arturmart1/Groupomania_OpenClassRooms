@@ -95,22 +95,6 @@ exports.modifyUser = (req, res, next) => {
                     res.status(403).json({ message: 'Vous n\'êtes pas autorisé à modifier cet utilisateur !' });
                 }
             })
-            .catch(error => res.status(500).json({ error, message: error.message }));
-    } else if (req.file !== undefined && req.body.firstName || req.body.lastName === undefined){ //Modification de l'image uniquement
-        const userImage = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-        User.findOne({ where: { id : req.params.id } })
-            .then(user =>{ 
-                if (user.id === req.token.userId){
-                    const filename = user.imageUrl.split('/images/')[1];
-                    fs.unlink(`images/${filename}`, () => {
-                    User.update({...user, imageUrl: userImage}, { where: { id: req.params.id }})
-                    .then(() => res.status(201).json({ message: 'Image modifiée !' }))
-                    .catch(error => res.status(400).json({ error, message: error.message }));
-                    });
-                } else {
-                    res.status(403).json({ message: 'Vous n\'êtes pas autorisé à modifier cet utilisateur !' });
-                }
-            })
             .catch(error => res.status(500).json({ error, message: error.message }));        
     } else { // Modification de toutes les données de l'utilisateur
         const userImage = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`

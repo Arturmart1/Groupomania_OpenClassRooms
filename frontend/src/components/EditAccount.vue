@@ -4,7 +4,7 @@
             <h2>Modification</h2>
             <form name="editUser" id="editUser">
                 <input type="text" :placeholder="firstName" :autocomplete="firstName" v-model="input.firstName" />
-                <input type="text" :placeholder="lastName" v-model="input.lastName" />
+                <input type="text" :placeholder="lastName" :autocomplete="lastName" v-model="input.lastName" />
                 <input type="file" ref="imageUrl" name="image" id="imageUrl" accept="image/*">
             </form>
         </div>
@@ -61,8 +61,8 @@ export default {
         updateUser(){
             let input = document.getElementById('imageUrl');
             let formData = new FormData();
-            formData.append('firstName', this.input.firstName);
-            formData.append('lastName', this.input.lastName);
+            formData.append('firstName', this.input.firstName || this.firstName);
+            formData.append('lastName', this.input.lastName || this.lastName);
             formData.append('image', input.files[0]);
 
             const url = "http://localhost:3000/api/auth/update/" + this.userId;
