@@ -12,7 +12,7 @@
                 </div>
             </div>
         </aside>
-        <section id="main--section" v-if="isAdmin === true" >
+        <section id="main--section" v-if="this.isAdmin === 'true'">
             <div class="list-container">
                 <div>
                     <h2>Liste des utilisateurs</h2>
@@ -54,7 +54,7 @@
             </div>
             <EditAccount :userId="this.userId"/>
         </section>
-        <section id="main--section__noAdmin">
+        <section id="main--section__noAdmin" v-else>
             <EditAccount :userId="this.userId"/>
         </section>
     </main>
@@ -175,7 +175,7 @@ export default {
             .then(response => response.json())
             .then(data =>{
                 this.users = data;
-                //window.location.reload();
+                window.location.reload();
             })
             .catch(error => console.log(error));
         },
@@ -184,7 +184,6 @@ export default {
             const options = {
                 method: "DELETE",
                 headers: {
-                    "Content-Type": "application/json",
                     "Authorization": "Bearer " + sessionStorage.getItem("token")
                 }
             };
@@ -201,7 +200,6 @@ export default {
             const options = {
                 method: "DELETE",
                 headers: {
-                    "Content-Type": "application/json",
                     "Authorization": "Bearer " + sessionStorage.getItem("token")
                 }
             };
