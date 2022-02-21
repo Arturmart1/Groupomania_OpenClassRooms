@@ -15,8 +15,13 @@
         <div class="reply--bloc">
             <div v-for="comment in comments" :key="comment.id" class="reply__display" >
                 <div class="reply__list">
-                    <h3>{{comment.User.firstName}} {{comment.User.lastName}}</h3>
-                    <p>{{comment.content}}</p>
+                    <div>
+                        <h3>{{comment.User.firstName}} {{comment.User.lastName}}</h3>
+                        <p>{{comment.content}}</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-solid fa-ban" @click="deleteComment(comment.id)"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -28,6 +33,7 @@ export default {
     name: "Reply",
     data() {
         return {
+            userId: sessionStorage.getItem('userId'),
             comment: "",
             comments: [],
             replyContent: "",
@@ -72,6 +78,18 @@ export default {
                 .then(()=>window.location.reload())
                 .catch(error => console.log(error))
         },
+        deleteComment(id){
+            const url = "http://localhost:3000/api/comment/delete/" + id
+            const options = {
+                method: "DELETE",
+                headers: {
+                    'Authorization' : 'Bearer ' + sessionStorage.getItem("token"),
+                }
+            }
+            fetch(url, options)
+                .then(()=>window.location.reload())
+                .catch(error => console.log(error))
+        }
     },
 }
 </script>
@@ -182,6 +200,18 @@ input:focus ~ .left, input:focus ~ .right {
         font-size: 1.2em;
         font-weight: 500;
         padding:0.5rem 0 0.5rem 0;
+    }
+}
+.reply__list{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .fa-ban{
+        font-size: 1.2em;
+        color: #FF4B2B;
+        &:hover{
+            cursor: pointer;
+        }
     }
 }
 </style>
