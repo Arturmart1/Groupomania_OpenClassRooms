@@ -3,8 +3,8 @@
         <div class="post--form">
             <h2>Modification</h2>
             <form name="editUser" id="editUser">
-                <input type="text" :placeholder="firstName" required v-model="input.firstName" />
-                <input type="text" :placeholder="lastName" required v-model="input.lastName" />
+                <input type="text" :placeholder="firstName" v-model="input.firstName" />
+                <input type="text" :placeholder="lastName" v-model="input.lastName" />
                 <input type="file" ref="imageUrl" name="image" id="imageUrl" accept="image/*">
             </form>
         </div>
@@ -85,27 +85,16 @@ export default {
                 })
                 .catch(error => console.error(error));
         },
-        deleteProfilPicture(){
-            let defaultPicture = "https://i.postimg.cc/MHrVKYGM/default-profil-pict.jpg"
-            let formData = new FormData();
-            formData.append('image', defaultPicture);
-            
-            const url = "http://localhost:3000/api/auth/update/" + this.userId;
+        deleteProfilPicture(){           
+            const url = "http://localhost:3000/api/auth/update/" + this.userId + "/image";
             const options = {
                 method: 'PUT',
-                body: formData,
                 headers: {
                     'Authorization': 'Bearer ' + sessionStorage.getItem('token')
                 },
             };
             fetch(url, options)
-                .then(response => response.json())
-                .then(data => {
-                    this.users.push(data);
-                    this.input.imageUrl = "";
-                    window.location.reload();
-                    alert("Photo supprimée")
-                })
+                .then(()=>window.location.reload())
                 .catch(error => console.error(error));
         },
     },
