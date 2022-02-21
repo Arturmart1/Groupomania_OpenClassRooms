@@ -7,7 +7,7 @@ exports.newComment = (req, res, next) => {
     const reply= {
         content: req.body.content,
         PostId: req.body.postId,
-        UserId: req.body.userId
+        UserId: req.token.userId
     };
     Comment.create(reply)
     .then(() => res.status(201).json({ message: 'Réponse envoyée' }))

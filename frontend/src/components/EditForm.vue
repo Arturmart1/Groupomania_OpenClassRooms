@@ -70,7 +70,6 @@ export default {
             formData.append('title', this.postInput.title);
             formData.append('content', this.postInput.content);
             formData.append('image', input.files[0]);
-            formData.append('userId', this.userId);
 
             const url = "http://localhost:3000/api/posts/" + id;
             const options = {

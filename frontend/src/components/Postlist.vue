@@ -58,7 +58,7 @@ export default {
     },
     data(){
         return {
-            UserId: sessionStorage.getItem('userId'),
+            userId: sessionStorage.getItem('userId'),
             isAdmin: sessionStorage.getItem('isAdmin'),
             firstName:"",
             lastName:"",
@@ -72,7 +72,7 @@ export default {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer" + sessionStorage.getItem("token"),
+                "Authorization": "Bearer " + sessionStorage.getItem("token"),
             }
         };
         fetch(url, options)

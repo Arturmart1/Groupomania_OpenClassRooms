@@ -28,7 +28,6 @@ export default {
             content: "",
             imageUrl: "",
             userId: sessionStorage.getItem('userId'),
-            posts:[],
         }
     },
     methods: {
@@ -38,26 +37,18 @@ export default {
             formData.append('title', this.title);
             formData.append('content', this.content);
             formData.append('image', input.files[0]);
-            formData.append('UserId', this.userId);
+            //formData.append('UserId', this.userId);
             
             const url = 'http://localhost:3000/api/posts/new';
             const options = {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'Authorization': 'Bearer' + sessionStorage.getItem("token")
+                    'Authorization': 'Bearer ' + sessionStorage.getItem("token")
                 }
             }
             fetch(url, options)
-            .then(response => response.json())
-            .then(data => {
-                this.posts.push(data);
-                this.title = "";
-                this.content = "";
-                this.imageUrl = "";
-                this.UserId = "";
-                //window.location.reload();
-            })
+            .then(()=>window.location.reload())
             .catch(error => console.error(error))
         },
     }

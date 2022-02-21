@@ -42,7 +42,7 @@ export default {
         const options = {
             method: "GET",
             headers: {
-                'Authorization' : 'Bearer' + sessionStorage.getItem("token"),
+                'Authorization' : 'Bearer ' + sessionStorage.getItem("token"),
                 'Content-type' : 'application/json'
             }
         };
@@ -57,7 +57,7 @@ export default {
         sendReply(){
             const replyInput = {
                 "content": this.replyContent,
-                //"postId": this.postId,
+                "postId": this.postId,
             }
             const url = "http://localhost:3000/api/comment/reply"
             const options = {
@@ -69,12 +69,7 @@ export default {
                 }
             }
             fetch(url, options)
-                .then(response => response.json())
-                .then(data =>{
-                    this.comments.push(data);
-                    this.replyContent = "";
-                    //window.location.reload();
-                })
+                .then(()=>window.location.reload())
                 .catch(error => console.log(error))
         },
     },

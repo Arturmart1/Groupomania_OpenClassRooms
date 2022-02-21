@@ -11,7 +11,7 @@ exports.newPost = (req, res, next) => {
         title: req.body.title,
         content: req.body.content,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        UserId: req.body.userId
+        UserId: req.token.userId
     };
     Post.create(post)
         .then(() => res.status(201).json({ message: 'Post créé !' }))
@@ -21,7 +21,7 @@ exports.newPost = (req, res, next) => {
 //Mise à jour du post par son auteur
 
 exports.updatePost = (req, res, next) => {
-    if (req.filename === undefined) {
+    if (req.file.filename === undefined) {
         Post.findOne({ where: { id: req.params.id } })
             .then(post => {
                 if (post.UserId === req.token.userId || post.isAdmin === req.token.isAdmin ) {
