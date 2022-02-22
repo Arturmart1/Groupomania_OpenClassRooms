@@ -4,17 +4,13 @@
             <h2>A vous de partager!</h2>
             <form name="newPost" id="newPost">
                 <input type="text" placeholder="Titre" name="title" id="title" required v-model="title">
+                <span id="title_error"></span>
                 <input type="text" placeholder="Votre message ici" name="content" id="content" required v-model="content">
+                <span id="content_error"></span>
                 <input type="file" placeholder="Importez votre image" ref="imageUrl" name="image" id="imageUrl" accept="image/*">
+                <span id="image_error"></span>
+                <button type="submit" class="command__button" @click.prevent="sendPost()">Publier</button>
             </form>
-        </div>
-        <div class="command__center">
-            <div class="command__button" @click.prevent="sendPost()">
-                <p>Envoi</p>
-            </div>
-            <div class="command__button" >
-                <p>Annuler</p>
-            </div>
         </div>                
     </div>
 </template>
@@ -31,26 +27,37 @@ export default {
         }
     },
     methods: {
-        sendPost(){
-            let input = document.getElementById('imageUrl');
-            let formData = new FormData();
-            formData.append('title', this.title);
-            formData.append('content', this.content);
-            formData.append('image', input.files[0]);
-            //formData.append('UserId', this.userId);
-            
-            const url = 'http://localhost:3000/api/posts/new';
-            const options = {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+        sendPost : function (){
+            //Verification de la complétion des champs
+            if(this.title == "" || this.content == ""){
+                if(this.title == ""){
+                    document.getElementById("title").style.borderColor = "red";
+                    document.getElementById("title_error").innerHTML = "Veuillez remplir ce champ";
                 }
+                if(this.content == ""){
+                    document.getElementById("content").style.borderColor = "red";
+                    document.getElementById("content_error").innerHTML = "Veuillez remplir ce champ";
+                }
+            }else{
+                let input = document.getElementById('imageUrl');
+                let formData = new FormData();
+                formData.append('title', this.title);
+                formData.append('content', this.content);
+                formData.append('image', input.files[0]);
+
+                const url = 'http://localhost:3000/api/posts/new';
+                const options = {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+                    }
+                }
+                fetch(url, options)
+                .then(()=>window.location.reload())
+                .catch(error => console.error(error))
             }
-            fetch(url, options)
-            .then(()=>window.location.reload())
-            .catch(error => console.error(error))
-        },
+        }
     }
 }
 </script>
@@ -72,22 +79,18 @@ export default {
         justify-content: space-around;
         width: 95%;
         margin: auto;
-    }
-    .command__center{
-        width: 95%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 0.5rem auto 0.5rem auto;
-        .command__button{
+        button{
+            border: unset;
             background-color: #FF4B2B;
             color: white;
-            width: 5rem;
-            margin-top: 0.8rem;
-            padding: 0.5rem;
-            border-radius: 1rem;
+            width: 100%;
+            margin: 1rem 0;
+            padding: 0.5rem 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 0.6rem;
             &:hover{
-                background-color: lighten($color: #FF4B2B, $amount: 10);
+                background-color: lighten($color: #FF4B2B, $amount: 5);
                 cursor: pointer;
             }
         }

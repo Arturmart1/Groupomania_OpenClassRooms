@@ -6,16 +6,29 @@ const fs = require('fs');
 
 //Création d'un nouveau post en tenant compte de l'utilisateur connecté
 
-exports.newPost = (req, res, next) => { 
-    const post = {
-        title: req.body.title,
-        content: req.body.content,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        UserId: req.token.userId
-    };
-    Post.create(post)
+exports.newPost = (req, res, next) => {
+    if (req.file === undefined){
+        const post = {
+            title: req.body.title,
+            content: req.body.content,
+            UserId: req.token.userId
+        };
+        Post.create(post)
+            .then(() => res.status(201).json({ message: 'Post créé !' }))
+            .catch(error => res.status(401).json({ error, message: error.message }));
+    } else if (req.body.title && req.body.content && req.file){
+        const post = {
+            title: req.body.title,
+            content: req.body.content,
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+            UserId: req.token.userId
+        };
+        Post.create(post)
         .then(() => res.status(201).json({ message: 'Post créé !' }))
-        .catch(error => res.status(400).json({ error, message: error.message }));
+        .catch(error => res.status(401).json({ error, message: error.message }));
+    } else {
+        return res.status(401).json({message : "Un champ ne peut être vide"});
+    }
 };
 
 //Mise à jour du post par son auteur
@@ -73,7 +86,13 @@ exports.deletePost = (req, res, next) => {
 exports.getAllPosts = (req, res, next) => {
     Post.findAll({
         order: [['createdAt', 'DESC']],
-        include: [User, Comment]
+        include: [{
+            model: User,
+            attributes: ['id', 'firstName', 'lastName']
+        },{
+            model: Comment,
+            attributes: ['id', 'content', 'createdAt'],
+        }]
     })
     .then(posts => { res.status(200).json(posts); })
     .catch(error => res.status(500).json({ error, message: error.message }));

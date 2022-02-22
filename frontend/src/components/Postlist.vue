@@ -25,7 +25,7 @@
                     <p class="post__date">{{post.createdAt}}</p>
                 </div>
                 <div class="post__image">
-                    <img :src="post.imageUrl" alt="post image" class="post__picture">
+                    <img :src="post.imageUrl" alt="post image" class="post__picture" v-if="post.imageUrl != undefined">
                 </div>
                 <div class="post__content">
                     <p class="content">{{post.content}}</p>
