@@ -13,6 +13,7 @@
             </div>
         </div>
         <div class="reply--bloc">
+            <span id="reply_error"></span>
             <div v-for="comment in comments" :key="comment.id" class="reply__display" >
                 <div class="reply__list">
                     <div>
@@ -61,22 +62,27 @@ export default {
     },
     methods: {
         sendReply(){
-            const replyInput = {
+            //Verification de la complétion du champ
+            if(this.replyContent == ""){
+                document.getElementById("reply_error").innerHTML = "Veuillez ajouter un commentaire";
+            }else{
+                const replyInput = {
                 "content": this.replyContent,
                 "postId": this.postId,
-            }
-            const url = "http://localhost:3000/api/comment/reply"
-            const options = {
-                method: "POST",
-                body: JSON.stringify(replyInput),
-                headers: {
-                    'Authorization' : 'Bearer ' + sessionStorage.getItem("token"),
-                    'Content-type': 'application/json'
                 }
+                const url = "http://localhost:3000/api/comment/reply"
+                const options = {
+                    method: "POST",
+                    body: JSON.stringify(replyInput),
+                    headers: {
+                        'Authorization' : 'Bearer ' + sessionStorage.getItem("token"),
+                        'Content-type': 'application/json'
+                    }
+                }
+                fetch(url, options)
+                    .then(()=>window.location.reload())
+                    .catch(error => console.log(error))
             }
-            fetch(url, options)
-                .then(()=>window.location.reload())
-                .catch(error => console.log(error))
         },
         deleteComment(id){
             const url = "http://localhost:3000/api/comment/delete/" + id
@@ -100,7 +106,7 @@ export default {
     margin: auto;
     .leave--reply{
         display: flex;
-        align-items: center;
+        align-items: baseline;
         justify-content: space-between;
         .fa-share{
             font-size: 1.5em;
@@ -114,6 +120,13 @@ export default {
 .reply__input {
   position: relative;
   width: 90%;
+  margin-top: 0.5rem;
+}
+#reply_error{
+    color: red;
+    font-size: 1.2em;
+    font-weight: 600;
+    background: none;
 }
 
 input {
@@ -121,22 +134,19 @@ input {
   color: darkgray;
   font-size: inherit;
   font-family: inherit;
-  
   padding: 0.35em 0.45em;
   border: 1px solid lightgray;
   transition: background-color 0.3s ease-in-out;
+  &:focus{
+    outline: none;
+    border: none;
+    color: black;
+  }
+  &::placeholder {
+    color: darkgray;
+    text-align: left;
+  }
 }
-
-input:focus {
-  outline: none;
-  border: none;
-}
-
-input::placeholder {
-  color: darkgrey;
-  text-align: left;
-}
-
 span {
   position: absolute;
   background-color: #FF4B2B;
@@ -187,7 +197,7 @@ input:focus ~ .left, input:focus ~ .right {
     display: flex;
     align-items: flex-start;
     flex-direction: column;
-    margin-top: 0.5rem;
+    margin-top: 0.8rem;
     .reply__display{
         width: 95%;
         margin: 0 auto 0.5rem auto;
