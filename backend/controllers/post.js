@@ -68,12 +68,19 @@ exports.deletePost = (req, res, next) => {
     Post.findOne({ where: { id: req.params.id } })
         .then(post => {
             if (post.UserId === req.token.userId  || req.token.isAdmin) {
-                const filename = post.imageUrl.split('/images/')[1];
-                fs.unlink(`images/${filename}`, () =>
-                Post.destroy({ where: { id: req.params.id } })
-                    .then(() => res.status(200).json({ message: 'Post supprimé !' }))
-                    .catch(error => res.status(400).json({ error, message: error.message }))
-                );
+                //Suppression du post sans image
+                if (post.imageUrl === null) {
+                    Post.destroy({ where: { id: req.params.id } })
+                        .then(() => res.status(201).json({ message: 'Post supprimé !' }))
+                        .catch(error => res.status(400).json({ error, message: error.message }));
+                } else {
+                    const filename = post.imageUrl.split('/images/')[1];
+                    fs.unlink(`images/${filename}`, () =>
+                    Post.destroy({ where: { id: req.params.id } })
+                        .then(() => res.status(200).json({ message: 'Post supprimé !' }))
+                        .catch(error => res.status(400).json({ error, message: error.message }))
+                    );
+                }
             } else {
                 res.status(401).json({ message: 'Vous n\'êtes pas autorisé à supprimer ce post !' });
             }
