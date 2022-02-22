@@ -31,12 +31,10 @@ export default {
             //Verification de la complétion des champs
             if(this.title == "" || this.content == ""){
                 if(this.title == ""){
-                    document.getElementById("title").style.borderColor = "red";
-                    document.getElementById("title_error").innerHTML = "Veuillez remplir ce champ";
+                    document.getElementById("title_error").innerHTML = "Veuillez ajouter un titre";
                 }
                 if(this.content == ""){
-                    document.getElementById("content").style.borderColor = "red";
-                    document.getElementById("content_error").innerHTML = "Veuillez remplir ce champ";
+                    document.getElementById("content_error").innerHTML = "Veuillez ajouter un message";
                 }
             }else{
                 let input = document.getElementById('imageUrl');
@@ -93,6 +91,9 @@ export default {
                 background-color: lighten($color: #FF4B2B, $amount: 5);
                 cursor: pointer;
             }
+        }
+        span{
+            color: red;
         }
     }
     h2{
