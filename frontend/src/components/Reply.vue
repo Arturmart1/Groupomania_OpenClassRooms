@@ -55,9 +55,7 @@ export default {
         fetch(url, options)
             .then(response => response.json())
             .then(data =>{
-                this.comments = data;
-                console.log(data)
-                console.log(this.userId)
+                this.comments = data; 
             })
             .catch(error => console.log(error))
     },
