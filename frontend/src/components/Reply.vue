@@ -19,7 +19,7 @@
                         <h3>{{comment.User.firstName}} {{comment.User.lastName}}</h3>
                         <p>{{comment.content}}</p>
                     </div>
-                    <div>
+                    <div v-if="comment.User.id == this.userId">
                         <i class="fas fa-solid fa-ban" @click="deleteComment(comment.id)"></i>
                     </div>
                 </div>
@@ -33,7 +33,7 @@ export default {
     name: "Reply",
     data() {
         return {
-            userId: sessionStorage.getItem('userId'),
+            userId: sessionStorage.getItem("userId"),
             comment: "",
             comments: [],
             replyContent: "",
@@ -56,6 +56,8 @@ export default {
             .then(response => response.json())
             .then(data =>{
                 this.comments = data;
+                console.log(data)
+                console.log(this.userId)
             })
             .catch(error => console.log(error))
     },
