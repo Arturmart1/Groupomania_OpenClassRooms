@@ -30,7 +30,10 @@ exports.getAllComments = (req, res, next) => {
     Comment.findAll({
         order: [['createdAt', 'DESC']],
         where: { postId: req.params.id },
-        include: [User]
+        include: [{
+            model: User,
+            attributes: ['id', 'firstName', 'lastName']
+        }]
     })
         .then((answers) => res.status(200).json(answers))
         .catch(error => res.status(400).json({ error }));
@@ -39,7 +42,11 @@ exports.getAllComments = (req, res, next) => {
 exports.commentsList = (req, res, next) =>{
     Comment.findAll({
         wher: { id: req.params.id},
-        order: [['createdAt', 'DESC']]
+        order: [['createdAt', 'DESC']],
+        include: [{
+            model: User,
+            attributes: ['id', 'firstName', 'lastName']
+        }]
     })
     .then((list) => res.status(200).json(list))
     .catch(error => res.status(400).json({ error}));
