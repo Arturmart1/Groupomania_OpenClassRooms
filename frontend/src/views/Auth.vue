@@ -92,7 +92,7 @@ export default {
 				.then(res => res.json())
 				.then (() =>{
 					window.location.reload();
-					alert("Inscription confirmée, vous pouvez vous connecter")
+					alert("Inscription confirmée, veuillez vous connecter")
 				})
 			.catch(error => console.log(error))
 		},
