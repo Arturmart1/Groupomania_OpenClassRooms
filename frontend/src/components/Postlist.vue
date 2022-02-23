@@ -122,7 +122,7 @@ export default {
             this.$router.push({
                 path: "/PostEdit/" + postId
             });
-        }
+        },
     },
     created: function() {
         this.getUserInfo();
