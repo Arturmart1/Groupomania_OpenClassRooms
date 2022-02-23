@@ -96,10 +96,7 @@ exports.getAllPosts = (req, res, next) => {
         include: [{
             model: User,
             attributes: ['id', 'firstName', 'lastName']
-        },{
-            model: Comment,
-            attributes: ['id', 'content', 'createdAt'],
-        }]
+        },]
     })
     .then(posts => { res.status(200).json(posts); })
     .catch(error => res.status(500).json({ error, message: error.message }));
@@ -115,10 +112,7 @@ exports.getOnePost = (req, res, next) => {
         include: [{
             model: User,
             attributes: ['id', 'firstName', 'lastName']
-        },{
-            model: Comment,
-            attributes: ['id', 'content', 'createdAt'],
-        }]
+        },]
     })
         .then(post => { res.status(200).json(post)})
         .catch(error => res.status(500).json({ error, message: error.message }));
