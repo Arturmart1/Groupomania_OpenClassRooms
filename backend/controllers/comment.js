@@ -51,3 +51,17 @@ exports.commentsList = (req, res, next) =>{
     .then((list) => res.status(200).json(list))
     .catch(error => res.status(400).json({ error}));
 };
+
+exports.updateComment = (req, res, next) =>{
+    Comment.findOne({where:{id: req.params.id} })
+        .then(comment =>{
+            if(comment.UserId === req.token.userId || comment.isAdmin === req.token.isAdmin){
+                Comment.update({...comment, content: req.body.content}, { where: { id: req.params.id }})
+                .then(() => res.status(200).json({ message: 'Commentaire modifié !' }))
+                    .catch(error => res.status(400).json({ error, message: error.message }));
+            } else {
+                res.status(403).json({ message: 'Vous n\'êtes pas autorisé à modifier ce post !' });
+            }
+        })
+    .catch(error => res.status(500).json({ error, message: error.message }));
+}

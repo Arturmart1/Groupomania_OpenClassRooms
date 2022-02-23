@@ -22,6 +22,7 @@
                     </div>
                     <div v-if="comment.User.id == this.userId">
                         <i class="fas fa-solid fa-ban" @click="deleteComment(comment.id)"></i>
+                        <i class="fa-solid fa-pen-to-square" @click="updateComment(comment.id)"></i>
                     </div>
                 </div>
             </div>
@@ -95,7 +96,7 @@ export default {
             fetch(url, options)
                 .then(()=>window.location.reload())
                 .catch(error => console.log(error))
-        }
+        },
     },
 }
 </script>

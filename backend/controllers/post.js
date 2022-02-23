@@ -52,7 +52,7 @@ exports.updatePost = (req, res, next) => {
         .then(post => {
             if (post.UserId === req.token.userId || post.isAdmin === req.token.isAdmin ) {
                 Post.update({...post, title: req.body.title, content: req.body.content, imageUrl: postImage}, { where: { id: req.params.id }})
-                    .then(() => res.status(201).json({ message: 'Post modifié !' }))
+                    .then(() => res.status(200).json({ message: 'Post modifié !' }))
                     .catch(error => res.status(400).json({ error, message: error.message }));
             } else {
                 res.status(403).json({ message: 'Vous n\'êtes pas autorisé à modifier ce post !' });
