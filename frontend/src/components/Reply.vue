@@ -17,12 +17,13 @@
             <div v-for="comment in comments" :key="comment.id" class="reply__display" >
                 <div class="reply__list">
                     <div>
+                        <EditComment v-if="EditComment" :comment="comment" :commentId="comment.id" :commentUserId="comment.UserId"></EditComment>
                         <h3>{{comment.User.firstName}} {{comment.User.lastName}}</h3>
                         <p>{{comment.content}}</p>
                     </div>
-                    <div v-if="comment.User.id == this.userId">
+                    <div v-if="comment.User.id == this.userId" class="comment-options">
                         <i class="fas fa-solid fa-ban" @click="deleteComment(comment.id)"></i>
-                        <i class="fa-solid fa-pen-to-square" @click="updateComment(comment.id)"></i>
+                        <i class="fas fa-edit" @click="EditComment = !EditComment"></i>
                     </div>
                 </div>
             </div>
@@ -31,10 +32,16 @@
 </template>
 
 <script>
+import EditComment from './EditComment.vue'
+
 export default {
     name: "Reply",
+    components:{
+        EditComment,
+    },
     data() {
         return {
+            EditComment: false,
             userId: sessionStorage.getItem("userId"),
             comment: "",
             comments: [],
@@ -223,6 +230,19 @@ input:focus ~ .left, input:focus ~ .right {
         &:hover{
             cursor: pointer;
         }
+    }
+    .fa-edit{
+        font-size: 1.2em;
+        color: green;
+        &:hover{
+            cursor: pointer;
+        }
+    }
+    .comment-options{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 0.5rem;
     }
 }
 </style>

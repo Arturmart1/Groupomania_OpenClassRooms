@@ -39,17 +39,16 @@ exports.getAllComments = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
 };
 
-exports.commentsList = (req, res, next) =>{
-    Comment.findAll({
-        wher: { id: req.params.id},
-        order: [['createdAt', 'DESC']],
+exports.getOneComment = (req, res, next) =>{
+    Comment.findOne({
+        where:{id: req.params.id}, 
         include: [{
-            model: User,
+            model: User, 
             attributes: ['id', 'firstName', 'lastName']
         }]
     })
-    .then((list) => res.status(200).json(list))
-    .catch(error => res.status(400).json({ error}));
+        .then(comment => res.status(200).json(comment))
+        .catch(error => res.status(400).json({ error, message: error.message }));
 };
 
 exports.updateComment = (req, res, next) =>{
