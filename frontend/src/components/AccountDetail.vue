@@ -191,7 +191,7 @@ export default {
             .then(response => response.json())
             .then(data => {
                 this.posts = data;
-                //window.location.reload();
+                window.location.reload();
             })
             .catch(error => console.log(error));
         },
@@ -331,5 +331,29 @@ export default {
     margin: auto;
     width: 50%;
 }
-
+@media only screen and (max-width: 850px){
+    #main--container{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        #main--section{
+            margin: unset;
+            width: 95%;
+        }
+        .profile--preview{
+            width: 90%;
+            margin-bottom: 1rem;
+        }
+        .list-container{
+            margin-bottom: 0.5rem;
+            width: 100%!important;
+        }
+        .form--card{
+            width: 100%;
+            margin-bottom: 3.5rem;
+        }
+    }
+}
 </style>

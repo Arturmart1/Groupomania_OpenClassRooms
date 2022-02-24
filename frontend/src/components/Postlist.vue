@@ -216,7 +216,7 @@ export default {
                 }
             }
             .post__picture{
-                width: 0%;
+                width: 90%;
                 margin: auto;
                 padding: 0.5rem;
             }
@@ -269,6 +269,7 @@ export default {
         }
         .post--card{
             width: 100%!important;
+            
         } 
     }
 }

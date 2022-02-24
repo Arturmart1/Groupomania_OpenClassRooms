@@ -133,4 +133,11 @@ export default {
         }
     }
 }
+@media only screen and (max-width: 400px){
+    .command__center{
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+}
 </style>

@@ -83,9 +83,11 @@ export default {
 			//Check password field
 			let password = this.signUpInput.password;
 			let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-			if(!regex.test(password)) {
+			if(regex.test(password)) {
 				document.getElementById("password_error").textContent = "Votre mot de passe doit contenir au moins 8 caractères, 1 majuscule, 1 minuscule et 2 chiffres";
 				return false;
+			} else {
+				document.getElementById("password_error").textContent = "";
 			}
 			//Check if email is already used
 			const url = "http://localhost:3000/api/auth/signup"
@@ -99,8 +101,8 @@ export default {
 			fetch(url, options)
 				.then(res => res.json())
 				.then (() =>{
-					window.location.reload();
 					alert("Inscription confirmée, veuillez vous connecter")
+					window.location.reload();
 				})
 			.catch(error => console.log(error))
 		}
