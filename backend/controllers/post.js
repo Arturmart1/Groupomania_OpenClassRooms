@@ -34,7 +34,7 @@ exports.newPost = (req, res, next) => {
 //Mise à jour du post par son auteur
 
 exports.updatePost = (req, res, next) => {
-    if (req.file.filename === undefined) {
+    if (req.file === undefined) {
         Post.findOne({ where: { id: req.params.id } })
             .then(post => {
                 if (post.UserId === req.token.userId || post.isAdmin === req.token.isAdmin ) {
