@@ -355,5 +355,10 @@ export default {
             margin-bottom: 3.5rem;
         }
     }
+    #main--section__noAdmin{
+        width: 85%;
+        display: flex;
+        align-items: center;
+    }
 }
 </style>

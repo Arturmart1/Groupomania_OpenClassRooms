@@ -245,4 +245,9 @@ input:focus ~ .left, input:focus ~ .right {
         gap: 0.5rem;
     }
 }
+@media only screen and (max-width: 400px){
+    .fa-share{
+        margin-left: 1rem;
+    }
+}
 </style>

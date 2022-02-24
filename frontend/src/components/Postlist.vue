@@ -270,7 +270,10 @@ export default {
         .post--card{
             width: 100%!important;
             
-        } 
+        }
+        .post--list{
+            padding-bottom: 2rem;
+        }
     }
 }
 </style>

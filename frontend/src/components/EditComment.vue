@@ -119,4 +119,10 @@ export default{
         }
     }
 }
+@media only screen and (max-width: 400px){
+    .leave--reply{
+        width: 70%;
+        margin: auto;
+    }
+}
 </style>

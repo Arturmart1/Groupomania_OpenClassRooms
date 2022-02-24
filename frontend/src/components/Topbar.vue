@@ -65,7 +65,7 @@ export default {
         margin: auto;
     }
     .topbar__image{
-        width: 9rem!important;
+        width: 12rem!important;
         margin: auto!important;
     }
     .topbar__navigation{
@@ -74,6 +74,7 @@ export default {
         width: 100%;
         bottom: 0;
         left: 0;
+        z-index: 1;
     }
 }
 </style>
