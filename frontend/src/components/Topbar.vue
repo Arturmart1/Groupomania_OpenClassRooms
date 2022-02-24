@@ -21,7 +21,7 @@ export default {
             sessionStorage.clear();
             this.$router.push('/');
         }
-    }
+    },
 }
 </script>
 
@@ -58,9 +58,22 @@ export default {
         }
     }
 }
+
 @media only screen and (max-width: 400px){
+    .topbar__logo{
+        width: 100%;
+        margin: auto;
+    }
     .topbar__image{
         width: 9rem!important;
+        margin: auto!important;
+    }
+    .topbar__navigation{
+        position: fixed;
+        background: #FF4B2B;
+        width: 100%;
+        bottom: 0;
+        left: 0;
     }
 }
 </style>

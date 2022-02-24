@@ -216,8 +216,9 @@ export default {
                 }
             }
             .post__picture{
-                width: 40%;
-                margin: 0.5rem;
+                width: 0%;
+                margin: auto;
+                padding: 0.5rem;
             }
             .post__content{
                 text-align: left;
@@ -246,20 +247,29 @@ export default {
 .reply--bloc{
     width: 100%;
 }
+@media only screen and (max-width: 1000px){
+    .profile--preview__info{
+        h2{
+            font-size: 1.2em!important;
+        }
+        h3{
+            font-size: 1em!important;
+        }
+    }
+}
 @media only screen and (max-width: 400px){
     aside{
         display: none;
     }
-    .post--list{
-        width: 90%!important;
-        margin: auto!important;;
-        .post--card{
-            width: 95%!important;
-            margin: auto;
-        }
+    #main--container{
+        width: 95%;
+        margin: unset;
         .form--card{
             width: 100%;
         }
+        .post--card{
+            width: 100%!important;
+        } 
     }
 }
 </style>
