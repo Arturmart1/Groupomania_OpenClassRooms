@@ -1,7 +1,7 @@
 <template>
     <div class="leave--reply">
         <div class="reply__input">
-            <input type="text" id="reply" v-model="replyInput.content" :placeholder="originalContent" >
+            <input type="text" id="reply" v-model="replyInput.content" :placeholder="originalContent" aria-label="modification du ommentaire" >
             <span class="bottom"></span>
             <span class="right"></span>
             <span class="top"></span>

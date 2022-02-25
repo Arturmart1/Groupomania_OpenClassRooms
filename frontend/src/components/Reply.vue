@@ -2,14 +2,14 @@
     <div class="reply--container">
         <div class="leave--reply">
             <div class="reply__input">
-                <input type="text" id="reply" v-model="replyContent" placeholder="Commentaire" >
+                <input type="text" id="reply" v-model="replyContent" placeholder="Commentaire" aria-label="commentaire">
                 <span class="bottom"></span>
                 <span class="right"></span>
                 <span class="top"></span>
                 <span class="left"></span>
             </div>
             <div>
-                <a @click="sendReply()"><i class="fas fa-share" aria-label="Répondre"></i></a>
+                <a @click="sendReply()"><i class="fas fa-share" aria-label="Répondre" role="button" aria-roledescription="Envoi du commentaire"></i></a>
             </div>
         </div>
         <div class="reply--bloc">

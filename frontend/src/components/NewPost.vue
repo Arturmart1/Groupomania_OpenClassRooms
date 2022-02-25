@@ -3,13 +3,13 @@
         <div class="post--form">
             <h2>A vous de partager!</h2>
             <form name="newPost" id="newPost">
-                <input type="text" placeholder="Titre" name="title" id="title" required v-model="title">
+                <input type="text" placeholder="Titre" name="title" id="title" required v-model="title" aria-label="titre">
                 <span id="title_error"></span>
-                <input type="text" placeholder="Votre message ici" name="content" id="content" required v-model="content">
+                <input type="text" placeholder="Votre message ici" name="content" id="content" required v-model="content" aria-label="message">
                 <span id="content_error"></span>
-                <input type="file" placeholder="Importez votre image" ref="imageUrl" name="image" id="imageUrl" accept="image/*">
+                <input type="file" placeholder="Importez votre image" ref="imageUrl" name="image" id="imageUrl" accept="image/*" aria-label="Ajout d'une image">
                 <span id="image_error"></span>
-                <button type="submit" class="command__button" @click.prevent="sendPost()">Publier</button>
+                <button type="submit" class="command__button" @click.prevent="sendPost()" aria-label="publier">Publier</button>
             </form>
         </div>                
     </div>

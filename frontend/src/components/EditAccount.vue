@@ -3,9 +3,9 @@
         <div class="post--form">
             <h2>Modification</h2>
             <form name="editUser" id="editUser">
-                <input type="text" :placeholder="firstName" :autocomplete="firstName" v-model="input.firstName" />
-                <input type="text" :placeholder="lastName" :autocomplete="lastName" v-model="input.lastName" />
-                <input type="file" ref="imageUrl" name="image" id="imageUrl" accept="image/*">
+                <input type="text" :placeholder="firstName" :autocomplete="firstName" v-model="input.firstName" aria-label="Prénom" />
+                <input type="text" :placeholder="lastName" :autocomplete="lastName" v-model="input.lastName" aria-label="Nom"/>
+                <input type="file" ref="imageUrl" name="image" id="imageUrl" accept="image/*" aria-label="photo de profil">
             </form>
         </div>
         <div class="command__center">

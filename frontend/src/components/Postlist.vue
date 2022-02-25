@@ -10,7 +10,7 @@
                     <h2 class="lastName">{{lastName}}</h2>
                 </div>
                 <div class="profil--preview__link">
-                    <router-link to="/Account" title="Account" class="toAccount">Mon compte</router-link>
+                    <router-link to="/Account" title="Account" class="toAccount" aria-label="Mon compte">Mon compte</router-link>
                 </div>
             </div>
         </aside>

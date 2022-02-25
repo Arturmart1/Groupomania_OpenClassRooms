@@ -6,9 +6,9 @@
             </div>
             <div>
                 <form name="editPost" id="editPost">
-                    <input type="text" placeholder="{{title}}" required v-model="postInput.title">
-                    <input type="text" placeholder="{{content}}" required v-model="postInput.content">
-                    <input type="file" placeholder="Importez votre image" ref="imageUrl" name="image" id="imageUrl" accept="image/*">
+                    <input type="text" placeholder="{{title}}" required v-model="postInput.title" aria-label="titre">
+                    <input type="text" placeholder="{{content}}" required v-model="postInput.content" aria-label="contenu">
+                    <input type="file" placeholder="Importez votre image" ref="imageUrl" name="image" id="imageUrl" accept="image/*" aria-label="image">
                 </form>
             </div>
         </div>
