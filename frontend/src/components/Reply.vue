@@ -70,7 +70,6 @@ export default {
     },
     methods: {
         sendReply(){
-            //Verification de la complétion du champ
             if(this.replyContent == ""){
                 document.getElementById("reply_error").innerHTML = "Veuillez ajouter un commentaire";
             }else{

@@ -27,7 +27,7 @@ export default {
         }
     },
     methods: {
-        sendPost : function (){
+        sendPost : function (){ //Crétion d'un post
             //Verification de la complétion des champs
             if(this.title == "" || this.content == ""){
                 if(this.title == ""){

@@ -81,7 +81,6 @@ export default {
         }
     },
     mounted() {
-
         const url = "http://localhost:3000/api/auth/user/" + this.userId;
         const options = {
             method: "GET",

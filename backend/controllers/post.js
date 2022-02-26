@@ -3,11 +3,10 @@ const User = require('../models/userSchema');
 const Comment = require('../models/commentSchema');
 const fs = require('fs');
 
-
 //Création d'un nouveau post en tenant compte de l'utilisateur connecté
 
 exports.newPost = (req, res, next) => {
-    if (req.file === undefined){
+    if (req.file === undefined){ //Création sans image
         const post = {
             title: req.body.title,
             content: req.body.content,
@@ -16,7 +15,7 @@ exports.newPost = (req, res, next) => {
         Post.create(post)
             .then(() => res.status(201).json({ message: 'Post créé !' }))
             .catch(error => res.status(401).json({ error, message: error.message }));
-    } else if (req.body.title && req.body.content && req.file){
+    } else if (req.body.title && req.body.content && req.file){ //Création avec image
         const post = {
             title: req.body.title,
             content: req.body.content,
@@ -31,10 +30,10 @@ exports.newPost = (req, res, next) => {
     }
 };
 
-//Mise à jour du post par son auteur
+//Mise à jour du post par son auteur ou l'utilisateur adminisrateur
 
 exports.updatePost = (req, res, next) => {
-    if (req.file === undefined) {
+    if (req.file === undefined) { //Mise à jour sans image
         Post.findOne({ where: { id: req.params.id } })
             .then(post => {
                 if (post.UserId === req.token.userId || post.isAdmin === req.token.isAdmin ) {
@@ -46,7 +45,7 @@ exports.updatePost = (req, res, next) => {
                 }
             })
             .catch(error => res.status(500).json({ error, message: error.message }));
-    } else {
+    } else { //Mise à jour avec image
         const postImage = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
         Post.findOne({ where: { id: req.params.id } })
         .then(post => {
@@ -62,18 +61,17 @@ exports.updatePost = (req, res, next) => {
     }    
 };
 
-//Suppression d'un post
+//Suppression d'un post par son auteur ou l'utilisateur adminisrateur
 
 exports.deletePost = (req, res, next) => {
     Post.findOne({ where: { id: req.params.id } })
         .then(post => {
             if (post.UserId === req.token.userId  || req.token.isAdmin) {
-                //Suppression du post sans image
-                if (post.imageUrl === null) {
+                if (post.imageUrl === null) { //Suppression du post sans image
                     Post.destroy({ where: { id: req.params.id } })
                         .then(() => res.status(201).json({ message: 'Post supprimé !' }))
                         .catch(error => res.status(400).json({ error, message: error.message }));
-                } else {
+                } else { //Suppression du post avec image
                     const filename = post.imageUrl.split('/images/')[1];
                     fs.unlink(`images/${filename}`, () =>
                     Post.destroy({ where: { id: req.params.id } })

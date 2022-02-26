@@ -17,7 +17,7 @@
 export default {
     name: "Topbar",
     methods:{
-        disconnect(){
+        disconnect(){ //Déconnexion
             sessionStorage.clear();
             this.$router.push('/');
         }

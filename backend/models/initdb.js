@@ -1,9 +1,9 @@
-// DAO model
-
+//Import des models
 const User = require('./userSchema');
 const Post = require('./postSchema');
 const Comment = require('./commentSchema');
 
+//Synchronisation de la base de données
 const Init = async () => {
     User.hasMany(Post, {onDelete:'CASCADE'});
     Post.belongsTo(User, {onDelete: 'CASCADE'});

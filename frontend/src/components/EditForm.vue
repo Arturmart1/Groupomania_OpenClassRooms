@@ -43,7 +43,7 @@ export default {
             },
         }
     },
-    mounted() {
+    mounted() { //Récuperation du post à editer
         const postId = this.$route.params.id;
         const url = "http://localhost:3000/api/posts/" + postId;
         const options = {
@@ -64,7 +64,7 @@ export default {
             .catch(error => console.error(error));
     },
     methods: {
-        updatePost(id){
+        updatePost(id){ //Mise à jour du post
             let input = document.getElementById('imageUrl');
             let formData = new FormData();
             formData.append('title', this.postInput.title);

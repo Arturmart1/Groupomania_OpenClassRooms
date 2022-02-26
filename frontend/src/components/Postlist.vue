@@ -22,7 +22,7 @@
                 <div class="post--card__text">
                     <h2 class="post__title">{{post.title}}</h2>
                     <p class="post__author">{{post.User.firstName}} {{post.User.lastName}}</p>
-                    <p class="post__date">{{post.createdAt}}</p>
+                    <p class="post__date">{{new Date(post.createdAt).toLocaleString("fr-FR", {timeZone:"UTC"})}}</p>
                 </div>
                 <div class="post__image">
                     <img :src="post.imageUrl" alt="post image" class="post__picture" v-if="post.imageUrl != undefined">
@@ -143,6 +143,9 @@ export default {
         height: max-content;
         box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
         padding: 0.3rem;
+    }
+    .profil--preview__link{
+        margin-top: 0.8rem;
     }
     .profile--preview__image{
         margin: auto;

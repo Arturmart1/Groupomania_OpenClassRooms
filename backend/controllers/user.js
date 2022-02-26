@@ -7,6 +7,7 @@ const AES = require('../middleware/aes-encrypt');
 const passwordValidator = require('password-validator');
 const fs = require('fs');
 
+//Format imposé du mot de passe
 const passwordSchema = new passwordValidator();
 passwordSchema
     .is().min(8)                                    // Minimum 8 caractères
@@ -26,7 +27,7 @@ exports.signup = (req, res, next) => {
     if (!passwordSchema.validate(password)) {
         return res.status(400).json({ error: 'Mot de passe incorrect' });
     }
-    const cryptedEmail = AES.encrypt(email);
+    const cryptedEmail = AES.encrypt(email); //Chiffrage de l'adresse mail
     User.findOne({
         where: {
             email: cryptedEmail
@@ -37,34 +38,27 @@ exports.signup = (req, res, next) => {
                 return res.status(400).json({ error: 'Cet email est déjà utilisé' });
             }
             const salt = bcrypt.genSaltSync(10);
-            const hashPassword = bcrypt.hashSync(password, salt);
+            const hashPassword = bcrypt.hashSync(password, salt); //Chiffrage du mot de passe
             User.create({
                 firstName: firstName,
                 lastName: lastName,
                 email: cryptedEmail,
                 password: hashPassword,
             })
-                .then(() => {
-                    res.status(201).json({ message: 'Utilisateur créé avec succès !' });
+                .then(() => { res.status(201).json({ message: 'Utilisateur créé avec succès !' });
                 })
-                .catch(error => {
-                    res.status(400).json({ error: 'Une erreur est survenue lors de la création de l\'utilisateur' });
+                .catch(error => { res.status(400).json({ error: 'Une erreur est survenue lors de la création de l\'utilisateur' });
                 });
         })
-        .catch(error => {
-            res.status(500).json({ error: 'Une erreur est survenue lors de la création de l\'utilisateur', message: error.message });
+        .catch(error => { res.status(500).json({ error: 'Une erreur est survenue lors de la création de l\'utilisateur', message: error.message });
         });
 };
 
-//Module de connection
+//Connexion d'un utilisateur
 
 exports.login = (req, res, next) =>{
     const cryptedEmail = AES.encrypt(req.body.email);
-    User.findOne({
-        where: {
-            email: cryptedEmail
-        }
-    })
+    User.findOne({ where: { email: cryptedEmail }})
         .then(user => {
             if (!user) {
                 return res.status(400).json({ error: 'Utilisateur non trouvé' });
@@ -75,7 +69,7 @@ exports.login = (req, res, next) =>{
             res.status(200).json({
                 userId: user.id,
                 isAdmin: user.isAdmin,
-                token: jwt.sign({ userId: user.id, isAdmin: user.isAdmin}, 'process.env.TOKEN',{ expiresIn: '24h' })
+                token: jwt.sign({ userId: user.id, isAdmin: user.isAdmin}, 'process.env.TOKEN',{ expiresIn: '24h' }) //Generation du token d'authentification
             });
         })
         .catch(error => res.status(500).json({ error: 'Une erreur est survenue lors de la connexion', message: error.message }));
@@ -116,8 +110,7 @@ exports.modifyUser = (req, res, next) => {
 };
                         
 
-//Suppression d'un utilisateur par l'utilisateur
-
+//Suppression d'un utilisateur par l'utilisateur ou l'utilisateur administrateur
 exports.deleteUser = (req, res, next) => {
     User.findOne({ where: { id: req.params.id } })
         .then((user) => {
@@ -140,7 +133,6 @@ exports.deleteUser = (req, res, next) => {
 exports.getAllUsers = (req, res, next) => {
     User.findAll({
         order: [['createdAt', 'DESC']],
-        //include: [Post, Comment]
     })
     .then(users => { res.status(200).json(users); })
     .catch(error => res.status(500).json({ error, message: error.message }));
@@ -156,6 +148,7 @@ exports.getOneUser = (req, res, next) => {
         .catch((error) => res.status(404).json(error));
 };
 
+//Suppression d'un utilisateur par l'administrateur ou par l'utilisateur
 exports.deleteUserImage = (req, res, next) => {
     User.findOne({ where: { id: req.params.id } })
         .then((user) => {

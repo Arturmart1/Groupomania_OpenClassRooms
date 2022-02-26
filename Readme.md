@@ -36,7 +36,7 @@ Ouvrir le dossier Backend dans le terminal de votre éditeur puis exécuter la c
 
 puis
 
-    nodemon server
+    nodemon server ou node server
 
 ## Droit administrateur
 Un compte administrateur à été créé sur la base de données distante, voici les identifiants :
@@ -50,8 +50,8 @@ Pour s'inscrire sur le social network de Groupomania, il vous faut renseigner :
 
 - Votre nom et prénom (minimum 2 caractères)
 - Une adresse mail valide
-- Un mot de passe (de 8 à 20 caractères, lettres, chiffreset symboles acceptés, majuscules et minuscules).
-  Vous pouvez par la suite modifier votre profil (Nom, prénom, photo) en allant sur votre profil. Votre compte peut être supprimé par vous-même ainsi que par l'administrateur.
+- Un mot de passe (de 8 à 20 caractères, lettres, chiffres et symboles, majuscules et minuscules). /!\ Mots de passe interdits : Passw0rd, Password123, azerty1234.
+- Vous pouvez par la suite modifier votre profil (Nom, prénom, photo) en allant sur votre profil. Votre compte peut être supprimé par vous-même ainsi que par l'administrateur.
 
 Une fois connecté vous pouvez voir les publications des utilisateurs et publier au choix:
 
@@ -60,4 +60,4 @@ Une fois connecté vous pouvez voir les publications des utilisateurs et publier
 
 ## Erreur possibles
 
-Dans le cadre d'un deploiment sous linux, node v17 présentant des dysfonctionnements sur ce sytème d'éxploitation, vous devez lancer le front-end avec la version 16.
+Dans le cadre d'un deploiment sous linux, node v17 présentant des dysfonctionnements sur ce sytème d'éxploitation, vous devez lancer le front-end avec la version 16(LTS).

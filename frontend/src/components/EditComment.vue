@@ -30,7 +30,7 @@ export default{
         comment: Object,
         commentId: Number,
     },
-    mounted() {
+    mounted() { //Récuperation du commentaire à editer
         const url = "http://localhost:3000/api/comment/" + this.commentId
         const options = {
             method: "GET",
@@ -46,7 +46,7 @@ export default{
         .catch(error => console.log(error))
     },
     methods:{
-        updateComment(id){
+        updateComment(id){ //Mise à jour du commentaire
             const url = "http://localhost:3000/api/comment/update/" + id
             const options = {
                 method: "PUT",
@@ -61,7 +61,6 @@ export default{
             .then(data => {
                 this.comments.push(data);
                 this.replyInput.content = "";
-                alert("Commentaire modifié");
                 window.location.reload();
             })
             .catch(error => console.log(error))

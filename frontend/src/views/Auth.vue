@@ -46,7 +46,7 @@ export default {
         }
     },
     methods: {
-        login()  {
+        login()  { //Connexion
             const credentials = {
                 "email": this.loginInput.email,
                 "password": this.loginInput.password
@@ -73,7 +73,7 @@ export default {
 					})
 					.catch(error => console.log(error))
         },
-        signUp: function(){
+        signUp: function(){ //Inscription
 			const credentials = {
 				"firstName": this.signUpInput.firstName,
 				"lastName": this.signUpInput.lastName,
@@ -84,12 +84,11 @@ export default {
 			let password = this.signUpInput.password;
 			let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 			if(!regex.test(password)) {
-				document.getElementById("password_error").textContent = "Votre mot de passe doit contenir au moins 8 caractères, 1 majuscule, 1 minuscule et 2 chiffres";
+				document.getElementById("password_error").textContent = "Votre mot de passe doit contenir au moins 8 caractères, 1 majuscule, 1 minuscule et 2 chiffres et un caractère spécial";
 				return false;
 			} else {
 				document.getElementById("password_error").textContent = "";
 			}
-			//Check if email is already used
 			const url = "http://localhost:3000/api/auth/signup"
 			const options = {
 				method: "POST",

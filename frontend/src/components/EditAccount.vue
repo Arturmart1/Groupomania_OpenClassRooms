@@ -41,7 +41,7 @@ export default {
             },
         }
     },
-    mounted() {
+    mounted() { //Récuperation des infos utilisateurs
         const url = "http://localhost:3000/api/auth/user/" + this.userId;
         const options = {
             method: 'GET',
@@ -58,7 +58,7 @@ export default {
             .catch(error => console.error(error));
     },
     methods: {
-        updateUser(){
+        updateUser(){ //Fonction de mise à jour de l'utilisateur
             let input = document.getElementById('imageUrl');
             let formData = new FormData();
             formData.append('firstName', this.input.firstName || this.firstName);
@@ -85,7 +85,7 @@ export default {
                 })
                 .catch(error => console.error(error));
         },
-        deleteProfilPicture(){           
+        deleteProfilPicture(){ //Suppression de la photo de profil           
             const url = "http://localhost:3000/api/auth/update/" + this.userId + "/image";
             const options = {
                 method: 'PUT',

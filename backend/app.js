@@ -1,12 +1,12 @@
 const express = require('express');
 const path = require('path');
-//const helmet = require('helmet');
+
 const userRoutes = require('./routes/userRoute');
 const postRoutes = require('./routes/postRoute');
 const commentRoutes = require('./routes/commentRoute');
 const app = express();
 
-//Initialisation et synchronisation de la base de données
+//Initialisation, synchronisation et connexion à la base de données
 
 const InitDB = require('../backend/models/initdb');
 
@@ -22,11 +22,6 @@ app.use((req, res, next) => {
 
 InitDB().then(() => {
     app.use(express.json());
-
-    //app.use(helmet({
-    //    crossOriginEmbedderPolicy: false,
-    //    })
-    //);
 
     app.use('/api/auth', userRoutes);
 

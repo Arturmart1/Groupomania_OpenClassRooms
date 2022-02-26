@@ -2,7 +2,7 @@ const Comment = require('../models/commentSchema');
 const Post = require('../models/postSchema');
 const User = require('../models/userSchema');
 
-//Create a new comment on a post in function of the postId
+//Création d'un commmentaire
 exports.newComment = (req, res, next) => {
     const reply= {
         content: req.body.content,
@@ -14,6 +14,7 @@ exports.newComment = (req, res, next) => {
     .catch(error => res.status(400).json({ error, message: error.message }));
 };
 
+//Suppression d'un commentaire
 exports.deleteComment = (req, res, next) => {
     Comment.findOne({ 
         where: { id: req.params.id },
@@ -26,19 +27,20 @@ exports.deleteComment = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
+//Récupération de touts les commentaires, avec leurs utilisateurs
 exports.getAllComments = (req, res, next) => {
     Comment.findAll({
         order: [['createdAt', 'DESC']],
-        where: { postId: req.params.id },
         include: [{
             model: User,
             attributes: ['id', 'firstName', 'lastName']
         }]
     })
-        .then((answers) => res.status(200).json(answers))
+        .then((comment) => res.status(200).json(comment))
         .catch(error => res.status(400).json({ error }));
 };
 
+//Récupération des commentaires d'un post, avec son utilisateur
 exports.getOneComment = (req, res, next) =>{
     Comment.findOne({
         where:{id: req.params.id}, 
@@ -51,6 +53,7 @@ exports.getOneComment = (req, res, next) =>{
         .catch(error => res.status(400).json({ error, message: error.message }));
 };
 
+//Mise à jour d'un commentaire
 exports.updateComment = (req, res, next) =>{
     Comment.findOne({where:{id: req.params.id} })
         .then(comment =>{

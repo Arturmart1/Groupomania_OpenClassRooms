@@ -1,8 +1,6 @@
 const DataTypes = require('sequelize');
 const db = require('../config/db');
 
-//Définition du schema de la table Post
-
 const Post = db.define('Post', {
     title: {
         type: DataTypes.STRING,
