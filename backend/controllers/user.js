@@ -131,21 +131,29 @@ exports.deleteUser = (req, res, next) => {
 //Récuperation de tous les utilisateurs
 
 exports.getAllUsers = (req, res, next) => {
-    User.findAll({
-        order: [['createdAt', 'DESC']],
-    })
-    .then(users => { res.status(200).json(users); })
-    .catch(error => res.status(500).json({ error, message: error.message }));
+    User.findAll({ order: [['createdAt', 'DESC']],})
+        .then((user)=>{
+            if (user.id === req.token.userId || req.token.isAdmin){
+                res.status(200).json(user);
+            } else {
+                res.status(403).json({ message: '403: Unauthorized request'});
+            }
+        })
+        .catch(error => res.status(500).json({ error, message: error.message }));
 };
 
 //Récupération d'un seul utilisateur
 
 exports.getOneUser = (req, res, next) => {
-    User.findOne({ 
-        where: { id: req.params.id}
-    })
-        .then((user) => res.status(200).json(user))
-        .catch((error) => res.status(404).json(error));
+    User.findOne({ where: { id: req.params.id}})
+        .then((user) => {
+            if (user.id === req.token.userId || req.token.isAdmin){
+                res.status(200).json(user);
+            } else {
+                res.status(403).json({ message: '403: Unauthorized request'});
+            }
+        })
+        .catch(error => res.status(500).json({ error, message: error.message }));
 };
 
 //Suppression d'un utilisateur par l'administrateur ou par l'utilisateur

@@ -30,7 +30,7 @@
                 <div class="post__content">
                     <p class="content">{{post.content}}</p>
                 </div>
-                <div class="post__command" v-if="post.UserId == userId || this.isAdmin == 'true'">
+                <div class="post__command" v-if="post.UserId == userId || this.isAdmin == 'true' ">
                     <div @click="deletePost(post.id)" class="command__button">
                         <p>Supprimer</p>
                     </div>
