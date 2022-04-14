@@ -110,6 +110,6 @@ export default {
 
 </script>
 
-<style lang="scss" src="../../sass/components/authPage.scss">
+<style lang="scss" src="../../sass/components/authPage.scss" scoped>
 	
 </style>
